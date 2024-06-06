@@ -26,7 +26,7 @@ import com.example.budgetapp.ui.theme.Green20
 import com.example.budgetapp.ui.theme.Green40
 
 @Composable
-fun CardSaldo(modifier: Modifier = Modifier) {
+fun cardSaldo(modifier: Modifier = Modifier) {
     Surface(
         color = Green40,
         modifier = modifier,
@@ -82,8 +82,8 @@ fun CardSaldo(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true, widthDp = 320)
 @Composable
-fun CardSaldoPreview() {
+fun cardSaldoPreview() {
     BudgetAppTheme {
-        CardSaldo()
+        cardSaldo()
     }
 }
