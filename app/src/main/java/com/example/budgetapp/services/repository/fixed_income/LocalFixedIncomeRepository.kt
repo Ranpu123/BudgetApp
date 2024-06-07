@@ -1,12 +1,13 @@
 package com.example.budgetapp.services.repository.fixed_income
 
-import com.example.budgetapp.models.income.FixedIncome
+import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
+import com.example.budgetapp.domain.models.income.FixedIncome
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 class LocalFixedIncomeRepository(): IFixedIncomeRepository {
 
-    var fixedIncomes: MutableList<FixedIncome> = mutableListOf(
+    private val fixedIncomes: MutableList<FixedIncome> = mutableListOf(
         FixedIncome(
             date = LocalDateTime.parse("2024-04-31"),
             value = 1415.00,

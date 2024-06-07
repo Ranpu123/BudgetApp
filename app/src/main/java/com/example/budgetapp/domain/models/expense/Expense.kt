@@ -1,7 +1,7 @@
-package com.example.budgetapp.models.expense
+package com.example.budgetapp.domain.models.expense
 
-import com.example.budgetapp.models.ICategories
-import com.example.budgetapp.models.transaction.Transaction
+import com.example.budgetapp.domain.models.ICategories
+import com.example.budgetapp.domain.models.transaction.Transaction
 import java.time.LocalDateTime
 
 open class Expense(
@@ -16,7 +16,10 @@ open class Expense(
     category = category,
     description = description
 ){
-    companion object: ICategories{
+    init {
+        require(value < 0.0){"Expense requires negative value!"}
+    }
+    companion object: ICategories {
         enum class CATEGORIES(val displayName: String) {
             FOOD("Alimentação"),
             GROCERY("Mercado"),

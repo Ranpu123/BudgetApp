@@ -1,14 +1,14 @@
 package com.example.budgetapp.services.repository.income
 
-import androidx.compose.runtime.mutableStateOf
-import com.example.budgetapp.models.income.Income
+import com.example.budgetapp.domain.repository_interfaces.IIncomeRepository
+import com.example.budgetapp.domain.models.income.Income
 import java.time.LocalDateTime
 
 class LocalIncomeRepository(): IIncomeRepository {
 
-    var incomes: MutableList<Income> = mutableListOf(
+    private val incomes: MutableList<Income> = mutableListOf(
         Income(
-            date = LocalDateTime.parse("2024-04-31T10:30:00"),
+            date = LocalDateTime.parse("2024-04-30T10:30:00"),
             value = 1415.00,
             category = Income.Companion.CATEGORIES.SALARY.displayName,
             description = "Salário"
@@ -20,7 +20,7 @@ class LocalIncomeRepository(): IIncomeRepository {
             description = "Salário"
         ),
         Income(
-            date = LocalDateTime.parse("2024-05-31T8:30:00"),
+            date = LocalDateTime.parse("2024-05-31T08:30:00"),
             value = 1415.00,
             category = Income.Companion.CATEGORIES.SELL.displayName,
             description = "Venda Computador"

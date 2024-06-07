@@ -1,4 +1,4 @@
-package com.example.budgetapp.models.transaction
+package com.example.budgetapp.domain.models.transaction
 
 import java.time.LocalDate
 import java.time.LocalDateTime

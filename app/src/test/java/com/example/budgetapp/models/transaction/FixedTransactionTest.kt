@@ -1,6 +1,7 @@
 package com.example.budgetapp.models.transaction
 
 
+import com.example.budgetapp.domain.models.transaction.FixedTransaction
 import org.junit.Assert.*
 import org.junit.Test
 import java.time.LocalDate

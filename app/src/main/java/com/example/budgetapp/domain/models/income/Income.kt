@@ -1,7 +1,7 @@
-package com.example.budgetapp.models.income
+package com.example.budgetapp.domain.models.income
 
-import com.example.budgetapp.models.ICategories
-import com.example.budgetapp.models.transaction.Transaction
+import com.example.budgetapp.domain.models.ICategories
+import com.example.budgetapp.domain.models.transaction.Transaction
 import java.time.LocalDateTime
 
 class Income(
@@ -20,7 +20,7 @@ class Income(
         require(value > 0.0) {"Income requires positive value!"}
     }
 
-    companion object: ICategories{
+    companion object: ICategories {
         enum class CATEGORIES(val displayName: String) {
             COMISSION("Comissão"),
             GIFT("Presente"),

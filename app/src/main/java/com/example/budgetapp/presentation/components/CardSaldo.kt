@@ -1,4 +1,4 @@
-package com.example.budgetapp.components
+package com.example.budgetapp.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,12 +21,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.budgetapp.ui.theme.BudgetAppTheme
-import com.example.budgetapp.ui.theme.Green20
-import com.example.budgetapp.ui.theme.Green40
+import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
+import com.example.budgetapp.presentation.ui.theme.Green20
+import com.example.budgetapp.presentation.ui.theme.Green40
 
 @Composable
-fun cardSaldo(modifier: Modifier = Modifier) {
+fun CardSaldo(
+    totalBalance: Double,
+    incomeBalance: Double,
+    expenseBalance: Double,
+    modifier: Modifier = Modifier,
+) {
     Surface(
         color = Green40,
         modifier = modifier,
@@ -39,7 +44,7 @@ fun cardSaldo(modifier: Modifier = Modifier) {
                     .fillMaxWidth()
             ) {
                 Text(text = "Saldo", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                Text(text = "R$ 1.500,00", fontWeight = FontWeight.Bold, fontSize = 24.sp)
+                Text(text = "R$ $totalBalance", fontWeight = FontWeight.Bold, fontSize = 24.sp)
             }
             Surface(
                 modifier = modifier.fillMaxWidth(),
@@ -61,7 +66,7 @@ fun cardSaldo(modifier: Modifier = Modifier) {
                             )
                             Text("Entradas", fontWeight = FontWeight.Medium, fontSize = 15.sp)
                         }
-                        Text("R$ 1.419,00", textAlign = TextAlign.Start, fontSize = 16.sp)
+                        Text("R$ $incomeBalance", textAlign = TextAlign.Start, fontSize = 16.sp)
                     }
                     Column {
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -72,7 +77,7 @@ fun cardSaldo(modifier: Modifier = Modifier) {
                             )
                             Text("Saídas", fontWeight = FontWeight.Medium, fontSize = 15.sp)
                         }
-                        Text("R$ 250,00", textAlign = TextAlign.End, fontSize = 16.sp)
+                        Text("R$ $expenseBalance", textAlign = TextAlign.End, fontSize = 16.sp)
                     }
                 }
             }
@@ -84,6 +89,10 @@ fun cardSaldo(modifier: Modifier = Modifier) {
 @Composable
 fun cardSaldoPreview() {
     BudgetAppTheme {
-        cardSaldo()
+        CardSaldo(
+            totalBalance = 1500.00,
+            expenseBalance = 250.00,
+            incomeBalance = 1750.00
+        )
     }
 }

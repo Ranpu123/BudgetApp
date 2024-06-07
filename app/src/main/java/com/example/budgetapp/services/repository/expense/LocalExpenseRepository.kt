@@ -1,31 +1,32 @@
 package com.example.budgetapp.services.repository.expense
 
-import com.example.budgetapp.models.expense.Expense
+import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
+import com.example.budgetapp.domain.models.expense.Expense
 import java.time.LocalDateTime
 
 class LocalExpenseRepository(): IExpenseRepository {
-    var expenses: MutableList<Expense> = mutableListOf(
+    private val expenses: MutableList<Expense> = mutableListOf(
         Expense(
-            date = LocalDateTime.parse("2024-06-01T10:30:00"),
-            value = 50.00,
+            date = LocalDateTime.parse("2024-06-06T10:30:00"),
+            value = -50.00,
             category = Expense.Companion.CATEGORIES.FUEL.displayName,
             description = "Gasolina Fox"
         ),
         Expense(
             date = LocalDateTime.parse("2024-06-01T11:30:00"),
-            value = 25.00,
+            value = -25.00,
             category = Expense.Companion.CATEGORIES.RESTAURANT.displayName,
             description = "Almoço"
         ),
         Expense(
-            date = LocalDateTime.parse("2024-06-02T8:30:00"),
-            value = 5.00,
+            date = LocalDateTime.parse("2024-06-02T08:30:00"),
+            value = -5.00,
             category = Expense.Companion.CATEGORIES.RESTAURANT.displayName,
             description = "Café"
         ),
         Expense(
-            date = LocalDateTime.parse("2024-06-02T8:30:00"),
-            value = 5.00,
+            date = LocalDateTime.parse("2024-06-02T08:30:00"),
+            value = -105.00,
             category = Expense.Companion.CATEGORIES.LIGHTING.displayName,
             description = "Conta Luz"
         ),

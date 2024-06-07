@@ -1,16 +1,16 @@
-package com.example.budgetapp.models.expense
+package com.example.budgetapp.domain.models.income
 
-import com.example.budgetapp.models.ICategories
-import com.example.budgetapp.models.transaction.FixedTransaction
+import com.example.budgetapp.domain.models.ICategories
+import com.example.budgetapp.domain.models.transaction.FixedTransaction
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class FixedExpense(
+class FixedIncome(
     date: LocalDateTime,
     value: Double,
     category: String,
     description: String,
-    active : Boolean = true,
+    active: Boolean = true,
     endDate: LocalDate? = null,
     lastDate: LocalDate = if (date.toLocalDate().isBefore(LocalDate.now())) date.toLocalDate() else LocalDate.now()
 
@@ -24,19 +24,15 @@ class FixedExpense(
     endDate = endDate
 ){
     init {
-        require(value < 0.0){"Fixed Income requires negative value!"}
+        require(value > 0.0){"Fixed Income requires positive value!"}
     }
 
     companion object: ICategories {
         enum class CATEGORIES(val displayName: String) {
-            STREAMING("Streaming"),
-            INTERNET("Internet"),
-            PHONE_PLAN("Plano de celular"),
-            INSURANCE("Seguro"),
-            INSTALLMENT("Prestação"),
+            SALARY("Salário"),
+            RENT("Alguel"),
             OTHERS("Outros")
         }
-
         override fun getCategories(): List<String> {
             return CATEGORIES.values().map { it.displayName }
         }

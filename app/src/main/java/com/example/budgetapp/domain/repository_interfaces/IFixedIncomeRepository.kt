@@ -1,6 +1,6 @@
-package com.example.budgetapp.services.repository.fixed_income
+package com.example.budgetapp.domain.repository_interfaces
 
-import com.example.budgetapp.models.income.FixedIncome
+import com.example.budgetapp.domain.models.income.FixedIncome
 
 
 interface IFixedIncomeRepository {

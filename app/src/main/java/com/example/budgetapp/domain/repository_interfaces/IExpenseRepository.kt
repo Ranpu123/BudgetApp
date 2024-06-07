@@ -1,6 +1,6 @@
-package com.example.budgetapp.services.repository.expense
+package com.example.budgetapp.domain.repository_interfaces
 
-import com.example.budgetapp.models.expense.Expense
+import com.example.budgetapp.domain.models.expense.Expense
 
 interface IExpenseRepository {
 

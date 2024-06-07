@@ -1,4 +1,4 @@
-package com.example.budgetapp.ui.theme
+package com.example.budgetapp.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -18,7 +18,8 @@ val provider = GoogleFont.Provider(
 val fontName = GoogleFont("Poppins")
 val fontFamily = FontFamily(
     Font(googleFont = fontName,
-        fontProvider = provider)
+        fontProvider = provider
+    )
 )
 
 // Set of Material typography styles to start with

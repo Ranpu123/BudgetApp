@@ -1,10 +1,11 @@
 package com.example.budgetapp.services.repository.fixed_expense
 
-import com.example.budgetapp.models.expense.FixedExpense
+import com.example.budgetapp.domain.repository_interfaces.IFixedExpenseRepository
+import com.example.budgetapp.domain.models.expense.FixedExpense
 
 class LocalFixedExpenseRepository: IFixedExpenseRepository {
 
-    var fixedExpenses: MutableList<FixedExpense> = mutableListOf()
+    private val fixedExpenses: MutableList<FixedExpense> = mutableListOf()
 
     override fun fetchAll(): MutableList<FixedExpense> {
         return fixedExpenses

@@ -1,6 +1,6 @@
-package com.example.budgetapp.services.repository.income
+package com.example.budgetapp.domain.repository_interfaces
 
-import com.example.budgetapp.models.income.Income
+import com.example.budgetapp.domain.models.income.Income
 
 interface IIncomeRepository {
     fun fetchAll():MutableList<Income>
