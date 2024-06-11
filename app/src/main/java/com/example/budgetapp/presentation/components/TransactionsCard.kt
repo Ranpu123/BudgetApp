@@ -48,7 +48,7 @@ import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 @Composable
 fun TransactionsCard(
     cardName: String,
-    transactions: MutableList<Transaction>,
+    transactions: List<Transaction>,
     modifier: Modifier = Modifier,
     expanded: Boolean = true,
     onNewTransactionClicked: () -> Unit = {},
@@ -117,7 +117,7 @@ fun TransactionsCard(
                                     date = it.date.toLocalDate(),
                                     total = filteredTransactions.sumOf { it.value })
                             }
-                            items(filteredTransactions) { transaction ->
+                            items(filteredTransactions.sortedBy { it.date }) { transaction ->
                                 ItemTransactionsCard(transaction = transaction)
                                 Divider()
                             }
@@ -140,6 +140,6 @@ fun TransactionCardPreview(){
     BudgetAppTheme {
         TransactionsCard(
             cardName = "Receitas",
-            transactions = LocalIncomeRepository().fetchAll() as MutableList<Transaction>)
+            transactions = LocalIncomeRepository.fetchAll() as List<Transaction>)
     }
 }

@@ -13,5 +13,3 @@ val Pink40 = Color(0xFF7D5260)
 val Green80 = Color(0xFF00BD40)
 val Green40 = Color(0xFF009A33)
 val Green20 = Color(0xFF008028)
-
-val White = Color.White

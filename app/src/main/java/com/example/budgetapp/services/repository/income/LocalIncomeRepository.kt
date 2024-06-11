@@ -4,7 +4,7 @@ import com.example.budgetapp.domain.repository_interfaces.IIncomeRepository
 import com.example.budgetapp.domain.models.income.Income
 import java.time.LocalDateTime
 
-class LocalIncomeRepository(): IIncomeRepository {
+object LocalIncomeRepository: IIncomeRepository {
 
     private val incomes: MutableList<Income> = mutableListOf(
         Income(

@@ -5,11 +5,11 @@ import com.example.budgetapp.domain.models.income.FixedIncome
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class LocalFixedIncomeRepository(): IFixedIncomeRepository {
+object LocalFixedIncomeRepository: IFixedIncomeRepository {
 
     private val fixedIncomes: MutableList<FixedIncome> = mutableListOf(
         FixedIncome(
-            date = LocalDateTime.parse("2024-04-31"),
+            date = LocalDateTime.parse("2024-04-30T10:00:00"),
             value = 1415.00,
             category = FixedIncome.Companion.CATEGORIES.SALARY.displayName,
             description = "Salário",

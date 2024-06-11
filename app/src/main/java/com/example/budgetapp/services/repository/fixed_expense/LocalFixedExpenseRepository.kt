@@ -3,7 +3,7 @@ package com.example.budgetapp.services.repository.fixed_expense
 import com.example.budgetapp.domain.repository_interfaces.IFixedExpenseRepository
 import com.example.budgetapp.domain.models.expense.FixedExpense
 
-class LocalFixedExpenseRepository: IFixedExpenseRepository {
+object LocalFixedExpenseRepository: IFixedExpenseRepository {
 
     private val fixedExpenses: MutableList<FixedExpense> = mutableListOf()
 

@@ -41,7 +41,7 @@ fun TransactionDateHeader(date: LocalDate, total: Double, modifier: Modifier = M
                         end.linkTo(parent.end)
                         centerVerticallyTo(parent)
                     },
-                color = if(total < 0.0) Color.Red else Color.Green,
+                color = if(total < 0.0) Color(0xFFFF0000) else Color(0xFF00BD40),
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
                 text = "$total"

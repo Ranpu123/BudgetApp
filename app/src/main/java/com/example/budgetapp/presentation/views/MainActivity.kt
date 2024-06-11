@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.budgetapp.presentation.views
 
 import android.os.Bundle
@@ -5,6 +7,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,28 +16,44 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.budgetapp.presentation.components.TransactionsCard
 
 import com.example.budgetapp.presentation.components.CardSaldo
 import com.example.budgetapp.domain.models.transaction.Transaction
-import com.example.budgetapp.services.repository.expense.LocalExpenseRepository
-import com.example.budgetapp.services.repository.income.LocalIncomeRepository
+import com.example.budgetapp.presentation.components.AddExpenseBottomSheet
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import com.example.budgetapp.presentation.ui.theme.Green80
+import com.example.budgetapp.presentation.viewModels.HomeViewModel
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 
 class MainActivity : ComponentActivity() {
@@ -43,15 +62,24 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BudgetAppTheme {
-                App(modifier = Modifier)
+                HomeView(modifier = Modifier)
             }
         }
     }
 }
 
 @Composable
-fun App(modifier: Modifier = Modifier){
-    Column(modifier  = modifier
+fun HomeView(
+    modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel = viewModel()
+){
+    val homeUiState by homeViewModel.uiState.collectAsState()
+
+    var isAddExpenseOpen by rememberSaveable {mutableStateOf(false)}
+
+    var isAddIncomeOpen by rememberSaveable {mutableStateOf(false)}
+
+    Surface(modifier  = modifier
         .fillMaxSize()
         .verticalScroll(rememberScrollState())
     ) {
@@ -62,6 +90,7 @@ fun App(modifier: Modifier = Modifier){
                 text,
                 expenses,
                 incomes) = createRefs()
+
             Surface(
                 color = Green80,
                 modifier = modifier
@@ -81,7 +110,7 @@ fun App(modifier: Modifier = Modifier){
                     }
             ) {
                 Text(
-                    text = "Olá, Vinícius!",
+                    text = "Olá, ${homeUiState.userName}!",
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp
                 )
@@ -96,9 +125,9 @@ fun App(modifier: Modifier = Modifier){
                     }
             ) {
                 CardSaldo(
-                    totalBalance = 1500.00,
-                    incomeBalance = 1750.00,
-                    expenseBalance = 250.00,
+                    totalBalance = homeUiState.balance,
+                    incomeBalance = homeUiState.incomeBalance,
+                    expenseBalance = homeUiState.expenseBalance,
                     modifier = modifier,
                 )
             }
@@ -112,10 +141,10 @@ fun App(modifier: Modifier = Modifier){
             ) {
                 TransactionsCard(
                     cardName = "Gastos",
-                    transactions = LocalExpenseRepository().fetchAll() as MutableList<Transaction>,
+                    transactions = homeUiState.expenses as MutableList<Transaction>,
                     modifier = modifier,
-                    onNewTransactionClicked = { println("Novo Gasto") },
-                    onSeeMoreClicked = {println("Ver Mais Gastos")}
+                    onNewTransactionClicked = { isAddExpenseOpen = true },
+                    onSeeMoreClicked = {/*TODO*/}
                 )
             }
             Surface(
@@ -128,22 +157,61 @@ fun App(modifier: Modifier = Modifier){
             ) {
                 TransactionsCard(
                     cardName = "Receitas",
-                    transactions = LocalIncomeRepository().fetchAll() as MutableList<Transaction>,
+                    transactions = homeUiState.incomes as MutableList<Transaction>,
                     modifier = modifier,
-                    expanded = false
+                    expanded = false,
+                    onNewTransactionClicked = { isAddIncomeOpen = true }
                 )
             }
         }
+        if(isAddExpenseOpen){
+            AddExpenseBottomSheet(
+                modifier = modifier.fillMaxWidth(),
+                onDissmiss = {
+                    isAddExpenseOpen = false
+                },
+                onAdd = { description: String, value: Double, date: Long, category: String ->
+                    homeViewModel.addNewExpense(
+                        description = description,
+                        value = value,
+                        category = category,
+                        date = Instant.ofEpochMilli(date)
+                            .atZone(ZoneId.of("UTC")).toLocalDate()
+                    )
+                    isAddExpenseOpen = false
+                })
+        }
+
+        if(isAddIncomeOpen){
+            AddExpenseBottomSheet(
+                modifier = modifier.fillMaxWidth(),
+                onDissmiss = {
+                    isAddIncomeOpen = false
+                },
+                onAdd = { description: String, value: Double, date: Long, category: String ->
+                    homeViewModel.addNewExpense(
+                        description = description,
+                        value = value,
+                        category = category,
+                        date = Instant.ofEpochMilli(date)
+                            .atZone(ZoneId.of("UTC")).toLocalDate()
+                    )
+                    isAddIncomeOpen = false
+                })
+        }
     }
+
+
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
-fun AppPreview(){
+fun HomePreview(){
     BudgetAppTheme {
-        App()
+        HomeView()
     }
-}
+}*/
 
 
 

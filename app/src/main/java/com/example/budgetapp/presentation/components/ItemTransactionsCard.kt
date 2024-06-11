@@ -36,7 +36,7 @@ fun ItemTransactionsCard(transaction: Transaction, modifier: Modifier = Modifier
                     end.linkTo(parent.end)
                     centerVerticallyTo(parent)
                 },
-            color = if(nTransaction.value < 0.0) Color.Red else Color.Green,
+            color = if(nTransaction.value < 0.0) Color(0xFFFF0000) else Color(0xFF00BD40),
             fontWeight = FontWeight.Normal,
             fontSize = 12.sp,
             text = "${nTransaction.value}"

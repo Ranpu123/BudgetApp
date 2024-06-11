@@ -2,6 +2,7 @@ package com.example.budgetapp.domain.models.transaction
 
 import java.time.LocalDateTime
 import java.util.UUID
+import kotlin.enums.EnumEntries
 
 open class Transaction (
     var date: LocalDateTime,

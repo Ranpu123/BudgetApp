@@ -4,7 +4,7 @@ import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.models.expense.Expense
 import java.time.LocalDateTime
 
-class LocalExpenseRepository(): IExpenseRepository {
+object LocalExpenseRepository: IExpenseRepository {
     private val expenses: MutableList<Expense> = mutableListOf(
         Expense(
             date = LocalDateTime.parse("2024-06-06T10:30:00"),
