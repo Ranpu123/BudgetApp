@@ -7,10 +7,10 @@ import java.time.LocalDateTime
 class Income(
     date: LocalDateTime,
     value: Double,
-    category: String,
+    category: INCOME_CATEGORIES,
     description: String,
 
-) : Transaction(
+    ) : Transaction<INCOME_CATEGORIES>(
     date = date,
     value = value,
     category = category,
@@ -18,22 +18,5 @@ class Income(
 ){
     init {
         require(value > 0.0) {"Income requires positive value!"}
-    }
-
-    companion object: ICategories {
-        enum class CATEGORIES(val displayName: String) {
-            COMISSION("Comissão"),
-            GIFT("Presente"),
-            INTEREST("Juros"),
-            INVESTMENT("Investimentos"),
-            SALARY("Salário"),
-            SELL("Venda"),
-            TIPS("Gorjeta"),
-            OTHERS("Outros")
-        }
-
-        override fun getCategories(): List<String> {
-            return CATEGORIES.values().map { it.displayName }
-        }
     }
 }

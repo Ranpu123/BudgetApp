@@ -7,8 +7,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,32 +15,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
 import com.example.budgetapp.presentation.components.TransactionsCard
 
 import com.example.budgetapp.presentation.components.CardSaldo
@@ -52,7 +44,6 @@ import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import com.example.budgetapp.presentation.ui.theme.Green80
 import com.example.budgetapp.presentation.viewModels.HomeViewModel
 import java.time.Instant
-import java.time.LocalDate
 import java.time.ZoneId
 
 
@@ -141,7 +132,7 @@ fun HomeView(
             ) {
                 TransactionsCard(
                     cardName = "Gastos",
-                    transactions = homeUiState.expenses as MutableList<Transaction>,
+                    transactions = homeUiState.expenses as List<Transaction<*>>,
                     modifier = modifier,
                     onNewTransactionClicked = { isAddExpenseOpen = true },
                     onSeeMoreClicked = {/*TODO*/}
@@ -157,7 +148,7 @@ fun HomeView(
             ) {
                 TransactionsCard(
                     cardName = "Receitas",
-                    transactions = homeUiState.incomes as MutableList<Transaction>,
+                    transactions = homeUiState.incomes as List<Transaction<*>>,
                     modifier = modifier,
                     expanded = false,
                     onNewTransactionClicked = { isAddIncomeOpen = true }
@@ -167,10 +158,10 @@ fun HomeView(
         if(isAddExpenseOpen){
             AddExpenseBottomSheet(
                 modifier = modifier.fillMaxWidth(),
-                onDissmiss = {
+                onDismiss = {
                     isAddExpenseOpen = false
                 },
-                onAdd = { description: String, value: Double, date: Long, category: String ->
+                onAdd = { description: String, value: Double, date: Long, category: EXPENSE_CATEGORIES ->
                     homeViewModel.addNewExpense(
                         description = description,
                         value = value,
@@ -182,13 +173,13 @@ fun HomeView(
                 })
         }
 
-        if(isAddIncomeOpen){
+        /*if(isAddIncomeOpen){
             AddExpenseBottomSheet(
                 modifier = modifier.fillMaxWidth(),
                 onDissmiss = {
                     isAddIncomeOpen = false
                 },
-                onAdd = { description: String, value: Double, date: Long, category: String ->
+                onAdd = { description: String, value: Double, date: Long, category: INCOME_CATEGORIES ->
                     homeViewModel.addNewExpense(
                         description = description,
                         value = value,
@@ -198,7 +189,7 @@ fun HomeView(
                     )
                     isAddIncomeOpen = false
                 })
-        }
+        }*/
     }
 
 

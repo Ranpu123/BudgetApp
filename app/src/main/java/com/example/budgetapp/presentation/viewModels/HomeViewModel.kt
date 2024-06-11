@@ -3,6 +3,8 @@ package com.example.budgetapp.presentation.viewModels
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.budgetapp.domain.models.ICategories
+import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
 import com.example.budgetapp.domain.models.expense.Expense
 import com.example.budgetapp.domain.models.expense.FixedExpense
 import com.example.budgetapp.domain.models.income.FixedIncome
@@ -75,7 +77,7 @@ class HomeViewModel: ViewModel() {
     fun addNewExpense(
         date: LocalDate,
         value: Double,
-        category: String,
+        category: EXPENSE_CATEGORIES,
         description: String,
     ){
         expenseRepository.addExpense(Expense(

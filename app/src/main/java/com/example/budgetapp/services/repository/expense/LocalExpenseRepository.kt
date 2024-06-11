@@ -1,5 +1,6 @@
 package com.example.budgetapp.services.repository.expense
 
+import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.models.expense.Expense
 import java.time.LocalDateTime
@@ -9,25 +10,25 @@ object LocalExpenseRepository: IExpenseRepository {
         Expense(
             date = LocalDateTime.parse("2024-06-06T10:30:00"),
             value = -50.00,
-            category = Expense.Companion.CATEGORIES.FUEL.displayName,
+            category = EXPENSE_CATEGORIES.FUEL,
             description = "Gasolina Fox"
         ),
         Expense(
             date = LocalDateTime.parse("2024-06-01T11:30:00"),
             value = -25.00,
-            category = Expense.Companion.CATEGORIES.RESTAURANT.displayName,
+            category = EXPENSE_CATEGORIES.RESTAURANT,
             description = "Almoço"
         ),
         Expense(
             date = LocalDateTime.parse("2024-06-02T08:30:00"),
             value = -5.00,
-            category = Expense.Companion.CATEGORIES.RESTAURANT.displayName,
+            category = EXPENSE_CATEGORIES.RESTAURANT,
             description = "Café"
         ),
         Expense(
             date = LocalDateTime.parse("2024-06-02T08:30:00"),
             value = -105.00,
-            category = Expense.Companion.CATEGORIES.LIGHTING.displayName,
+            category = EXPENSE_CATEGORIES.LIGHTING,
             description = "Conta Luz"
         ),
     )

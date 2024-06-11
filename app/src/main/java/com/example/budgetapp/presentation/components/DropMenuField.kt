@@ -26,12 +26,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import com.example.budgetapp.domain.models.ICategories
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 
 @Composable
 fun dropDownMenu(
-    suggestions: List<String> = emptyList<String>(),
-    onChoice: (it:String) -> Unit = {}
+    suggestions: List<ICategories> = emptyList<ICategories>(),
+    onChoice: (it:ICategories) -> Unit = {}
 ) {
 
     var expanded by remember { mutableStateOf(false) }
@@ -72,16 +73,16 @@ fun dropDownMenu(
                 .height(with(LocalDensity.current) { itemSize.height.toDp() * 7 })
                 .width(with(LocalDensity.current) { textfieldSize.width.toDp() }),
         ){
-            suggestions.forEach { label ->
+            suggestions.forEach { category ->
                 DropdownMenuItem(
                     onClick = {
-                        selectedText = label
+                        selectedText = category.displayName
                         expanded = false
-                        onChoice(label)
+                        onChoice(category)
                     },
                     text = {
                         Text(
-                            text = label,
+                            text = category.displayName,
                             color = Color.Black,
                             modifier = Modifier
                                 .onGloballyPositioned { coordinates ->

@@ -15,8 +15,8 @@ import com.example.budgetapp.domain.models.income.Income
 import com.example.budgetapp.domain.models.transaction.Transaction
 
 @Composable
-fun ItemTransactionsCard(transaction: Transaction, modifier: Modifier = Modifier){
-    var nTransaction: Transaction
+fun ItemTransactionsCard(transaction: Transaction<*>, modifier: Modifier = Modifier){
+    var nTransaction: Transaction<*>
 
     when(transaction){
         is Expense -> nTransaction = transaction as Expense

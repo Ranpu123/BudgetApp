@@ -1,5 +1,6 @@
 package com.example.budgetapp.services.repository.fixed_income
 
+import com.example.budgetapp.domain.models.income.FIXED_INCOME_CATEGORIES
 import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
 import com.example.budgetapp.domain.models.income.FixedIncome
 import java.time.LocalDate
@@ -11,7 +12,7 @@ object LocalFixedIncomeRepository: IFixedIncomeRepository {
         FixedIncome(
             date = LocalDateTime.parse("2024-04-30T10:00:00"),
             value = 1415.00,
-            category = FixedIncome.Companion.CATEGORIES.SALARY.displayName,
+            category = FIXED_INCOME_CATEGORIES.SALARY,
             description = "Salário",
             lastDate = LocalDate.parse("2024-05-31"),
         )

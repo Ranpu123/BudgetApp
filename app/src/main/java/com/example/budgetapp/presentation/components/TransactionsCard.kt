@@ -48,7 +48,7 @@ import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 @Composable
 fun TransactionsCard(
     cardName: String,
-    transactions: List<Transaction>,
+    transactions: List<Transaction<*>>,
     modifier: Modifier = Modifier,
     expanded: Boolean = true,
     onNewTransactionClicked: () -> Unit = {},
@@ -140,6 +140,6 @@ fun TransactionCardPreview(){
     BudgetAppTheme {
         TransactionsCard(
             cardName = "Receitas",
-            transactions = LocalIncomeRepository.fetchAll() as List<Transaction>)
+            transactions = LocalIncomeRepository.fetchAll() as List<Transaction<*>>)
     }
 }

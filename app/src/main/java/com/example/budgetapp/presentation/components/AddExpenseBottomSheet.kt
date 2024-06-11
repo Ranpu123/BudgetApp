@@ -14,8 +14,6 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerColors
-import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,7 +22,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -42,7 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.budgetapp.domain.models.expense.Expense
+import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import java.time.Instant
 import java.time.ZoneId
@@ -50,11 +47,12 @@ import java.time.format.DateTimeFormatter
 
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddExpenseBottomSheet(
     modifier: Modifier =  Modifier,
-    onDissmiss: () -> Unit = {},
-    onAdd: (description: String, value: Double, date: Long, category: String)-> Unit){
+    onDismiss: () -> Unit = {},
+    onAdd: (description: String, value: Double, date: Long, category: EXPENSE_CATEGORIES)-> Unit){
 
     val addExpensetSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val datePickerState = rememberDatePickerState()
@@ -73,9 +71,7 @@ fun AddExpenseBottomSheet(
         mutableStateOf(Instant.now().toEpochMilli())
     }
 
-    var category by remember {
-        mutableStateOf("")
-    }
+    var category : EXPENSE_CATEGORIES = EXPENSE_CATEGORIES.OTHER
 
     LaunchedEffect(key1 = Unit) {
         addExpensetSheetState.expand()
@@ -84,7 +80,7 @@ fun AddExpenseBottomSheet(
     if(addExpensetSheetState.isVisible) {
         ModalBottomSheet(
             sheetState = addExpensetSheetState,
-            onDismissRequest = { onDissmiss() },
+            onDismissRequest = { onDismiss() },
         ) {
             Text(
                 modifier = modifier.fillMaxWidth(),
@@ -106,8 +102,8 @@ fun AddExpenseBottomSheet(
                     fontSize = 13.sp
                 )
                 dropDownMenu(
-                    suggestions = Expense.Companion.getCategories(),
-                    onChoice = {category = it}
+                    suggestions = EXPENSE_CATEGORIES.entries.toList().sortedBy { it.displayName },
+                    onChoice = {category = it as EXPENSE_CATEGORIES }
                 )
 
                 Text(
@@ -191,7 +187,7 @@ fun AddExpenseBottomSheet(
                         confirmButton = {
                             Button(onClick = {
                                 date = datePickerState.selectedDateMillis ?: Instant.now()
-                                    .toEpochMilli();
+                                    .toEpochMilli()
                                 isDatePickerVisible = false
                             }) {
                                 Text(text = "Confirmar")
@@ -220,8 +216,8 @@ fun PreviewAddExpenseBottomSheet(){
                 mutableStateOf(false)
             }
             AddExpenseBottomSheet(
-                onDissmiss = {open = false},
-                onAdd =  { description: String, value: Double, date: Long, category: String ->
+                onDismiss = {open = false},
+                onAdd =  { description: String, value: Double, date: Long, category: EXPENSE_CATEGORIES ->
                     println(description + category)
                 })
         }

@@ -8,13 +8,13 @@ import java.time.LocalDateTime
 class FixedIncome(
     date: LocalDateTime,
     value: Double,
-    category: String,
+    category: FIXED_INCOME_CATEGORIES,
     description: String,
     active: Boolean = true,
     endDate: LocalDate? = null,
     lastDate: LocalDate = if (date.toLocalDate().isBefore(LocalDate.now())) date.toLocalDate() else LocalDate.now()
 
-) : FixedTransaction(
+) : FixedTransaction<FIXED_INCOME_CATEGORIES>(
     date = date,
     value = value,
     category = category,
@@ -25,16 +25,5 @@ class FixedIncome(
 ){
     init {
         require(value > 0.0){"Fixed Income requires positive value!"}
-    }
-
-    companion object: ICategories {
-        enum class CATEGORIES(val displayName: String) {
-            SALARY("Salário"),
-            RENT("Alguel"),
-            OTHERS("Outros")
-        }
-        override fun getCategories(): List<String> {
-            return CATEGORIES.values().map { it.displayName }
-        }
     }
 }
