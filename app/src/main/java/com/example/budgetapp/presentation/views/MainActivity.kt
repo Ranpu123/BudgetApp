@@ -35,11 +35,15 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
+import com.example.budgetapp.domain.models.income.INCOME_CATEGORIES
+import com.example.budgetapp.domain.models.transaction.FixedTransaction
 import com.example.budgetapp.presentation.components.TransactionsCard
 
 import com.example.budgetapp.presentation.components.CardSaldo
 import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.presentation.components.AddExpenseBottomSheet
+import com.example.budgetapp.presentation.components.AddIncomeBottomSheet
+import com.example.budgetapp.presentation.components.FixedTransactionsCard
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import com.example.budgetapp.presentation.ui.theme.Green80
 import com.example.budgetapp.presentation.viewModels.HomeViewModel
@@ -67,8 +71,10 @@ fun HomeView(
     val homeUiState by homeViewModel.uiState.collectAsState()
 
     var isAddExpenseOpen by rememberSaveable {mutableStateOf(false)}
-
     var isAddIncomeOpen by rememberSaveable {mutableStateOf(false)}
+    var isAddFixedIncomeOpen by rememberSaveable {mutableStateOf(false)}
+    var isAddFixedExpenseOpen by rememberSaveable {mutableStateOf(false)}
+
 
     Surface(modifier  = modifier
         .fillMaxSize()
@@ -80,7 +86,9 @@ fun HomeView(
                 back,
                 text,
                 expenses,
-                incomes) = createRefs()
+                incomes,
+                fixedExpenses,
+                fixedIncomes,) = createRefs()
 
             Surface(
                 color = Green80,
@@ -120,6 +128,7 @@ fun HomeView(
                     incomeBalance = homeUiState.incomeBalance,
                     expenseBalance = homeUiState.expenseBalance,
                     modifier = modifier,
+                    onReloadClicked = {homeViewModel.updateAll()}
                 )
             }
             Surface(
@@ -154,6 +163,38 @@ fun HomeView(
                     onNewTransactionClicked = { isAddIncomeOpen = true }
                 )
             }
+            Surface(
+                color = Color.Transparent,
+                modifier = modifier
+                    .padding(horizontal = 16.dp)
+                    .constrainAs(fixedExpenses) {
+                        top.linkTo(incomes.bottom, margin = 16.dp)
+                    }
+            ) {
+                TransactionsCard(
+                    cardName = "Gastos Fixos",
+                    transactions = homeUiState.fixedExpense as List<FixedTransaction<*>>,
+                    modifier = modifier,
+                    expanded = false,
+                    onNewTransactionClicked = { isAddFixedExpenseOpen = true }
+                )
+            }
+            Surface(
+                color = Color.Transparent,
+                modifier = modifier
+                    .padding(horizontal = 16.dp)
+                    .constrainAs(fixedIncomes) {
+                        top.linkTo(fixedExpenses.bottom, margin = 16.dp)
+                    }
+            ) {
+                FixedTransactionsCard(
+                    cardName = "Receitas Fixas",
+                    transactions = homeUiState.fixedIncome as List<FixedTransaction<*>>,
+                    modifier = modifier,
+                    expanded = false,
+                    onNewTransactionClicked = { isAddFixedIncomeOpen = true }
+                )
+            }
         }
         if(isAddExpenseOpen){
             AddExpenseBottomSheet(
@@ -173,14 +214,14 @@ fun HomeView(
                 })
         }
 
-        /*if(isAddIncomeOpen){
-            AddExpenseBottomSheet(
+        if(isAddIncomeOpen){
+            AddIncomeBottomSheet(
                 modifier = modifier.fillMaxWidth(),
-                onDissmiss = {
+                onDismiss = {
                     isAddIncomeOpen = false
                 },
                 onAdd = { description: String, value: Double, date: Long, category: INCOME_CATEGORIES ->
-                    homeViewModel.addNewExpense(
+                    homeViewModel.addNewIncome(
                         description = description,
                         value = value,
                         category = category,
@@ -188,11 +229,11 @@ fun HomeView(
                             .atZone(ZoneId.of("UTC")).toLocalDate()
                     )
                     isAddIncomeOpen = false
-                })
-        }*/
+                }
+            )
+        }
+
     }
-
-
 }
 
 /*

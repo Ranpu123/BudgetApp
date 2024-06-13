@@ -10,19 +10,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.budgetapp.domain.models.expense.Expense
-import com.example.budgetapp.domain.models.income.Income
 import com.example.budgetapp.domain.models.transaction.Transaction
+import com.example.budgetapp.utils.formatCurrency
 
 @Composable
 fun ItemTransactionsCard(transaction: Transaction<*>, modifier: Modifier = Modifier){
-    var nTransaction: Transaction<*>
+    /*var nTransaction: Transaction<*>
 
     when(transaction){
-        is Expense -> nTransaction = transaction as Expense
-        is Income -> nTransaction = transaction as Income
+        is Expense -> nTransaction = transaction
+        is Income -> nTransaction = transaction
         else -> throw IllegalArgumentException("Unsupported Transaction Type")
-    }
+    }*/
 
     ConstraintLayout(
         modifier = modifier
@@ -36,10 +35,10 @@ fun ItemTransactionsCard(transaction: Transaction<*>, modifier: Modifier = Modif
                     end.linkTo(parent.end)
                     centerVerticallyTo(parent)
                 },
-            color = if(nTransaction.value < 0.0) Color(0xFFFF0000) else Color(0xFF00BD40),
+            color = if(transaction.value < 0.0) Color(0xFFFF0000) else Color(0xFF00BD40),
             fontWeight = FontWeight.Normal,
             fontSize = 12.sp,
-            text = "${nTransaction.value}"
+            text = formatCurrency(transaction.value)
         )
         Text(
             modifier = modifier
@@ -50,7 +49,7 @@ fun ItemTransactionsCard(transaction: Transaction<*>, modifier: Modifier = Modif
             color = Color.Black,
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp,
-            text = nTransaction.description
+            text = transaction.description
         )
     }
 }

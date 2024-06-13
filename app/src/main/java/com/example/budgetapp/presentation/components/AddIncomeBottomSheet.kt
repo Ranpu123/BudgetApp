@@ -40,32 +40,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
+import com.example.budgetapp.domain.models.income.INCOME_CATEGORIES
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import com.example.budgetapp.utils.currencyToDouble
 import com.example.budgetapp.utils.formatCurrency
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Currency
-import java.util.Locale
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddExpenseBottomSheet(
+fun AddIncomeBottomSheet(
     modifier: Modifier =  Modifier,
     onDismiss: () -> Unit = {},
-    onAdd: (description: String, value: Double, date: Long, category: EXPENSE_CATEGORIES)-> Unit){
+    onAdd: (description: String, value: Double, date: Long, category: INCOME_CATEGORIES)-> Unit){
 
-    var category : EXPENSE_CATEGORIES = EXPENSE_CATEGORIES.OTHER
+    var category : INCOME_CATEGORIES = INCOME_CATEGORIES.OTHER
 
     val addExpensetSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val datePickerState = rememberDatePickerState()
 
-    var isDatePickerVisible by remember {
-        mutableStateOf(false)
-    }
+    var isDatePickerVisible by remember {mutableStateOf(false)}
 
     var description by remember {
         mutableStateOf(category.displayName)
@@ -79,6 +76,8 @@ fun AddExpenseBottomSheet(
         mutableStateOf(Instant.now().toEpochMilli())
     }
 
+
+
     LaunchedEffect(key1 = Unit) {
         addExpensetSheetState.expand()
     }
@@ -90,7 +89,7 @@ fun AddExpenseBottomSheet(
         ) {
             Text(
                 modifier = modifier.fillMaxWidth(),
-                text = "Adicionar Gasto",
+                text = "Adicionar Receita",
                 color = Color.Black,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
@@ -108,9 +107,9 @@ fun AddExpenseBottomSheet(
                     fontSize = 13.sp
                 )
                 dropDownMenu(
-                    suggestions = EXPENSE_CATEGORIES.entries.toList().sortedBy { it.displayName },
+                    suggestions = INCOME_CATEGORIES.entries.toList().sortedBy { it.displayName},
                     onChoice = {
-                        category = it as EXPENSE_CATEGORIES
+                        category = it as INCOME_CATEGORIES
                         description = category.displayName
                     }
                 )
@@ -183,9 +182,7 @@ fun AddExpenseBottomSheet(
                 )
 
                 Button(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
+                    modifier = modifier.fillMaxWidth().padding(vertical = 16.dp),
                     colors = ButtonDefaults.buttonColors(Color(0xFF009A33)),
                     shape = RoundedCornerShape(15.dp),
                     onClick = {
@@ -234,15 +231,15 @@ fun AddExpenseBottomSheet(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewAddExpenseBottomSheet(){
+fun PreviewAddIncomeBottomSheet(){
     BudgetAppTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             var open by remember {
                 mutableStateOf(false)
             }
-            AddExpenseBottomSheet(
+            AddIncomeBottomSheet(
                 onDismiss = {open = false},
-                onAdd =  { description: String, value: Double, date: Long, category: EXPENSE_CATEGORIES ->
+                onAdd =  { description: String, value: Double, date: Long, category: INCOME_CATEGORIES ->
                     println(description + category)
                 })
         }

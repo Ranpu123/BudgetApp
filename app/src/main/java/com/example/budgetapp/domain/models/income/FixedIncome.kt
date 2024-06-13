@@ -8,13 +8,13 @@ import java.time.LocalDateTime
 class FixedIncome(
     date: LocalDateTime,
     value: Double,
-    category: FIXED_INCOME_CATEGORIES,
+    category: INCOME_CATEGORIES,
     description: String,
     active: Boolean = true,
     endDate: LocalDate? = null,
-    lastDate: LocalDate = if (date.toLocalDate().isBefore(LocalDate.now())) date.toLocalDate() else LocalDate.now()
+    lastDate: LocalDate = if (date.toLocalDate().isBefore(LocalDate.now())) date.toLocalDate() else date.toLocalDate().minusMonths(1)
 
-) : FixedTransaction<FIXED_INCOME_CATEGORIES>(
+) : FixedTransaction<INCOME_CATEGORIES>(
     date = date,
     value = value,
     category = category,

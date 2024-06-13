@@ -10,5 +10,5 @@ enum class INCOME_CATEGORIES(override val displayName: String): ICategories {
     SALARY("Salário"),
     SELL("Venda"),
     TIPS("Gorjeta"),
-    OTHERS("Outros")
+    OTHER("Outros")
 }

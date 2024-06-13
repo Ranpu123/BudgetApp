@@ -13,5 +13,10 @@ enum class EXPENSE_CATEGORIES(override val displayName: String): ICategories {
     WATER("Água"),
     GAS("Gás"),
     FUEL("Combustível"),
+    STREAMING("Streaming"),
+    INTERNET("Internet"),
+    PHONE_PLAN("Plano de celular"),
+    INSURANCE("Seguro"),
+    INSTALLMENT("Prestação"),
     OTHER("Outro")
 }

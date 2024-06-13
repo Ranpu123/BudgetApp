@@ -1,6 +1,8 @@
 package com.example.budgetapp.domain.models.transaction
 
+import android.util.Log
 import com.example.budgetapp.domain.models.ICategories
+import com.example.budgetapp.utils.validDayofMonth
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -12,7 +14,7 @@ open class FixedTransaction<T>(
     description: String,
     var active : Boolean = true,
     var endDate: LocalDate? = null,
-    var lastDate: LocalDate = if (date.toLocalDate().isBefore(LocalDate.now())) date.toLocalDate() else LocalDate.now()
+    var lastDate: LocalDate = if (date.toLocalDate().isBefore(LocalDate.now())) date.toLocalDate() else date.toLocalDate().minusMonths(1)
 
 ): Transaction<T>(
     date = date,
@@ -27,28 +29,25 @@ open class FixedTransaction<T>(
         //If due day is smaller than the current day, check if it was already payed.
         //If due day is bigger, check if the payment was made last month.
         if( (curDate.dayOfMonth >= date.dayOfMonth)
-            && lastDate.isBefore(curDate.withDayOfMonth(validDay(date.dayOfMonth, curDate))) ) {
+            && lastDate.isBefore(curDate.withDayOfMonth(validDayofMonth(date.dayOfMonth, curDate))) ) {
 
-            val res = ChronoUnit.MONTHS.between(lastDate,
-                curDate.withDayOfMonth(validDay(date.dayOfMonth, curDate)))
+            val res = ChronoUnit.MONTHS.between(lastDate.withDayOfMonth(validDayofMonth(date.dayOfMonth, curDate)),
+                curDate.withDayOfMonth(validDayofMonth(date.dayOfMonth, curDate)))
+
+
 
             return res.toInt()
 
         }else if( (curDate.dayOfMonth < date.dayOfMonth)
-            && lastDate.isBefore(lastMonth.withDayOfMonth(validDay(date.dayOfMonth, lastMonth))) ){
+            && lastDate.isBefore(lastMonth.withDayOfMonth(validDayofMonth(date.dayOfMonth, lastMonth))) ){
 
-            val res = ChronoUnit.MONTHS.between(lastDate,
-                lastMonth.withDayOfMonth(validDay(date.dayOfMonth, lastMonth)))
-
+            val res = ChronoUnit.MONTHS.between(lastDate.withDayOfMonth(validDayofMonth(date.dayOfMonth, lastMonth)),
+                lastMonth.withDayOfMonth(validDayofMonth(date.dayOfMonth, lastMonth)))
+            Log.e("ISDUE", "IM INSIDE THE THINGY " + lastMonth.withDayOfMonth(validDayofMonth(date.dayOfMonth, lastMonth)))
             return res.toInt()
 
         }else{
             return 0
         }
-    }
-
-    //Returns a valid day based on the month of a given date
-    private fun validDay(newDay: Int, date: LocalDate): Int{
-        return if(newDay > date.lengthOfMonth()) date.lengthOfMonth() else newDay
     }
 }

@@ -9,13 +9,13 @@ import java.time.LocalDateTime
 class FixedExpense(
     date: LocalDateTime,
     value: Double,
-    category: FIXED_INCOME_CATEGORIES,
+    category: EXPENSE_CATEGORIES,
     description: String,
     active : Boolean = true,
     endDate: LocalDate? = null,
-    lastDate: LocalDate = if (date.toLocalDate().isBefore(LocalDate.now())) date.toLocalDate() else LocalDate.now()
+    lastDate: LocalDate = if (date.toLocalDate().isBefore(LocalDate.now())) date.toLocalDate() else date.toLocalDate().minusMonths(1)
 
-) : FixedTransaction<FIXED_INCOME_CATEGORIES>(
+) : FixedTransaction<EXPENSE_CATEGORIES>(
     date = date,
     value = value,
     category = category,
@@ -27,4 +27,5 @@ class FixedExpense(
     init {
         require(value < 0.0){"Fixed Income requires negative value!"}
     }
+
 }

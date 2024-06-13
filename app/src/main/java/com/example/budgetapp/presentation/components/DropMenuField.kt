@@ -37,7 +37,7 @@ fun dropDownMenu(
 
     var expanded by remember { mutableStateOf(false) }
 
-    var selectedText by remember { mutableStateOf("") }
+    var selectedText by remember { mutableStateOf("Outros") }
 
     var textfieldSize by remember { mutableStateOf(Size.Zero) }
 
