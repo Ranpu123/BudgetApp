@@ -32,8 +32,7 @@ class HomeViewModel(
     private val incomeRepository: IIncomeRepository = LocalIncomeRepository,
     private val fixedExpenseRepository: IFixedExpenseRepository = LocalFixedExpenseRepository,
     private val fixedIncomeRepository: IFixedIncomeRepository = LocalFixedIncomeRepository,
-    private val validateDescription: ValidateTransactionDescription = ValidateTransactionDescription(),
-    private val validateValue: ValidateTransactionValue = ValidateTransactionValue(),
+
 
     ): ViewModel() {
 
@@ -170,16 +169,5 @@ class HomeViewModel(
         var total: Double = 0.0
         total += _expenses.sumOf { it.value }
         return total
-    }
-
-    private fun validadeForm(description: String, value: Double): Boolean {
-        val valueResult = validateValue.execute(value)
-        val descriptionResult = validateDescription.execute(description)
-
-        var hasError = listOf(
-            valueResult,
-            descriptionResult).any{!it.success}
-
-        return hasError
     }
 }

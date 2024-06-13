@@ -56,7 +56,6 @@ fun TransactionsCard(
 ){
 
     var expanded by rememberSaveable { mutableStateOf(expanded) }
-
     Surface(
         modifier = modifier
             .animateContentSize(
@@ -111,7 +110,7 @@ fun TransactionsCard(
                     Divider()
                     if(transactions.isNotEmpty()) {
                         LazyColumn(modifier = modifier.height(110.dp)) {
-                            transactions.distinctBy { it.date.toLocalDate() }.forEach {
+                            transactions.sortedByDescending { it.date }.distinctBy { it.date.toLocalDate() }.forEach {
                                 val filteredTransactions =
                                     transactions.filter { e -> e.date == it.date }
                                 stickyHeader {

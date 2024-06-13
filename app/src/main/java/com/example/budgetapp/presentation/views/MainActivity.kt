@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
 import com.example.budgetapp.domain.models.income.INCOME_CATEGORIES
 import com.example.budgetapp.domain.models.transaction.FixedTransaction
@@ -41,34 +41,63 @@ import com.example.budgetapp.presentation.components.TransactionsCard
 
 import com.example.budgetapp.presentation.components.CardSaldo
 import com.example.budgetapp.domain.models.transaction.Transaction
+import com.example.budgetapp.domain.modules.ExpenseBottomSheetModule
+import com.example.budgetapp.domain.modules.IncomeBottomSheetModule
+import com.example.budgetapp.domain.modules.homePageModule
 import com.example.budgetapp.presentation.components.AddExpenseBottomSheet
 import com.example.budgetapp.presentation.components.AddIncomeBottomSheet
 import com.example.budgetapp.presentation.components.FixedTransactionsCard
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import com.example.budgetapp.presentation.ui.theme.Green80
+import com.example.budgetapp.presentation.viewModels.ExpenseBottomSheetViewModel
 import com.example.budgetapp.presentation.viewModels.HomeViewModel
+import com.example.budgetapp.presentation.viewModels.IncomeBottomSheetViewModel
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.compose.koinViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.context.startKoin
+import org.koin.core.parameter.parametersOf
 import java.time.Instant
 import java.time.ZoneId
 
 
 class MainActivity : ComponentActivity() {
+
+    private val homeViewModel: HomeViewModel by viewModel()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        startModules()
+
         enableEdgeToEdge()
         setContent {
             BudgetAppTheme {
-                HomeView(modifier = Modifier)
+                HomeView(modifier = Modifier, homeViewModel)
             }
+        }
+    }
+
+    fun startModules(){
+        startKoin(){
+            androidLogger()
+            androidContext(this@MainActivity)
+            modules(homePageModule, ExpenseBottomSheetModule, IncomeBottomSheetModule)
         }
     }
 }
 
+
+
 @Composable
 fun HomeView(
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel = viewModel()
+    homeViewModel: HomeViewModel
 ){
     val homeUiState by homeViewModel.uiState.collectAsState()
+
 
     var isAddExpenseOpen by rememberSaveable {mutableStateOf(false)}
     var isAddIncomeOpen by rememberSaveable {mutableStateOf(false)}
@@ -197,6 +226,7 @@ fun HomeView(
             }
         }
         if(isAddExpenseOpen){
+            val expenseBottomSheetViewModel = koinViewModel<ExpenseBottomSheetViewModel>()
             AddExpenseBottomSheet(
                 modifier = modifier.fillMaxWidth(),
                 onDismiss = {
@@ -211,10 +241,14 @@ fun HomeView(
                             .atZone(ZoneId.of("UTC")).toLocalDate()
                     )
                     isAddExpenseOpen = false
-                })
+
+                },
+                bottomSheetViewModel = expenseBottomSheetViewModel
+            )
         }
 
         if(isAddIncomeOpen){
+            val incomeBottomSheetViewModel = koinViewModel<IncomeBottomSheetViewModel>()
             AddIncomeBottomSheet(
                 modifier = modifier.fillMaxWidth(),
                 onDismiss = {
@@ -229,7 +263,8 @@ fun HomeView(
                             .atZone(ZoneId.of("UTC")).toLocalDate()
                     )
                     isAddIncomeOpen = false
-                }
+                },
+                bottomSheetViewModel = incomeBottomSheetViewModel
             )
         }
 

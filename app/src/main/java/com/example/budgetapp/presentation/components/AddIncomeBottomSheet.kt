@@ -27,6 +27,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,6 +43,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.budgetapp.domain.models.income.INCOME_CATEGORIES
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
+import com.example.budgetapp.presentation.viewModels.ExpenseBottomSheetViewModel
+import com.example.budgetapp.presentation.viewModels.IncomeBottomSheetViewModel
 import com.example.budgetapp.utils.currencyToDouble
 import com.example.budgetapp.utils.formatCurrency
 import java.time.Instant
@@ -53,6 +56,7 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddIncomeBottomSheet(
+    bottomSheetViewModel: IncomeBottomSheetViewModel,
     modifier: Modifier =  Modifier,
     onDismiss: () -> Unit = {},
     onAdd: (description: String, value: Double, date: Long, category: INCOME_CATEGORIES)-> Unit){
@@ -61,6 +65,7 @@ fun AddIncomeBottomSheet(
 
     val addExpensetSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val datePickerState = rememberDatePickerState()
+    val uiState by bottomSheetViewModel.uiState.collectAsState()
 
     var isDatePickerVisible by remember {mutableStateOf(false)}
 
@@ -113,7 +118,6 @@ fun AddIncomeBottomSheet(
                         description = category.displayName
                     }
                 )
-
                 Text(
                     modifier = modifier.fillMaxWidth(),
                     text = "Descrição",
@@ -123,6 +127,7 @@ fun AddIncomeBottomSheet(
                 OutlinedTextField(
                     modifier = modifier.fillMaxWidth(),
                     value = description,
+                    isError = !uiState.descriptionError.isNullOrEmpty(),
                     onValueChange = { description = it },
                     textStyle = TextStyle(color = Color.Black),
                     trailingIcon = {
@@ -133,6 +138,14 @@ fun AddIncomeBottomSheet(
                         )
                     }
                 )
+                if (!uiState.descriptionError.isNullOrBlank()){
+                    Text(
+                        modifier = modifier.fillMaxWidth(),
+                        text = uiState.descriptionError.orEmpty(),
+                        color = Color.Red,
+                        fontSize = 13.sp,
+                    )
+                }
 
                 Text(
                     modifier = modifier.fillMaxWidth(),
@@ -170,6 +183,7 @@ fun AddIncomeBottomSheet(
                     modifier = modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     value = value,
+                    isError = !uiState.valueError.isNullOrEmpty(),
                     onValueChange = { value = formatCurrency(it) },
                     textStyle = TextStyle(color = Color.Black),
                     trailingIcon = {
@@ -180,18 +194,28 @@ fun AddIncomeBottomSheet(
                         )
                     }
                 )
+                if (!uiState.valueError.isNullOrBlank()){
+                    Text(
+                        modifier = modifier.fillMaxWidth(),
+                        text = uiState.valueError.orEmpty(),
+                        color = Color.Red,
+                        fontSize = 13.sp,
+                    )
+                }
 
                 Button(
                     modifier = modifier.fillMaxWidth().padding(vertical = 16.dp),
                     colors = ButtonDefaults.buttonColors(Color(0xFF009A33)),
                     shape = RoundedCornerShape(15.dp),
                     onClick = {
-                        onAdd(
-                            description,
-                            currencyToDouble(value),
-                            date,
-                            category
-                        )
+                        if(bottomSheetViewModel.validadeForm(description, currencyToDouble(value))){
+                            onAdd(
+                                description,
+                                currencyToDouble(value),
+                                date,
+                                category
+                            )
+                        }
                     },
                 ) {
                     Text(
@@ -228,7 +252,7 @@ fun AddIncomeBottomSheet(
         }
     }
 }
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun PreviewAddIncomeBottomSheet(){
@@ -245,4 +269,4 @@ fun PreviewAddIncomeBottomSheet(){
         }
     }
 }
-
+*/

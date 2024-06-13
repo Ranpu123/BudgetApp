@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.rounded.Close
@@ -25,8 +26,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,28 +43,34 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
+import com.example.budgetapp.presentation.viewModels.ExpenseBottomSheetViewModel
 import com.example.budgetapp.utils.currencyToDouble
 import com.example.budgetapp.utils.formatCurrency
+
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Currency
-import java.util.Locale
+
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddExpenseBottomSheet(
+    bottomSheetViewModel: ExpenseBottomSheetViewModel,
     modifier: Modifier =  Modifier,
     onDismiss: () -> Unit = {},
     onAdd: (description: String, value: Double, date: Long, category: EXPENSE_CATEGORIES)-> Unit){
 
     var category : EXPENSE_CATEGORIES = EXPENSE_CATEGORIES.OTHER
-
     val addExpensetSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val datePickerState = rememberDatePickerState()
+
+    val uiState by bottomSheetViewModel.uiState.collectAsState()
 
     var isDatePickerVisible by remember {
         mutableStateOf(false)
@@ -124,6 +133,7 @@ fun AddExpenseBottomSheet(
                 OutlinedTextField(
                     modifier = modifier.fillMaxWidth(),
                     value = description,
+                    isError = !uiState.descriptionError.isNullOrEmpty(),
                     onValueChange = { description = it },
                     textStyle = TextStyle(color = Color.Black),
                     trailingIcon = {
@@ -134,6 +144,14 @@ fun AddExpenseBottomSheet(
                         )
                     }
                 )
+                if (!uiState.descriptionError.isNullOrBlank()){
+                    Text(
+                        modifier = modifier.fillMaxWidth(),
+                        text = uiState.descriptionError.orEmpty(),
+                        color = Color.Red,
+                        fontSize = 13.sp,
+                    )
+                }
 
                 Text(
                     modifier = modifier.fillMaxWidth(),
@@ -171,6 +189,7 @@ fun AddExpenseBottomSheet(
                     modifier = modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     value = value,
+                    isError = !uiState.descriptionError.isNullOrEmpty(),
                     onValueChange = { value = formatCurrency(it) },
                     textStyle = TextStyle(color = Color.Black),
                     trailingIcon = {
@@ -181,6 +200,14 @@ fun AddExpenseBottomSheet(
                         )
                     }
                 )
+                if (!uiState.valueError.isNullOrBlank()){
+                    Text(
+                        modifier = modifier.fillMaxWidth(),
+                        text = uiState.valueError.orEmpty(),
+                        color = Color.Red,
+                        fontSize = 13.sp,
+                    )
+                }
 
                 Button(
                     modifier = modifier
@@ -189,12 +216,14 @@ fun AddExpenseBottomSheet(
                     colors = ButtonDefaults.buttonColors(Color(0xFF009A33)),
                     shape = RoundedCornerShape(15.dp),
                     onClick = {
-                        onAdd(
-                            description,
-                            currencyToDouble(value),
-                            date,
-                            category
-                        )
+                        if(bottomSheetViewModel.validadeForm(description, currencyToDouble(value))){
+                            onAdd(
+                                description,
+                                currencyToDouble(value),
+                                date,
+                                category
+                            )
+                        }
                     },
                 ) {
                     Text(
@@ -232,7 +261,7 @@ fun AddExpenseBottomSheet(
     }
 }
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun PreviewAddExpenseBottomSheet(){
     BudgetAppTheme {
@@ -247,5 +276,5 @@ fun PreviewAddExpenseBottomSheet(){
                 })
         }
     }
-}
+}*/
 
