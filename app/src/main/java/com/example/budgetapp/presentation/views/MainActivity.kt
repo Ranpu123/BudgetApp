@@ -42,21 +42,30 @@ import com.example.budgetapp.presentation.components.TransactionsCard
 import com.example.budgetapp.presentation.components.CardSaldo
 import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.domain.modules.ExpenseBottomSheetModule
+import com.example.budgetapp.domain.modules.FixedExpenseBottomSheetModule
+import com.example.budgetapp.domain.modules.FixedIncomeBottomSheetModule
 import com.example.budgetapp.domain.modules.IncomeBottomSheetModule
 import com.example.budgetapp.domain.modules.homePageModule
 import com.example.budgetapp.presentation.components.AddExpenseBottomSheet
+import com.example.budgetapp.presentation.components.AddFExpenseBottomSheet
+import com.example.budgetapp.presentation.components.AddFIncomeBottomSheet
 import com.example.budgetapp.presentation.components.AddIncomeBottomSheet
 import com.example.budgetapp.presentation.components.FixedTransactionsCard
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import com.example.budgetapp.presentation.ui.theme.Green80
 import com.example.budgetapp.presentation.viewModels.ExpenseBottomSheetViewModel
+import com.example.budgetapp.presentation.viewModels.FExpenseBottomSheetViewModel
+import com.example.budgetapp.presentation.viewModels.FIncomeBottomSheetViewModel
 import com.example.budgetapp.presentation.viewModels.HomeViewModel
 import com.example.budgetapp.presentation.viewModels.IncomeBottomSheetViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.compose.KoinContext
+import org.koin.core.context.KoinContext
 import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
 import org.koin.core.parameter.parametersOf
 import java.time.Instant
 import java.time.ZoneId
@@ -81,10 +90,17 @@ class MainActivity : ComponentActivity() {
     }
 
     fun startModules(){
+        stopKoin()
         startKoin(){
             androidLogger()
             androidContext(this@MainActivity)
-            modules(homePageModule, ExpenseBottomSheetModule, IncomeBottomSheetModule)
+            modules(
+                homePageModule,
+                ExpenseBottomSheetModule,
+                IncomeBottomSheetModule,
+                FixedExpenseBottomSheetModule,
+                FixedIncomeBottomSheetModule
+            )
         }
     }
 }
@@ -96,178 +112,203 @@ fun HomeView(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel
 ){
-    val homeUiState by homeViewModel.uiState.collectAsState()
+    KoinContext {
+        val homeUiState by homeViewModel.uiState.collectAsState()
+
+        val expenseBottomSheetViewModel = koinViewModel<ExpenseBottomSheetViewModel>()
+        val incomeBottomSheetViewModel = koinViewModel<IncomeBottomSheetViewModel>()
+        val fExpenseBottomSheetViewModel = koinViewModel<FExpenseBottomSheetViewModel>()
+        val fIncomeBottomSheetViewModel = koinViewModel<FIncomeBottomSheetViewModel>()
+
+        var isAddExpenseOpen by rememberSaveable { mutableStateOf(false) }
+        var isAddIncomeOpen by rememberSaveable { mutableStateOf(false) }
+        var isAddFixedIncomeOpen by rememberSaveable { mutableStateOf(false) }
+        var isAddFixedExpenseOpen by rememberSaveable { mutableStateOf(false) }
 
 
-    var isAddExpenseOpen by rememberSaveable {mutableStateOf(false)}
-    var isAddIncomeOpen by rememberSaveable {mutableStateOf(false)}
-    var isAddFixedIncomeOpen by rememberSaveable {mutableStateOf(false)}
-    var isAddFixedExpenseOpen by rememberSaveable {mutableStateOf(false)}
+        Surface(
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            ConstraintLayout {
+                val (
+                    card,
+                    back,
+                    text,
+                    expenses,
+                    incomes,
+                    fixedExpenses,
+                    fixedIncomes,
+                ) = createRefs()
 
+                Surface(
+                    color = Green80,
+                    modifier = modifier
+                        .height(180.dp)
+                        .fillMaxWidth()
+                        .constrainAs(back) {
+                            top.linkTo(parent.top)
+                        }
 
-    Surface(modifier  = modifier
-        .fillMaxSize()
-        .verticalScroll(rememberScrollState())
-    ) {
-        ConstraintLayout {
-            val (
-                card,
-                back,
-                text,
-                expenses,
-                incomes,
-                fixedExpenses,
-                fixedIncomes,) = createRefs()
-
-            Surface(
-                color = Green80,
-                modifier = modifier
-                    .height(180.dp)
-                    .fillMaxWidth()
-                    .constrainAs(back) {
-                        top.linkTo(parent.top)
-                    }
-
-            ) {}
-            Surface(
-                color = Color.Transparent,
-                modifier = modifier
-                    .padding(horizontal = 32.dp)
-                    .constrainAs(text) {
-                        bottom.linkTo(card.top)
-                    }
-            ) {
-                Text(
-                    text = "Olá, ${homeUiState.userName}!",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
-                )
-            }
-            Surface(
-                color = Color.Transparent,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .constrainAs(card) {
-                        top.linkTo(back.bottom, margin = -(95.dp))
-                    }
-            ) {
-                CardSaldo(
-                    totalBalance = homeUiState.balance,
-                    incomeBalance = homeUiState.incomeBalance,
-                    expenseBalance = homeUiState.expenseBalance,
-                    modifier = modifier,
-                    onReloadClicked = {homeViewModel.updateAll()}
-                )
-            }
-            Surface(
-                color = Color.Transparent,
-                modifier = modifier
-                    .padding(horizontal = 16.dp)
-                    .constrainAs(expenses) {
-                        top.linkTo(card.bottom, margin = 16.dp)
-                    }
-            ) {
-                TransactionsCard(
-                    cardName = "Gastos",
-                    transactions = homeUiState.expenses as List<Transaction<*>>,
-                    modifier = modifier,
-                    onNewTransactionClicked = { isAddExpenseOpen = true },
-                    onSeeMoreClicked = {/*TODO*/}
-                )
-            }
-            Surface(
-                color = Color.Transparent,
-                modifier = modifier
-                    .padding(horizontal = 16.dp)
-                    .constrainAs(incomes) {
-                        top.linkTo(expenses.bottom, margin = 16.dp)
-                    }
-            ) {
-                TransactionsCard(
-                    cardName = "Receitas",
-                    transactions = homeUiState.incomes as List<Transaction<*>>,
-                    modifier = modifier,
-                    expanded = false,
-                    onNewTransactionClicked = { isAddIncomeOpen = true }
-                )
-            }
-            Surface(
-                color = Color.Transparent,
-                modifier = modifier
-                    .padding(horizontal = 16.dp)
-                    .constrainAs(fixedExpenses) {
-                        top.linkTo(incomes.bottom, margin = 16.dp)
-                    }
-            ) {
-                TransactionsCard(
-                    cardName = "Gastos Fixos",
-                    transactions = homeUiState.fixedExpense as List<FixedTransaction<*>>,
-                    modifier = modifier,
-                    expanded = false,
-                    onNewTransactionClicked = { isAddFixedExpenseOpen = true }
-                )
-            }
-            Surface(
-                color = Color.Transparent,
-                modifier = modifier
-                    .padding(horizontal = 16.dp)
-                    .constrainAs(fixedIncomes) {
-                        top.linkTo(fixedExpenses.bottom, margin = 16.dp)
-                    }
-            ) {
-                FixedTransactionsCard(
-                    cardName = "Receitas Fixas",
-                    transactions = homeUiState.fixedIncome as List<FixedTransaction<*>>,
-                    modifier = modifier,
-                    expanded = false,
-                    onNewTransactionClicked = { isAddFixedIncomeOpen = true }
-                )
-            }
-        }
-        if(isAddExpenseOpen){
-            val expenseBottomSheetViewModel = koinViewModel<ExpenseBottomSheetViewModel>()
-            AddExpenseBottomSheet(
-                modifier = modifier.fillMaxWidth(),
-                onDismiss = {
-                    isAddExpenseOpen = false
-                },
-                onAdd = { description: String, value: Double, date: Long, category: EXPENSE_CATEGORIES ->
-                    homeViewModel.addNewExpense(
-                        description = description,
-                        value = value,
-                        category = category,
-                        date = Instant.ofEpochMilli(date)
-                            .atZone(ZoneId.of("UTC")).toLocalDate()
+                ) {}
+                Surface(
+                    color = Color.Transparent,
+                    modifier = modifier
+                        .padding(horizontal = 32.dp)
+                        .constrainAs(text) {
+                            bottom.linkTo(card.top)
+                        }
+                ) {
+                    Text(
+                        text = "Olá, ${homeUiState.userName}!",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
                     )
-                    isAddExpenseOpen = false
-
-                },
-                bottomSheetViewModel = expenseBottomSheetViewModel
-            )
-        }
-
-        if(isAddIncomeOpen){
-            val incomeBottomSheetViewModel = koinViewModel<IncomeBottomSheetViewModel>()
-            AddIncomeBottomSheet(
-                modifier = modifier.fillMaxWidth(),
-                onDismiss = {
-                    isAddIncomeOpen = false
-                },
-                onAdd = { description: String, value: Double, date: Long, category: INCOME_CATEGORIES ->
-                    homeViewModel.addNewIncome(
-                        description = description,
-                        value = value,
-                        category = category,
-                        date = Instant.ofEpochMilli(date)
-                            .atZone(ZoneId.of("UTC")).toLocalDate()
+                }
+                Surface(
+                    color = Color.Transparent,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .constrainAs(card) {
+                            top.linkTo(back.bottom, margin = -(95.dp))
+                        }
+                ) {
+                    CardSaldo(
+                        totalBalance = homeUiState.balance,
+                        incomeBalance = homeUiState.incomeBalance,
+                        expenseBalance = homeUiState.expenseBalance,
+                        modifier = modifier,
+                        onReloadClicked = { homeViewModel.updateAll() }
                     )
-                    isAddIncomeOpen = false
-                },
-                bottomSheetViewModel = incomeBottomSheetViewModel
-            )
-        }
+                }
+                Surface(
+                    color = Color.Transparent,
+                    modifier = modifier
+                        .padding(horizontal = 16.dp)
+                        .constrainAs(expenses) {
+                            top.linkTo(card.bottom, margin = 16.dp)
+                        }
+                ) {
+                    TransactionsCard(
+                        cardName = "Gastos",
+                        transactions = homeUiState.expenses as List<Transaction<*>>,
+                        modifier = modifier,
+                        onNewTransactionClicked = { isAddExpenseOpen = true },
+                        onSeeMoreClicked = {/*TODO*/ }
+                    )
+                }
+                Surface(
+                    color = Color.Transparent,
+                    modifier = modifier
+                        .padding(horizontal = 16.dp)
+                        .constrainAs(incomes) {
+                            top.linkTo(expenses.bottom, margin = 16.dp)
+                        }
+                ) {
+                    TransactionsCard(
+                        cardName = "Receitas",
+                        transactions = homeUiState.incomes as List<Transaction<*>>,
+                        modifier = modifier,
+                        expanded = false,
+                        onNewTransactionClicked = { isAddIncomeOpen = true }
+                    )
+                }
+                Surface(
+                    color = Color.Transparent,
+                    modifier = modifier
+                        .padding(horizontal = 16.dp)
+                        .constrainAs(fixedExpenses) {
+                            top.linkTo(incomes.bottom, margin = 16.dp)
+                        }
+                ) {
+                    FixedTransactionsCard(
+                        cardName = "Gastos Fixos",
+                        transactions = homeUiState.fixedExpense as List<FixedTransaction<*>>,
+                        modifier = modifier,
+                        expanded = false,
+                        onNewTransactionClicked = { isAddFixedExpenseOpen = true }
+                    )
+                }
+                Surface(
+                    color = Color.Transparent,
+                    modifier = modifier
+                        .padding(horizontal = 16.dp)
+                        .constrainAs(fixedIncomes) {
+                            top.linkTo(fixedExpenses.bottom, margin = 16.dp)
+                        }
+                ) {
+                    FixedTransactionsCard(
+                        cardName = "Receitas Fixas",
+                        transactions = homeUiState.fixedIncome as List<FixedTransaction<*>>,
+                        modifier = modifier,
+                        expanded = false,
+                        onNewTransactionClicked = { isAddFixedIncomeOpen = true }
+                    )
+                }
+            }
 
+            if (isAddExpenseOpen) {
+                AddExpenseBottomSheet(
+                    modifier = modifier.fillMaxWidth(),
+                    onDismiss = {
+                        isAddExpenseOpen = false
+                    },
+                    onAdd = {
+                        homeViewModel.updateAll()
+                        isAddExpenseOpen = false
+                    },
+                    bottomSheetViewModel = expenseBottomSheetViewModel,
+                )
+            }
+
+            if (isAddIncomeOpen) {
+
+                AddIncomeBottomSheet(
+                    modifier = modifier.fillMaxWidth(),
+                    onDismiss = {
+                        isAddIncomeOpen = false
+                    },
+                    onAdd = {
+                        homeViewModel.updateAll()
+                        isAddIncomeOpen = false
+                    },
+                    bottomSheetViewModel = incomeBottomSheetViewModel
+                )
+            }
+
+            if (isAddFixedExpenseOpen) {
+
+                AddFExpenseBottomSheet(
+                    modifier = modifier.fillMaxWidth(),
+                    onDismiss = {
+                        isAddFixedExpenseOpen = false
+                    },
+                    onAdd = {
+                        homeViewModel.updateAll()
+                        isAddFixedExpenseOpen = false
+                    },
+                    bottomSheetViewModel = fExpenseBottomSheetViewModel
+                )
+            }
+
+            if (isAddFixedIncomeOpen) {
+
+                AddFIncomeBottomSheet(
+                    modifier = modifier.fillMaxWidth(),
+                    onDismiss = {
+                        isAddFixedIncomeOpen = false
+                    },
+                    onAdd = {
+                        homeViewModel.updateAll()
+                        isAddFixedIncomeOpen = false
+                    },
+                    bottomSheetViewModel = fIncomeBottomSheetViewModel
+                )
+            }
+
+        }
     }
 }
 

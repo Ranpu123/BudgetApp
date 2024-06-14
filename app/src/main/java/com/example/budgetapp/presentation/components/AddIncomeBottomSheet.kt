@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.rounded.Close
@@ -59,29 +61,21 @@ fun AddIncomeBottomSheet(
     bottomSheetViewModel: IncomeBottomSheetViewModel,
     modifier: Modifier =  Modifier,
     onDismiss: () -> Unit = {},
-    onAdd: (description: String, value: Double, date: Long, category: INCOME_CATEGORIES)-> Unit){
-
-    var category : INCOME_CATEGORIES = INCOME_CATEGORIES.OTHER
+    onAdd: ()-> Unit = {}
+){
 
     val addExpensetSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val datePickerState = rememberDatePickerState()
+
+    var isDatePickerVisible by remember {
+        mutableStateOf(false)
+    }
+
     val uiState by bottomSheetViewModel.uiState.collectAsState()
-
-    var isDatePickerVisible by remember {mutableStateOf(false)}
-
-    var description by remember {
-        mutableStateOf(category.displayName)
-    }
-
-    var value by remember {
-        mutableStateOf(formatCurrency("0"))
-    }
-
-    var date by remember {
-        mutableStateOf(Instant.now().toEpochMilli())
-    }
-
-
+    var category by bottomSheetViewModel.category
+    var description by bottomSheetViewModel.description
+    var value by bottomSheetViewModel.value
+    var date by bottomSheetViewModel.date
 
     LaunchedEffect(key1 = Unit) {
         addExpensetSheetState.expand()
@@ -90,7 +84,10 @@ fun AddIncomeBottomSheet(
     if(addExpensetSheetState.isVisible) {
         ModalBottomSheet(
             sheetState = addExpensetSheetState,
-            onDismissRequest = { onDismiss() },
+            onDismissRequest = {
+                onDismiss()
+                bottomSheetViewModel.clearState()
+            },
         ) {
             Text(
                 modifier = modifier.fillMaxWidth(),
@@ -103,6 +100,7 @@ fun AddIncomeBottomSheet(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
 
                 Text(
@@ -112,11 +110,12 @@ fun AddIncomeBottomSheet(
                     fontSize = 13.sp
                 )
                 dropDownMenu(
-                    suggestions = INCOME_CATEGORIES.entries.toList().sortedBy { it.displayName},
+                    suggestions = INCOME_CATEGORIES.entries.toList().sortedBy { it.displayName },
                     onChoice = {
                         category = it as INCOME_CATEGORIES
                         description = category.displayName
-                    }
+                    },
+                    defaultSelected = category.displayName
                 )
                 Text(
                     modifier = modifier.fillMaxWidth(),
@@ -204,17 +203,23 @@ fun AddIncomeBottomSheet(
                 }
 
                 Button(
-                    modifier = modifier.fillMaxWidth().padding(vertical = 16.dp),
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
                     colors = ButtonDefaults.buttonColors(Color(0xFF009A33)),
                     shape = RoundedCornerShape(15.dp),
                     onClick = {
                         if(bottomSheetViewModel.validadeForm(description, currencyToDouble(value))){
-                            onAdd(
-                                description,
-                                currencyToDouble(value),
-                                date,
-                                category
+                            bottomSheetViewModel.addNewTransaction(
+                                description = description,
+                                value = currencyToDouble(value),
+                                category = category,
+                                date = Instant.ofEpochMilli(date)
+                                    .atZone(ZoneId.of("UTC"))
+                                    .toLocalDate(),
                             )
+                            onAdd()
+                            bottomSheetViewModel.clearState()
                         }
                     },
                 ) {

@@ -101,25 +101,40 @@ fun FixedTransactionsCard(
                     modifier = modifier.clickable { expanded = !expanded }
                 )
             }
-            if (expanded && transactions.isNotEmpty()) {
+            if (expanded) {
                 Column(
                     modifier = modifier
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Divider()
-                    LazyColumn(modifier = modifier.height(110.dp)) {
-                        item { TransactionDateHeader(date = null, transactions.sumOf { it.value }) }
-                        items(transactions.sortedBy { it.date }) { transaction ->
-                            ItemTransactionsCard(transaction = transaction)
-                            Divider()
+                    if(transactions.isNotEmpty()) {
+                        LazyColumn(modifier = modifier.height(110.dp)) {
+                            item {
+                                TransactionDateHeader(
+                                    date = null,
+                                    transactions.sumOf { it.value })
+                            }
+                            items(transactions.sortedBy { it.date }) { transaction ->
+                                ItemTransactionsCard(transaction = transaction)
+                                Divider()
+                            }
                         }
+                    }else{
+                        Text(
+                            modifier = modifier.clickable { onSeeMoreClicked() },
+                            text = "Nada encontrado, tente adicionar um novo.",
+                            color = Color.Gray,
+                            textAlign = TextAlign.Center)
+                        Divider()
                     }
+
                     Text(
                         modifier = modifier.clickable { onSeeMoreClicked() },
                         text = "Ver mais",
                         color = Color(0xFF0077CD),
-                        textAlign = TextAlign.Center)
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }

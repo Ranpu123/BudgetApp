@@ -32,12 +32,13 @@ import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 @Composable
 fun dropDownMenu(
     suggestions: List<ICategories> = emptyList<ICategories>(),
-    onChoice: (it:ICategories) -> Unit = {}
+    onChoice: (it:ICategories) -> Unit = {},
+    defaultSelected: String = "Select an Option"
 ) {
 
     var expanded by remember { mutableStateOf(false) }
 
-    var selectedText by remember { mutableStateOf("Outros") }
+    var selectedText by remember { mutableStateOf(defaultSelected) }
 
     var textfieldSize by remember { mutableStateOf(Size.Zero) }
 
@@ -99,6 +100,6 @@ fun dropDownMenu(
 @Composable
 fun dropDownMenuPreview(){
     BudgetAppTheme {
-        dropDownMenu()
+        dropDownMenu(defaultSelected = "LMAO")
     }
 }

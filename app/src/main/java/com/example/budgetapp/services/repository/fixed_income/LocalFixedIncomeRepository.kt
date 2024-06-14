@@ -11,7 +11,7 @@ object LocalFixedIncomeRepository: IFixedIncomeRepository {
 
     private val fixedIncomes: MutableList<FixedIncome> = mutableListOf(
         FixedIncome(
-            date = LocalDateTime.parse("2024-07-03T10:00:00"),
+            date = LocalDateTime.parse("2024-06-03T10:00:00"),
             value = 1415.00,
             category = INCOME_CATEGORIES.SALARY,
             description = "Salário",

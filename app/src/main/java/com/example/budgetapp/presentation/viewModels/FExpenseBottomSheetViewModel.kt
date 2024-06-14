@@ -1,15 +1,12 @@
 package com.example.budgetapp.presentation.viewModels
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
 import com.example.budgetapp.domain.models.expense.Expense
-import com.example.budgetapp.domain.models.income.INCOME_CATEGORIES
-import com.example.budgetapp.domain.models.income.Income
+import com.example.budgetapp.domain.models.expense.FixedExpense
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
+import com.example.budgetapp.domain.repository_interfaces.IFixedExpenseRepository
 import com.example.budgetapp.domain.use_cases.ValidateTransactionDescription
 import com.example.budgetapp.domain.use_cases.ValidateTransactionValue
 import com.example.budgetapp.utils.formatCurrency
@@ -20,11 +17,11 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 
-class ExpenseBottomSheetViewModel(
-    private val repository: IExpenseRepository,
+class FExpenseBottomSheetViewModel(
+    private val repository: IFixedExpenseRepository,
     private val validateDescription: ValidateTransactionDescription = ValidateTransactionDescription(),
     private val validateValue: ValidateTransactionValue = ValidateTransactionValue(),
-    private val transaction: Expense? = null,
+    private val transaction: FixedExpense? = null,
 ): ViewModel() {
 
     private var _uiState = MutableStateFlow(TransactionBottomSheetUIState())
@@ -34,22 +31,6 @@ class ExpenseBottomSheetViewModel(
     var description = mutableStateOf(EXPENSE_CATEGORIES.OTHER.displayName)
     var value = mutableStateOf(formatCurrency("0"))
     var date = mutableStateOf(Instant.now().toEpochMilli())
-
-    fun addNewTransaction(
-        date: LocalDate,
-        value: Double,
-        category: EXPENSE_CATEGORIES,
-        description: String,
-    ){
-        repository.addExpense(
-            Expense(
-                date = date.atTime(LocalTime.now()),
-                value = if(value > 0.0) -value else value,
-                category = category,
-                description = description
-            )
-        )
-    }
 
     fun validadeForm(description: String, value: Double): Boolean{
         val valueResult = validateValue.execute(value)
@@ -68,6 +49,20 @@ class ExpenseBottomSheetViewModel(
         return true
     }
 
+    fun addNewTransaction(
+        date: LocalDate,
+        value: Double,
+        category: EXPENSE_CATEGORIES,
+        description: String,
+    ){
+        repository.addFixedExpense(FixedExpense(
+            date = date.atTime(LocalTime.now()),
+            value = if(value > 0.0) -value else value,
+            category = category,
+            description = description
+        ))
+    }
+
     fun clearState(){
         _uiState.value = TransactionBottomSheetUIState()
         description.value = EXPENSE_CATEGORIES.OTHER.displayName
@@ -75,5 +70,4 @@ class ExpenseBottomSheetViewModel(
         date.value = Instant.now().toEpochMilli()
         category.value = EXPENSE_CATEGORIES.OTHER
     }
-
 }

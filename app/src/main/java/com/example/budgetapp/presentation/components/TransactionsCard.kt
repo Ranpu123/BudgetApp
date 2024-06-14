@@ -112,7 +112,7 @@ fun TransactionsCard(
                         LazyColumn(modifier = modifier.height(110.dp)) {
                             transactions.sortedByDescending { it.date }.distinctBy { it.date.toLocalDate() }.forEach {
                                 val filteredTransactions =
-                                    transactions.filter { e -> e.date == it.date }
+                                    transactions.filter { e -> e.date.toLocalDate().isEqual(it.date.toLocalDate()) }
                                 stickyHeader {
                                     TransactionDateHeader(
                                         date = it.date.toLocalDate(),

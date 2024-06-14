@@ -22,7 +22,7 @@ object LocalIncomeRepository: IIncomeRepository {
         ),
         Income(
             date = LocalDateTime.parse("2024-05-31T08:30:00"),
-            value = 1415.00,
+            value = 1300.00,
             category = INCOME_CATEGORIES.SELL,
             description = "Venda Computador"
         ),

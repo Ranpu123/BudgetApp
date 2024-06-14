@@ -32,7 +32,8 @@ fun formatCurrency(it: Double): String {
     try {
 
         val parsed: BigDecimal = BigDecimal(it)
-            .setScale(2, RoundingMode.FLOOR)
+            .setScale(2, RoundingMode.DOWN)
+
 
         val result: String = NumberFormat.getCurrencyInstance(Locale.getDefault())
             .format(parsed)

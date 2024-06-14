@@ -133,6 +133,7 @@ class HomeViewModel(
             description = description
         ))
         fetchData()
+        Log.e("LISTA", _expenses.toString())
         updateHomeState()
     }
 
