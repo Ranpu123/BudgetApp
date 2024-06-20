@@ -113,7 +113,7 @@ fun FixedTransactionsCard(
                             item {
                                 TransactionDateHeader(
                                     date = null,
-                                    transactions.sumOf { it.value })
+                                    total = transactions.sumOf { it.value })
                             }
                             items(transactions.sortedBy { it.date }) { transaction ->
                                 ItemTransactionsCard(transaction = transaction)
