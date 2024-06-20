@@ -2,6 +2,7 @@ package com.example.budgetapp.presentation.viewModels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.budgetapp.domain.models.ICategories
 import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
 import com.example.budgetapp.domain.models.expense.Expense
 import com.example.budgetapp.domain.models.expense.FixedExpense
@@ -9,6 +10,7 @@ import com.example.budgetapp.domain.models.income.FixedIncome
 import com.example.budgetapp.domain.models.income.INCOME_CATEGORIES
 import com.example.budgetapp.domain.models.income.Income
 import com.example.budgetapp.domain.models.transaction.FixedTransaction
+import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
@@ -120,6 +122,13 @@ class HomeViewModel(
         }
     }
 
+
+    fun <T>removeTransaction(transaction: Transaction<T>)where T: Enum<T>, T: ICategories{
+        when(transaction){
+            is Income -> incomeRepository.removeIncome(transaction)
+            is Expense -> expenseRepository.removeExpense(transaction)
+        }
+    }
     fun addNewExpense(
         date: LocalDate,
         value: Double,

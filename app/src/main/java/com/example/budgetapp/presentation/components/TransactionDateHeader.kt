@@ -17,7 +17,12 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun TransactionDateHeader(date: LocalDate?, total: Double, modifier: Modifier = Modifier){
+fun TransactionDateHeader(
+    total: Double,
+    date: LocalDate? = null,
+    title: String = "",
+    modifier: Modifier = Modifier
+){
     Surface(modifier = modifier.fillMaxWidth()) {
         ConstraintLayout(
             modifier = modifier
@@ -47,18 +52,24 @@ fun TransactionDateHeader(date: LocalDate?, total: Double, modifier: Modifier = 
                 fontSize = 12.sp,
                 text = formatCurrency(total)
             )
-            if(date != null) {
-                Text(
-                    modifier = modifier
-                        .constrainAs(data) { centerTo(parent) },
-                    color = Color.Black,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 12.sp,
-                    text = if (date.isEqual(LocalDate.now())) "Hoje"
-                    else date.format(DateTimeFormatter.ofPattern("dd, MMM yyyy")).toString()
-                )
-            }
+
+            Text(
+                modifier = modifier
+                    .constrainAs(data) { centerTo(parent) },
+                color = Color.Black,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 12.sp,
+                text = if(date != null) toFormattedDate(date) else title
+            )
         }
     }
     Divider(color = Color.Black)
+}
+
+private fun toFormattedDate(date: LocalDate): String{
+    if (date.isEqual(LocalDate.now())) {
+        return "Hoje"
+    }else {
+        return date.format(DateTimeFormatter.ofPattern("dd, MMM yyyy")).toString()
+    }
 }

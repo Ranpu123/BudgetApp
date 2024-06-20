@@ -119,7 +119,9 @@ fun TransactionsCard(
                                         total = filteredTransactions.sumOf { it.value })
                                 }
                                 items(filteredTransactions.sortedBy { it.date }) { transaction ->
-                                    ItemTransactionsCard(transaction = transaction)
+                                    ItemTransactionsCard(
+                                        transaction = transaction,
+                                    )
                                     Divider()
                                 }
                             }
