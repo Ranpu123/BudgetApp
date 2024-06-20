@@ -2,19 +2,17 @@ package com.example.budgetapp.presentation.viewModels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
+import com.example.budgetapp.domain.models.expense.ExpenseCategory
 import com.example.budgetapp.domain.models.expense.Expense
 import com.example.budgetapp.domain.models.expense.FixedExpense
 import com.example.budgetapp.domain.models.income.FixedIncome
-import com.example.budgetapp.domain.models.income.INCOME_CATEGORIES
+import com.example.budgetapp.domain.models.income.IncomeCategory
 import com.example.budgetapp.domain.models.income.Income
 import com.example.budgetapp.domain.models.transaction.FixedTransaction
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
 import com.example.budgetapp.domain.repository_interfaces.IIncomeRepository
-import com.example.budgetapp.domain.use_cases.ValidateTransactionDescription
-import com.example.budgetapp.domain.use_cases.ValidateTransactionValue
 import com.example.budgetapp.services.repository.expense.LocalExpenseRepository
 import com.example.budgetapp.services.repository.fixed_expense.LocalFixedExpenseRepository
 import com.example.budgetapp.services.repository.fixed_income.LocalFixedIncomeRepository
@@ -24,7 +22,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 
 class HomeViewModel(
@@ -118,39 +115,6 @@ class HomeViewModel(
                 }
             }
         }
-    }
-
-    fun addNewExpense(
-        date: LocalDate,
-        value: Double,
-        category: EXPENSE_CATEGORIES,
-        description: String,
-    ){
-        expenseRepository.addExpense(Expense(
-            date = date.atTime(LocalTime.now()),
-            value = if(value > 0.0) -value else value,
-            category = category,
-            description = description
-        ))
-        fetchData()
-        Log.e("LISTA", _expenses.toString())
-        updateHomeState()
-    }
-
-    fun addNewIncome(
-        date: LocalDate,
-        value: Double,
-        category: INCOME_CATEGORIES,
-        description: String,
-    ){
-        incomeRepository.addIncome(Income(
-            date = date.atTime(LocalTime.now()),
-            value = if(value < 0.0) +value else value,
-            category = category,
-            description = description
-        ))
-        fetchData()
-        updateHomeState()
     }
 
     private fun getTotalBalance(): Double {

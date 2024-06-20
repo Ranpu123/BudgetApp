@@ -2,12 +2,8 @@
 
 package com.example.budgetapp.presentation.components
 
-import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -27,13 +23,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -46,12 +40,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
-import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
+import com.example.budgetapp.domain.models.expense.ExpenseCategory
 import com.example.budgetapp.presentation.viewModels.ExpenseBottomSheetViewModel
 import com.example.budgetapp.utils.currencyToDouble
 import com.example.budgetapp.utils.formatCurrency
@@ -59,9 +51,6 @@ import com.example.budgetapp.utils.formatCurrency
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-
-import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -121,9 +110,9 @@ fun AddExpenseBottomSheet(
                 )
                 dropDownMenu(
                     defaultSelected = category.displayName,
-                    suggestions = EXPENSE_CATEGORIES.entries.toList().sortedBy { it.displayName },
+                    suggestions = ExpenseCategory.entries.toList().sortedBy { it.displayName },
                     onChoice = {
-                        category = it as EXPENSE_CATEGORIES
+                        category = it as ExpenseCategory
                         description = category.displayName
                     }
                 )
@@ -266,21 +255,4 @@ fun AddExpenseBottomSheet(
         }
     }
 }
-
-/*@Preview(showBackground = true)
-@Composable
-fun PreviewAddExpenseBottomSheet(){
-    BudgetAppTheme {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            var open by remember {
-                mutableStateOf(false)
-            }
-            AddExpenseBottomSheet(
-                onDismiss = {open = false},
-                onAdd =  { description: String, value: Double, date: Long, category: EXPENSE_CATEGORIES ->
-                    println(description + category)
-                })
-        }
-    }
-}*/
 

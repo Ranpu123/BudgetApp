@@ -1,14 +1,9 @@
 package com.example.budgetapp.presentation.viewModels
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
+import com.example.budgetapp.domain.models.expense.ExpenseCategory
 import com.example.budgetapp.domain.models.expense.Expense
-import com.example.budgetapp.domain.models.income.INCOME_CATEGORIES
-import com.example.budgetapp.domain.models.income.Income
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.use_cases.ValidateTransactionDescription
 import com.example.budgetapp.domain.use_cases.ValidateTransactionValue
@@ -30,15 +25,15 @@ class ExpenseBottomSheetViewModel(
     private var _uiState = MutableStateFlow(TransactionBottomSheetUIState())
     val uiState: StateFlow<TransactionBottomSheetUIState> = _uiState.asStateFlow()
 
-    var category = mutableStateOf( EXPENSE_CATEGORIES.OTHER)
-    var description = mutableStateOf(EXPENSE_CATEGORIES.OTHER.displayName)
+    var category = mutableStateOf( ExpenseCategory.OTHER)
+    var description = mutableStateOf(ExpenseCategory.OTHER.displayName)
     var value = mutableStateOf(formatCurrency("0"))
     var date = mutableStateOf(Instant.now().toEpochMilli())
 
     fun addNewTransaction(
         date: LocalDate,
         value: Double,
-        category: EXPENSE_CATEGORIES,
+        category: ExpenseCategory,
         description: String,
     ){
         repository.addExpense(
@@ -70,10 +65,10 @@ class ExpenseBottomSheetViewModel(
 
     fun clearState(){
         _uiState.value = TransactionBottomSheetUIState()
-        description.value = EXPENSE_CATEGORIES.OTHER.displayName
+        description.value = ExpenseCategory.OTHER.displayName
         value.value = formatCurrency("0")
         date.value = Instant.now().toEpochMilli()
-        category.value = EXPENSE_CATEGORIES.OTHER
+        category.value = ExpenseCategory.OTHER
     }
 
 }

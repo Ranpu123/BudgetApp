@@ -15,13 +15,6 @@ import com.example.budgetapp.utils.formatCurrency
 
 @Composable
 fun ItemTransactionsCard(transaction: Transaction<*>, modifier: Modifier = Modifier){
-    /*var nTransaction: Transaction<*>
-
-    when(transaction){
-        is Expense -> nTransaction = transaction
-        is Income -> nTransaction = transaction
-        else -> throw IllegalArgumentException("Unsupported Transaction Type")
-    }*/
 
     ConstraintLayout(
         modifier = modifier

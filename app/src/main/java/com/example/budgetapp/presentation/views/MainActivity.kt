@@ -33,9 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
-import com.example.budgetapp.domain.models.income.INCOME_CATEGORIES
 import com.example.budgetapp.domain.models.transaction.FixedTransaction
 import com.example.budgetapp.presentation.components.TransactionsCard
 
@@ -63,18 +60,13 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.compose.KoinContext
-import org.koin.core.context.KoinContext
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
-import org.koin.core.parameter.parametersOf
-import java.time.Instant
-import java.time.ZoneId
 
 
 class MainActivity : ComponentActivity() {
 
     private val homeViewModel: HomeViewModel by viewModel()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -311,15 +303,6 @@ fun HomeView(
         }
     }
 }
-
-/*
-@Preview(showBackground = true)
-@Composable
-fun HomePreview(){
-    BudgetAppTheme {
-        HomeView()
-    }
-}*/
 
 
 

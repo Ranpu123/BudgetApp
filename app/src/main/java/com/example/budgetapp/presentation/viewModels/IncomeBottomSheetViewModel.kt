@@ -2,12 +2,8 @@ package com.example.budgetapp.presentation.viewModels
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
-import com.example.budgetapp.domain.models.expense.Expense
-import com.example.budgetapp.domain.models.income.FixedIncome
-import com.example.budgetapp.domain.models.income.INCOME_CATEGORIES
+import com.example.budgetapp.domain.models.income.IncomeCategory
 import com.example.budgetapp.domain.models.income.Income
-import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IIncomeRepository
 import com.example.budgetapp.domain.use_cases.ValidateTransactionDescription
 import com.example.budgetapp.domain.use_cases.ValidateTransactionValue
@@ -29,15 +25,15 @@ class IncomeBottomSheetViewModel(
     private var _uiState = MutableStateFlow(TransactionBottomSheetUIState())
     val uiState: StateFlow<TransactionBottomSheetUIState> = _uiState.asStateFlow()
 
-    var category = mutableStateOf( INCOME_CATEGORIES.OTHER)
-    var description = mutableStateOf(INCOME_CATEGORIES.OTHER.displayName)
+    var category = mutableStateOf( IncomeCategory.OTHER)
+    var description = mutableStateOf(IncomeCategory.OTHER.displayName)
     var value = mutableStateOf(formatCurrency("0"))
     var date = mutableStateOf(Instant.now().toEpochMilli())
 
     fun addNewTransaction(
         date: LocalDate,
         value: Double,
-        category: INCOME_CATEGORIES,
+        category: IncomeCategory,
         description: String,
     ){
         repository.addIncome(
@@ -69,9 +65,9 @@ class IncomeBottomSheetViewModel(
 
     fun clearState(){
         _uiState.value = TransactionBottomSheetUIState()
-        description.value = INCOME_CATEGORIES.OTHER.displayName
+        description.value = IncomeCategory.OTHER.displayName
         value.value = formatCurrency("0")
         date.value = Instant.now().toEpochMilli()
-        category.value = INCOME_CATEGORIES.OTHER
+        category.value = IncomeCategory.OTHER
     }
 }

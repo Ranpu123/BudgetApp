@@ -2,10 +2,8 @@ package com.example.budgetapp.presentation.viewModels
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
-import com.example.budgetapp.domain.models.expense.Expense
+import com.example.budgetapp.domain.models.expense.ExpenseCategory
 import com.example.budgetapp.domain.models.expense.FixedExpense
-import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedExpenseRepository
 import com.example.budgetapp.domain.use_cases.ValidateTransactionDescription
 import com.example.budgetapp.domain.use_cases.ValidateTransactionValue
@@ -27,8 +25,8 @@ class FExpenseBottomSheetViewModel(
     private var _uiState = MutableStateFlow(TransactionBottomSheetUIState())
     val uiState: StateFlow<TransactionBottomSheetUIState> = _uiState.asStateFlow()
 
-    var category = mutableStateOf( EXPENSE_CATEGORIES.OTHER)
-    var description = mutableStateOf(EXPENSE_CATEGORIES.OTHER.displayName)
+    var category = mutableStateOf( ExpenseCategory.OTHER)
+    var description = mutableStateOf(ExpenseCategory.OTHER.displayName)
     var value = mutableStateOf(formatCurrency("0"))
     var date = mutableStateOf(Instant.now().toEpochMilli())
 
@@ -52,7 +50,7 @@ class FExpenseBottomSheetViewModel(
     fun addNewTransaction(
         date: LocalDate,
         value: Double,
-        category: EXPENSE_CATEGORIES,
+        category: ExpenseCategory,
         description: String,
     ){
         repository.addFixedExpense(FixedExpense(
@@ -65,9 +63,9 @@ class FExpenseBottomSheetViewModel(
 
     fun clearState(){
         _uiState.value = TransactionBottomSheetUIState()
-        description.value = EXPENSE_CATEGORIES.OTHER.displayName
+        description.value = ExpenseCategory.OTHER.displayName
         value.value = formatCurrency("0")
         date.value = Instant.now().toEpochMilli()
-        category.value = EXPENSE_CATEGORIES.OTHER
+        category.value = ExpenseCategory.OTHER
     }
 }

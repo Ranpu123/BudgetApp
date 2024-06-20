@@ -15,17 +15,21 @@ open class FixedTransaction<T>(
     var active : Boolean = true,
     var endDate: LocalDate? = null,
     var lastDate: LocalDate = if (date.toLocalDate().isBefore(LocalDate.now())) date.toLocalDate() else date.toLocalDate().minusMonths(1)
-
 ): Transaction<T>(
     date = date,
     value = value,
     category = category,
     description = description,
 ) where T: Enum<T>,T: ICategories {
+
+    private fun findCorrectDate(date: LocalDate): LocalDate{
+        return if (date.isBefore(LocalDate.now())) date else date.minusMonths(1)
+    }
     fun isDue() : Int{
 
         val curDate = LocalDate.now()
         val lastMonth = curDate.minusMonths(1)
+
         //If due day is smaller than the current day, check if it was already payed.
         //If due day is bigger, check if the payment was made last month.
         if( (curDate.dayOfMonth >= date.dayOfMonth)
@@ -33,8 +37,6 @@ open class FixedTransaction<T>(
 
             val res = ChronoUnit.MONTHS.between(lastDate.withDayOfMonth(validDayofMonth(date.dayOfMonth, curDate)),
                 curDate.withDayOfMonth(validDayofMonth(date.dayOfMonth, curDate)))
-
-
 
             return res.toInt()
 

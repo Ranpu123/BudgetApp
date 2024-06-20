@@ -2,7 +2,7 @@ package com.example.budgetapp.domain.models.expense
 
 import com.example.budgetapp.domain.models.ICategories
 
-enum class EXPENSE_CATEGORIES(override val displayName: String): ICategories {
+enum class ExpenseCategory(override val displayName: String): ICategories {
     FOOD("Alimentação"),
     GROCERY("Mercado"),
     HEALTH("Saúde"),

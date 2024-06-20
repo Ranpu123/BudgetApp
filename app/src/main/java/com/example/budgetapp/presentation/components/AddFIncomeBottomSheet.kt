@@ -38,9 +38,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.budgetapp.domain.models.expense.EXPENSE_CATEGORIES
-import com.example.budgetapp.domain.models.income.INCOME_CATEGORIES
-import com.example.budgetapp.presentation.viewModels.FExpenseBottomSheetViewModel
+import com.example.budgetapp.domain.models.income.IncomeCategory
 import com.example.budgetapp.presentation.viewModels.FIncomeBottomSheetViewModel
 import com.example.budgetapp.utils.currencyToDouble
 import com.example.budgetapp.utils.formatCurrency
@@ -105,9 +103,9 @@ fun AddFIncomeBottomSheet(
                 )
                 dropDownMenu(
                     defaultSelected = category.displayName,
-                    suggestions = INCOME_CATEGORIES.entries.toList().sortedBy { it.displayName },
+                    suggestions = IncomeCategory.entries.toList().sortedBy { it.displayName },
                     onChoice = {
-                        category = it as INCOME_CATEGORIES
+                        category = it as IncomeCategory
                         description = category.displayName
                     }
                 )

@@ -1,6 +1,5 @@
 package com.example.budgetapp.domain.models.income
 
-import com.example.budgetapp.domain.models.ICategories
 import com.example.budgetapp.domain.models.transaction.FixedTransaction
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -8,13 +7,13 @@ import java.time.LocalDateTime
 class FixedIncome(
     date: LocalDateTime,
     value: Double,
-    category: INCOME_CATEGORIES,
+    category: IncomeCategory,
     description: String,
     active: Boolean = true,
     endDate: LocalDate? = null,
     lastDate: LocalDate = if (date.toLocalDate().isBefore(LocalDate.now())) date.toLocalDate() else date.toLocalDate().minusMonths(1)
 
-) : FixedTransaction<INCOME_CATEGORIES>(
+) : FixedTransaction<IncomeCategory>(
     date = date,
     value = value,
     category = category,
