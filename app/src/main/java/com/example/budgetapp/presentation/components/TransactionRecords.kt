@@ -115,10 +115,10 @@ fun RecordCard(
                 GenericDropDownMenu(
                     modifier = Modifier
                         .width(with(LocalDensity.current) { dropDownSize.width.toDp() / 3 }),
-                    options = listOf("Tudo", "Categoria"),
-                    defaultSelected = "Tudo",
+                    options = listOf("Mês", "Categoria"),
+                    defaultSelected = "Mês",
                     onChoice = {
-                        if(it == "Tudo"){
+                        if(it == "Mês"){
                             filterBy = true
                             filters = transactions.sortedByDescending { it.date }.distinctBy { it.date.toLocalDate() }
                         }else{
