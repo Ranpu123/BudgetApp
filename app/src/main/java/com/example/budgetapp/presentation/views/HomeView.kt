@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHostController
 import com.example.budgetapp.domain.models.transaction.FixedTransaction
 import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.presentation.components.AddExpenseBottomSheet
@@ -28,24 +30,26 @@ import com.example.budgetapp.presentation.components.AddFIncomeBottomSheet
 import com.example.budgetapp.presentation.components.AddIncomeBottomSheet
 import com.example.budgetapp.presentation.components.CardSaldo
 import com.example.budgetapp.presentation.components.FixedTransactionsCard
-import com.example.budgetapp.presentation.components.RecordCard
 import com.example.budgetapp.presentation.components.TransactionsCard
+import com.example.budgetapp.presentation.graphs.Graph
 import com.example.budgetapp.presentation.ui.theme.Green80
-import com.example.budgetapp.presentation.viewModels.ExpenseBottomSheetViewModel
-import com.example.budgetapp.presentation.viewModels.FExpenseBottomSheetViewModel
-import com.example.budgetapp.presentation.viewModels.FIncomeBottomSheetViewModel
-import com.example.budgetapp.presentation.viewModels.HomeViewModel
-import com.example.budgetapp.presentation.viewModels.IncomeBottomSheetViewModel
+import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.ExpenseBottomSheetViewModel
+import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.FExpenseBottomSheetViewModel
+import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.FIncomeBottomSheetViewModel
+import com.example.budgetapp.presentation.viewModels.home.HomeViewModel
+import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.IncomeBottomSheetViewModel
+import com.example.budgetapp.presentation.views.records.BottomBarScreen
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinContext
 
 @Composable
 fun HomeView(
+    navController: NavHostController,
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel
+    viewModel: HomeViewModel
 ){
     KoinContext {
-        val homeUiState by homeViewModel.uiState.collectAsState()
+        val homeUiState by viewModel.uiState.collectAsState()
 
         val expenseBottomSheetViewModel = koinViewModel<ExpenseBottomSheetViewModel>()
         val incomeBottomSheetViewModel = koinViewModel<IncomeBottomSheetViewModel>()
@@ -57,6 +61,9 @@ fun HomeView(
         var isAddFixedIncomeOpen by rememberSaveable { mutableStateOf(false) }
         var isAddFixedExpenseOpen by rememberSaveable { mutableStateOf(false) }
 
+        LaunchedEffect(key1 = Unit) {
+            viewModel.updateAll()
+        }
 
         Surface(
             modifier = modifier
@@ -82,7 +89,6 @@ fun HomeView(
                         .constrainAs(back) {
                             top.linkTo(parent.top)
                         }
-
                 ) {}
                 Surface(
                     color = Color.Transparent,
@@ -112,7 +118,7 @@ fun HomeView(
                         incomeBalance = homeUiState.incomeBalance,
                         expenseBalance = homeUiState.expenseBalance,
                         modifier = modifier,
-                        onReloadClicked = { homeViewModel.updateAll() }
+                        onReloadClicked = { viewModel.updateAll() }
                     )
                 }
                 Surface(
@@ -128,7 +134,7 @@ fun HomeView(
                         transactions = homeUiState.expenses as List<Transaction<*>>,
                         modifier = modifier,
                         onNewTransactionClicked = { isAddExpenseOpen = true },
-                        onSeeMoreClicked = {/*TODO*/ }
+                        onSeeMoreClicked = {navController.navigate(Graph.RECORDS + "?page=${BottomBarScreen.Expenses.route}")}
                     )
                 }
                 Surface(
@@ -144,7 +150,8 @@ fun HomeView(
                         transactions = homeUiState.incomes as List<Transaction<*>>,
                         modifier = modifier,
                         expanded = false,
-                        onNewTransactionClicked = { isAddIncomeOpen = true }
+                        onNewTransactionClicked = { isAddIncomeOpen = true },
+                        onSeeMoreClicked = { navController.navigate(Graph.RECORDS + "?page=${BottomBarScreen.Incomes.route}") }
                     )
                 }
                 Surface(
@@ -160,7 +167,8 @@ fun HomeView(
                         transactions = homeUiState.fixedExpense as List<FixedTransaction<*>>,
                         modifier = modifier,
                         expanded = false,
-                        onNewTransactionClicked = { isAddFixedExpenseOpen = true }
+                        onNewTransactionClicked = { isAddFixedExpenseOpen = true },
+                        onSeeMoreClicked = { navController.navigate(Graph.RECORDS + "?page=${BottomBarScreen.Expenses.route}&fixed=${true}") }
                     )
                 }
                 Surface(
@@ -176,7 +184,8 @@ fun HomeView(
                         transactions = homeUiState.fixedIncome as List<FixedTransaction<*>>,
                         modifier = modifier,
                         expanded = false,
-                        onNewTransactionClicked = { isAddFixedIncomeOpen = true }
+                        onNewTransactionClicked = { isAddFixedIncomeOpen = true },
+                        onSeeMoreClicked = { navController.navigate(Graph.RECORDS + "?page=${BottomBarScreen.Incomes.route}&fixed=${true}") }
                     )
                 }
             }
@@ -188,7 +197,7 @@ fun HomeView(
                         isAddExpenseOpen = false
                     },
                     onAdd = {
-                        homeViewModel.updateAll()
+                        viewModel.updateAll()
                         isAddExpenseOpen = false
                     },
                     bottomSheetViewModel = expenseBottomSheetViewModel,
@@ -203,7 +212,7 @@ fun HomeView(
                         isAddIncomeOpen = false
                     },
                     onAdd = {
-                        homeViewModel.updateAll()
+                        viewModel.updateAll()
                         isAddIncomeOpen = false
                     },
                     bottomSheetViewModel = incomeBottomSheetViewModel
@@ -218,7 +227,7 @@ fun HomeView(
                         isAddFixedExpenseOpen = false
                     },
                     onAdd = {
-                        homeViewModel.updateAll()
+                        viewModel.updateAll()
                         isAddFixedExpenseOpen = false
                     },
                     bottomSheetViewModel = fExpenseBottomSheetViewModel
@@ -233,7 +242,7 @@ fun HomeView(
                         isAddFixedIncomeOpen = false
                     },
                     onAdd = {
-                        homeViewModel.updateAll()
+                        viewModel.updateAll()
                         isAddFixedIncomeOpen = false
                     },
                     bottomSheetViewModel = fIncomeBottomSheetViewModel

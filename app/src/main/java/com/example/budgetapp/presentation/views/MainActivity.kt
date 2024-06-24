@@ -9,15 +9,17 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 
 import com.example.budgetapp.domain.modules.ExpenseBottomSheetModule
 import com.example.budgetapp.domain.modules.FixedExpenseBottomSheetModule
 import com.example.budgetapp.domain.modules.FixedIncomeBottomSheetModule
 import com.example.budgetapp.domain.modules.IncomeBottomSheetModule
+import com.example.budgetapp.domain.modules.RecordsModule
 import com.example.budgetapp.domain.modules.homePageModule
+import com.example.budgetapp.presentation.graphs.RootNavigationGraph
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
-import com.example.budgetapp.presentation.viewModels.HomeViewModel
+import com.example.budgetapp.presentation.viewModels.home.HomeViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -39,7 +41,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             BudgetAppTheme {
 
-                HomeView(modifier = Modifier, homeViewModel)
+                RootNavigationGraph(navController = rememberNavController())
 
             }
         }
@@ -55,7 +57,8 @@ class MainActivity : ComponentActivity() {
                 ExpenseBottomSheetModule,
                 IncomeBottomSheetModule,
                 FixedExpenseBottomSheetModule,
-                FixedIncomeBottomSheetModule
+                FixedIncomeBottomSheetModule,
+                RecordsModule
             )
         }
     }

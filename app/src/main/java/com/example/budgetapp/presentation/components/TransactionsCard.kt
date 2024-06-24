@@ -128,7 +128,7 @@ fun TransactionsCard(
                         }
                     }else{
                         Text(
-                            modifier = modifier.clickable { onSeeMoreClicked() },
+                            modifier = modifier.clickable { onNewTransactionClicked() },
                             text = "Nada encontrado, tente adicionar um novo.",
                             color = Color.Gray,
                             textAlign = TextAlign.Center)

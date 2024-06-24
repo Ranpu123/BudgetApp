@@ -1,4 +1,4 @@
-package com.example.budgetapp.presentation.viewModels
+package com.example.budgetapp.presentation.viewModels.transactionBottomSheet
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

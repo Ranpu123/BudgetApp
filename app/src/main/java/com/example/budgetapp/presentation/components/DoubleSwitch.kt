@@ -4,12 +4,17 @@ import android.provider.CalendarContract.Colors
 import androidx.compose.foundation.DefaultMarqueeSpacing
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -31,20 +36,16 @@ import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 @Composable
 fun DoubleSwitch(
     modifier: Modifier = Modifier,
-    startOnLeft: Boolean = true,
+    startOnRight: Boolean = false,
     onLeftClick: () -> Unit = {},
     onRightClick: () -> Unit = {},
 ){
 
     var switchLeft by remember {
-        mutableStateOf(startOnLeft)
-    }
-    val localDensity = LocalDensity.current
-    var buttonSize by remember {
-        mutableStateOf(0.dp)
+        mutableStateOf(!startOnRight)
     }
 
-    Box (
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
@@ -52,22 +53,21 @@ fun DoubleSwitch(
                 color = Color(0xFF009A33),
                 shape = RoundedCornerShape(30.dp),
             )
-            .onGloballyPositioned { coordinates ->
-                buttonSize = with(localDensity) { coordinates.size.width.toDp() / 2 }
-            },
-    ) {
+    ){
         Row (
             modifier = Modifier
                 .fillMaxWidth(),
-        ){
+        ) {
             Button(
-                modifier = modifier
-                    .width(buttonSize)
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
                     .padding(start = 5.dp),
                 colors = ButtonDefaults
                     .buttonColors(Color(0X00FFFFFF)),
                 onClick = {
-                    onLeftClick()
+                    onRightClick()
                     switchLeft = !switchLeft
                 },
             )
@@ -79,55 +79,57 @@ fun DoubleSwitch(
             }
 
             Button(
-                modifier = modifier
-                    .width(buttonSize)
+                contentPadding = PaddingValues(0.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
                     .padding(end = 5.dp),
                 colors = ButtonDefaults
                     .buttonColors(Color(0X00FFFFFF)),
                 onClick = {
-                    onRightClick()
+                    onLeftClick()
                     switchLeft = !switchLeft
                 },
-            )
-            {
+            ){
                 Text(
                     "Fixos",
                     color = Color(0xFF014D19)
                 )
             }
         }
+
         Row (
             modifier = Modifier
                 .fillMaxWidth(),
         ){
-
-            if(switchLeft) {
+            if (switchLeft) {
                 Button(
-                    modifier = modifier
-                        .width(buttonSize)
+                    contentPadding = PaddingValues(0.dp),
+                    modifier = Modifier
+                        .weight(1f)
                         .padding(start = 5.dp),
                     colors = ButtonDefaults
                         .buttonColors(Color(0XFFFFFFFF)),
                     onClick = {},
-                )
-                {
+                ){
                     Text(
                         "Variáveis",
                         color = Color(0xFF009A33)
                     )
                 }
+                Spacer(modifier = Modifier.weight(1f))
             }
-            if(!switchLeft) {
-                Spacer(modifier = modifier.weight(1f))
+            if (!switchLeft) {
+                Spacer(modifier = Modifier.weight(1f))
                 Button(
-                    modifier = modifier
-                        .width(buttonSize)
+                    contentPadding = PaddingValues(0.dp),
+                    modifier = Modifier
+                        .weight(1f)
                         .padding(end = 5.dp),
                     colors = ButtonDefaults
                         .buttonColors(Color(0XFFFFFFFF)),
                     onClick = {},
-                )
-                {
+                ){
                     Text(
                         "Fixos",
                         color = Color(0xFF009A33)

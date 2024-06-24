@@ -1,13 +1,11 @@
-package com.example.budgetapp.presentation.viewModels
+package com.example.budgetapp.presentation.viewModels.home
 
 
 import androidx.lifecycle.ViewModel
-import com.example.budgetapp.domain.models.expense.ExpenseCategory
 import com.example.budgetapp.domain.models.ICategories
 import com.example.budgetapp.domain.models.expense.Expense
 import com.example.budgetapp.domain.models.expense.FixedExpense
 import com.example.budgetapp.domain.models.income.FixedIncome
-import com.example.budgetapp.domain.models.income.IncomeCategory
 import com.example.budgetapp.domain.models.income.Income
 import com.example.budgetapp.domain.models.transaction.FixedTransaction
 import com.example.budgetapp.domain.models.transaction.Transaction
@@ -115,13 +113,6 @@ class HomeViewModel(
                     is FixedIncome -> fixedIncomeRepository.updateFixedIncome(transaction)
                 }
             }
-        }
-    }
-
-    fun <T>removeTransaction(transaction: Transaction<T>)where T: Enum<T>, T: ICategories{
-        when(transaction){
-            is Income -> incomeRepository.removeIncome(transaction)
-            is Expense -> expenseRepository.removeExpense(transaction)
         }
     }
 

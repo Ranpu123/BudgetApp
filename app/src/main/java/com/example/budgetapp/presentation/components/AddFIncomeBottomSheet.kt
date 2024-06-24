@@ -39,7 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.budgetapp.domain.models.income.IncomeCategory
-import com.example.budgetapp.presentation.viewModels.FIncomeBottomSheetViewModel
+import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.FIncomeBottomSheetViewModel
 import com.example.budgetapp.utils.currencyToDouble
 import com.example.budgetapp.utils.formatCurrency
 import java.time.Instant

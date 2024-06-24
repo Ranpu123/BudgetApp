@@ -66,7 +66,7 @@ fun TransactionDateHeader(
     Divider(color = Color.Black)
 }
 
-private fun toFormattedDate(date: LocalDate): String{
+fun toFormattedDate(date: LocalDate): String{
     if (date.isEqual(LocalDate.now())) {
         return "Hoje"
     }else {
