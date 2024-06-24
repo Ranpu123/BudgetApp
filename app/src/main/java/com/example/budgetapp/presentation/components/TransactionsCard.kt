@@ -84,7 +84,7 @@ fun TransactionsCard(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Adicionar Gasto",
+                        contentDescription = "Adicionar $cardName",
                         tint = Color.Black
                     )
                 }

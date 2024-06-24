@@ -15,6 +15,7 @@ import com.example.budgetapp.presentation.views.records.RecordsExpenses
 import com.example.budgetapp.presentation.views.records.RecordsIncomes
 import com.example.budgetapp.presentation.views.records.RecordsOverview
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.KoinContext
 
 @Composable
 fun RecordNavigationGraph(
@@ -23,48 +24,49 @@ fun RecordNavigationGraph(
     navController: NavHostController,
     fixed: Boolean = false
 ) {
-    var isFixed = fixed
+    KoinContext {
+        var isFixed = fixed
 
-    val recordsViewModel = koinViewModel<RecordsViewModel>()
+        val recordsViewModel = koinViewModel<RecordsViewModel>()
 
-    NavHost(
-        navController = navController,
-        route =  Graph.RECORDS,
-        startDestination = BottomBarScreen.Overview.route
-    ){
-        composable(
-            route = BottomBarScreen.Overview.route,
-        ){
-            RecordsOverview(
-                modifier = modifier,
-                viewModel = recordsViewModel,
-                onReturnClicked = {
-                    parentNav.navigate(Graph.MAIN)
-                }
-            )
-        }
-        composable(route = BottomBarScreen.Expenses.route){
-            RecordsExpenses(
-                modifier = modifier,
-                isFixed = isFixed,
-                viewModel = recordsViewModel,
-                onReturnClicked = {
-                    parentNav.navigate(Graph.MAIN)
-                }
-            )
-            isFixed = false
-        }
-        composable(route = BottomBarScreen.Incomes.route){
-            RecordsIncomes(
-                modifier = modifier,
-                isFixed = isFixed,
-                viewModel = recordsViewModel,
-                onReturnClicked = {
-                    parentNav.navigate(Graph.MAIN)
-                }
-            )
-            isFixed = false
+        NavHost(
+            navController = navController,
+            route = Graph.RECORDS,
+            startDestination = BottomBarScreen.Overview.route
+        ) {
+            composable(
+                route = BottomBarScreen.Overview.route,
+            ) {
+                RecordsOverview(
+                    modifier = modifier,
+                    viewModel = recordsViewModel,
+                    onReturnClicked = {
+                        parentNav.navigate(Graph.MAIN)
+                    }
+                )
+            }
+            composable(route = BottomBarScreen.Expenses.route) {
+                RecordsExpenses(
+                    modifier = modifier,
+                    isFixed = isFixed,
+                    viewModel = recordsViewModel,
+                    onReturnClicked = {
+                        parentNav.navigate(Graph.MAIN)
+                    }
+                )
+                isFixed = false
+            }
+            composable(route = BottomBarScreen.Incomes.route) {
+                RecordsIncomes(
+                    modifier = modifier,
+                    isFixed = isFixed,
+                    viewModel = recordsViewModel,
+                    onReturnClicked = {
+                        parentNav.navigate(Graph.MAIN)
+                    }
+                )
+                isFixed = false
+            }
         }
     }
-
 }

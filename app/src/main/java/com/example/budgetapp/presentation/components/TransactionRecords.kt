@@ -11,19 +11,26 @@ import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissState
 import androidx.compose.material3.Divider
@@ -58,7 +65,9 @@ import com.example.budgetapp.services.repository.income.LocalIncomeRepository
 fun RecordCard(
     transactions: List<Transaction<*>>,
     onDelete: (Transaction<*>) -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNewTransactionClicked: ()->Unit = { },
+    showAdd: Boolean = true
 ){
 
 
@@ -80,13 +89,29 @@ fun RecordCard(
                     dropDownSize = coordinates.size.toSize()
                 }
         ){
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.End,
+            Row(
+                horizontalArrangement = if(showAdd) Arrangement.SpaceBetween else Arrangement.End,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(6.dp)
             ) {
+
+                if(showAdd) {
+                    Button(
+                        modifier = Modifier.size(24.dp),
+                        onClick = { onNewTransactionClicked() },
+                        shape = CircleShape,
+                        contentPadding = PaddingValues(2.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "Adicionar",
+                            tint = Color.Black
+                        )
+                    }
+                }
+
                 GenericDropDownMenu(
                     modifier = Modifier
                         .width(with(LocalDensity.current) { dropDownSize.width.toDp() / 3 }),

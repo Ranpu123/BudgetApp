@@ -39,7 +39,6 @@ fun RecordsOverview(
     viewModel: RecordsViewModel = RecordsViewModel(),
     onReturnClicked: () -> Unit = {}
 ){
-
     val UiState by viewModel.uiState.collectAsState()
 
     var transactions: List<Transaction<*>> = UiState.expenses + UiState.incomes
@@ -147,7 +146,8 @@ fun RecordsOverview(
                         onDelete = {
                             viewModel.removeTransaction(it)
                             viewModel.updateAll()
-                        }
+                        },
+                        showAdd = false
                     )
                 } else {
                     RecordCard(
@@ -157,7 +157,8 @@ fun RecordsOverview(
                         onDelete = {
                             viewModel.removeTransaction(it)
                             viewModel.updateAll()
-                        }
+                        },
+                        showAdd = false
                     )
                 }
             }

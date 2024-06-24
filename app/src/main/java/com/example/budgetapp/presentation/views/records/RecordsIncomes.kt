@@ -18,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,10 +29,20 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.budgetapp.domain.models.transaction.Transaction
+import com.example.budgetapp.presentation.components.AddExpenseBottomSheet
+import com.example.budgetapp.presentation.components.AddFExpenseBottomSheet
+import com.example.budgetapp.presentation.components.AddFIncomeBottomSheet
+import com.example.budgetapp.presentation.components.AddIncomeBottomSheet
 import com.example.budgetapp.presentation.components.DoubleSwitch
 import com.example.budgetapp.presentation.components.RecordCard
 import com.example.budgetapp.presentation.ui.theme.Green80
 import com.example.budgetapp.presentation.viewModels.records.RecordsViewModel
+import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.ExpenseBottomSheetViewModel
+import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.FExpenseBottomSheetViewModel
+import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.FIncomeBottomSheetViewModel
+import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.IncomeBottomSheetViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.KoinContext
 
 @Composable
 fun RecordsIncomes(
@@ -39,130 +50,170 @@ fun RecordsIncomes(
     viewModel: RecordsViewModel = RecordsViewModel(),
     isFixed: Boolean = false,
     onReturnClicked: () -> Unit = {}
-){
+) {
+    KoinContext {
+        val incomeBottomSheetViewModel = koinViewModel<IncomeBottomSheetViewModel>()
+        val fIncomeBottomSheetViewModel = koinViewModel<FIncomeBottomSheetViewModel>()
 
-    val UiState by viewModel.uiState.collectAsState()
+        var isAddIncomeOpen by rememberSaveable { mutableStateOf(false) }
+        var isAddFixedIncomeOpen by rememberSaveable { mutableStateOf(false) }
 
-    var transactions: List<Transaction<*>> = UiState.incomes
-    var fixedTransactions: List<Transaction<*>> = UiState.fixedIncome
+        val UiState by viewModel.uiState.collectAsState()
 
-    var isFixos by remember {
-        mutableStateOf(isFixed)
-    }
+        var transactions: List<Transaction<*>> = UiState.incomes
+        var fixedTransactions: List<Transaction<*>> = UiState.fixedIncome
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        ConstraintLayout(
-            modifier = Modifier
+        var isFixos by remember {
+            mutableStateOf(isFixed)
+        }
+
+        Column(
+            modifier = modifier
+                .fillMaxSize()
         ) {
-
-            val (
-                switch,
-                title,
-                card,
-                backbtn,
-                back,
-                spacer,
-            ) = createRefs()
-
-            Surface(
-                color = Green80,
+            ConstraintLayout(
                 modifier = Modifier
-                    .height(180.dp)
-                    .fillMaxWidth()
-                    .constrainAs(back) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-            ) {}
-
-            Surface(
-                color = Color.Transparent,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .constrainAs(switch) {
-                        bottom.linkTo(card.top, margin = 8.dp)
-                    }
             ) {
-                DoubleSwitch(
-                    modifier = Modifier,
-                    onRightClick = { isFixos = false },
-                    onLeftClick = { isFixos = true },
-                    startOnRight = isFixed
-                )
-            }
 
-            Icon(
-                modifier = Modifier
-                    .clickable { onReturnClicked() }
-                    .constrainAs(backbtn) {
-                        start.linkTo(parent.start, margin = 16.dp)
-                        bottom.linkTo(title.bottom)
-                        top.linkTo(title.top)
-                    },
-                imageVector = Icons.Filled.KeyboardArrowLeft,
-                contentDescription = null,
-                tint = Color.White
-            )
-            Text(
-                modifier = Modifier
-                    .constrainAs(title) {
-                        centerHorizontallyTo(parent)
-                        bottom.linkTo(switch.top, margin = 3.dp)
-                    },
-                text = "Relatórios",
-                fontWeight = FontWeight.Normal,
-                fontSize = 20.sp,
-            )
+                val (
+                    switch,
+                    title,
+                    card,
+                    backbtn,
+                    back,
+                    spacer,
+                ) = createRefs()
 
-            Surface(
-                color = Color.Transparent,
-                modifier = Modifier
-                    .height(35.dp)
-                    .fillMaxWidth()
-                    .constrainAs(spacer) {
-                        bottom.linkTo(back.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-            ) {}
+                Surface(
+                    color = Green80,
+                    modifier = Modifier
+                        .height(180.dp)
+                        .fillMaxWidth()
+                        .constrainAs(back) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
+                ) {}
 
-            Surface(
-                color = Color.Transparent,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .constrainAs(card) {
-                        top.linkTo(spacer.top)
-                        bottom.linkTo(parent.bottom)
-                        height = Dimension.preferredWrapContent
-                    },
-
+                Surface(
+                    color = Color.Transparent,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .constrainAs(switch) {
+                            bottom.linkTo(card.top, margin = 8.dp)
+                        }
                 ) {
-                if (isFixos) {
-                    RecordCard(
-                        modifier = Modifier
-                            .fillMaxHeight(),
-                        transactions = fixedTransactions,
-                        onDelete = {
-                            viewModel.removeTransaction(it)
-                            viewModel.updateAll()
-                        }
-                    )
-                } else {
-                    RecordCard(
-                        modifier = Modifier
-                            .fillMaxHeight(),
-                        transactions = transactions,
-                        onDelete = {
-                            viewModel.removeTransaction(it)
-                            viewModel.updateAll()
-                        }
+                    DoubleSwitch(
+                        modifier = Modifier,
+                        onRightClick = { isFixos = false },
+                        onLeftClick = { isFixos = true },
+                        startOnRight = isFixed
                     )
                 }
+
+                Icon(
+                    modifier = Modifier
+                        .clickable { onReturnClicked() }
+                        .constrainAs(backbtn) {
+                            start.linkTo(parent.start, margin = 16.dp)
+                            bottom.linkTo(title.bottom)
+                            top.linkTo(title.top)
+                        },
+                    imageVector = Icons.Filled.KeyboardArrowLeft,
+                    contentDescription = null,
+                    tint = Color.White
+                )
+                Text(
+                    modifier = Modifier
+                        .constrainAs(title) {
+                            centerHorizontallyTo(parent)
+                            bottom.linkTo(switch.top, margin = 3.dp)
+                        },
+                    text = "Relatórios",
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 20.sp,
+                )
+
+                Surface(
+                    color = Color.Transparent,
+                    modifier = Modifier
+                        .height(35.dp)
+                        .fillMaxWidth()
+                        .constrainAs(spacer) {
+                            bottom.linkTo(back.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
+                ) {}
+
+                Surface(
+                    color = Color.Transparent,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .constrainAs(card) {
+                            top.linkTo(spacer.top)
+                            bottom.linkTo(parent.bottom)
+                            height = Dimension.preferredWrapContent
+                        },
+
+                    ) {
+                    if (isFixos) {
+                        RecordCard(
+                            modifier = Modifier
+                                .fillMaxHeight(),
+                            transactions = fixedTransactions,
+                            onDelete = {
+                                viewModel.removeTransaction(it)
+                                viewModel.updateAll()
+                            },
+                            onNewTransactionClicked = {
+                                isAddFixedIncomeOpen = !isAddFixedIncomeOpen
+                            }
+                        )
+                    } else {
+                        RecordCard(
+                            modifier = Modifier
+                                .fillMaxHeight(),
+                            transactions = transactions,
+                            onDelete = {
+                                viewModel.removeTransaction(it)
+                                viewModel.updateAll()
+                            },
+                            onNewTransactionClicked = { isAddIncomeOpen = !isAddIncomeOpen }
+                        )
+                    }
+                }
             }
+        }
+        if (isAddIncomeOpen) {
+
+            AddIncomeBottomSheet(
+                modifier = Modifier.fillMaxWidth(),
+                onDismiss = {
+                    isAddIncomeOpen = false
+                },
+                onAdd = {
+                    viewModel.updateAll()
+                    isAddIncomeOpen = false
+                },
+                bottomSheetViewModel = incomeBottomSheetViewModel
+            )
+        }
+
+        if (isAddFixedIncomeOpen) {
+
+            AddFIncomeBottomSheet(
+                modifier = Modifier.fillMaxWidth(),
+                onDismiss = {
+                    isAddFixedIncomeOpen = false
+                },
+                onAdd = {
+                    viewModel.updateAll()
+                    isAddFixedIncomeOpen = false
+                },
+                bottomSheetViewModel = fIncomeBottomSheetViewModel
+            )
         }
     }
 }
