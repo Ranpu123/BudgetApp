@@ -44,7 +44,7 @@ fun RootNavigationGraph(navController: NavHostController){
             ) {entry->
                 var page = entry.arguments?.getString("page") ?: BottomBarScreen.Overview.route
                 var isFixed = entry.arguments?.getBoolean("fixed") ?: false
-                RecordsView(page = page, isFixed = isFixed)
+                RecordsView(page = page, isFixed = isFixed, parentNav = navController)
             }
         }
     }

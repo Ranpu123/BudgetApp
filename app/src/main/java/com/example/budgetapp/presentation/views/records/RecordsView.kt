@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -27,17 +28,20 @@ import com.example.budgetapp.presentation.graphs.RecordNavigationGraph
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun RecordsView(
-    navController: NavHostController = rememberNavController(),
+    parentNav: NavHostController,
     page: String = BottomBarScreen.Overview.route,
     isFixed: Boolean = false
 ){
+    val navController: NavHostController = rememberNavController()
+
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
         RecordNavigationGraph(
             modifier = Modifier.padding(bottom = it.calculateBottomPadding()),
+            parentNav = parentNav,
             navController = navController,
-            isFixed = isFixed
+            fixed = isFixed
         )
         when(page){
             BottomBarScreen.Incomes.route -> navController.navigate(BottomBarScreen.Incomes.route)

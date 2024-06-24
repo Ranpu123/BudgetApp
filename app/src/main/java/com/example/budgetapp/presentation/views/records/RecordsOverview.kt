@@ -1,5 +1,6 @@
 package com.example.budgetapp.presentation.views.records
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,7 +36,8 @@ import com.example.budgetapp.presentation.viewModels.records.RecordsViewModel
 @Composable
 fun RecordsOverview(
     modifier: Modifier = Modifier,
-    viewModel: RecordsViewModel = RecordsViewModel()
+    viewModel: RecordsViewModel = RecordsViewModel(),
+    onReturnClicked: () -> Unit = {}
 ){
 
     val UiState by viewModel.uiState.collectAsState()
@@ -93,6 +95,7 @@ fun RecordsOverview(
 
             Icon(
                 modifier = Modifier
+                    .clickable { onReturnClicked() }
                     .constrainAs(backbtn) {
                         start.linkTo(parent.start, margin = 16.dp)
                         bottom.linkTo(title.bottom)

@@ -3,6 +3,7 @@ package com.example.budgetapp.presentation.graphs
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavArgument
+import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -18,10 +19,11 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun RecordNavigationGraph(
     modifier: Modifier,
+    parentNav: NavHostController,
     navController: NavHostController,
-    isFixed: Boolean = false
+    fixed: Boolean = false
 ) {
-    var isFixed = isFixed
+    var isFixed = fixed
 
     val recordsViewModel = koinViewModel<RecordsViewModel>()
 
@@ -33,14 +35,34 @@ fun RecordNavigationGraph(
         composable(
             route = BottomBarScreen.Overview.route,
         ){
-            RecordsOverview(modifier = modifier, viewModel = recordsViewModel)
+            RecordsOverview(
+                modifier = modifier,
+                viewModel = recordsViewModel,
+                onReturnClicked = {
+                    parentNav.navigate(Graph.MAIN)
+                }
+            )
         }
         composable(route = BottomBarScreen.Expenses.route){
-            RecordsExpenses(modifier = modifier, isFixed = isFixed, viewModel = recordsViewModel)
+            RecordsExpenses(
+                modifier = modifier,
+                isFixed = isFixed,
+                viewModel = recordsViewModel,
+                onReturnClicked = {
+                    parentNav.navigate(Graph.MAIN)
+                }
+            )
             isFixed = false
         }
         composable(route = BottomBarScreen.Incomes.route){
-            RecordsIncomes(modifier = modifier, isFixed = isFixed, viewModel = recordsViewModel)
+            RecordsIncomes(
+                modifier = modifier,
+                isFixed = isFixed,
+                viewModel = recordsViewModel,
+                onReturnClicked = {
+                    parentNav.navigate(Graph.MAIN)
+                }
+            )
             isFixed = false
         }
     }
