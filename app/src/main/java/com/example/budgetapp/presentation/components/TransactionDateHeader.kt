@@ -12,11 +12,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.budgetapp.utils.formatCurrency
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun TransactionDateHeader(date: LocalDate, total: Double, modifier: Modifier = Modifier){
+fun TransactionDateHeader(date: LocalDate?, total: Double, modifier: Modifier = Modifier){
     Surface(modifier = modifier.fillMaxWidth()) {
         ConstraintLayout(
             modifier = modifier
@@ -33,7 +34,7 @@ fun TransactionDateHeader(date: LocalDate, total: Double, modifier: Modifier = M
                 color = Color.Black,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,
-                text = "Total:"
+                text = "Total: "
             )
             Text(
                 modifier = modifier
@@ -44,17 +45,19 @@ fun TransactionDateHeader(date: LocalDate, total: Double, modifier: Modifier = M
                 color = if(total < 0.0) Color(0xFFFF0000) else Color(0xFF00BD40),
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
-                text = "$total"
+                text = formatCurrency(total)
             )
-            Text(
-                modifier = modifier
-                    .constrainAs(data) { centerTo(parent) },
-                color = Color.Black,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 12.sp,
-                text = if (date.isEqual(LocalDate.now())) "Hoje"
-                else date.format(DateTimeFormatter.ofPattern("dd, MMM yyyy")).toString()
-            )
+            if(date != null) {
+                Text(
+                    modifier = modifier
+                        .constrainAs(data) { centerTo(parent) },
+                    color = Color.Black,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 12.sp,
+                    text = if (date.isEqual(LocalDate.now())) "Hoje"
+                    else date.format(DateTimeFormatter.ofPattern("dd, MMM yyyy")).toString()
+                )
+            }
         }
     }
     Divider(color = Color.Black)

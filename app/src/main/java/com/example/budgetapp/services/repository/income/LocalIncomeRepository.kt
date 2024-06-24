@@ -1,6 +1,6 @@
 package com.example.budgetapp.services.repository.income
 
-import com.example.budgetapp.domain.models.income.INCOME_CATEGORIES
+import com.example.budgetapp.domain.models.income.IncomeCategory
 import com.example.budgetapp.domain.repository_interfaces.IIncomeRepository
 import com.example.budgetapp.domain.models.income.Income
 import java.time.LocalDateTime
@@ -11,19 +11,19 @@ object LocalIncomeRepository: IIncomeRepository {
         Income(
             date = LocalDateTime.parse("2024-04-30T10:30:00"),
             value = 1415.00,
-            category = INCOME_CATEGORIES.SALARY,
+            category = IncomeCategory.SALARY,
             description = "Salário"
         ),
         Income(
             date = LocalDateTime.parse("2024-05-31T10:30:00"),
             value = 1415.00,
-            category = INCOME_CATEGORIES.SALARY,
+            category = IncomeCategory.SALARY,
             description = "Salário"
         ),
         Income(
             date = LocalDateTime.parse("2024-05-31T08:30:00"),
-            value = 1415.00,
-            category = INCOME_CATEGORIES.SELL,
+            value = 1300.00,
+            category = IncomeCategory.SELL,
             description = "Venda Computador"
         ),
     )

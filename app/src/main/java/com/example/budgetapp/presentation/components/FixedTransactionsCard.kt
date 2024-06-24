@@ -40,15 +40,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.budgetapp.domain.models.transaction.Transaction
-import com.example.budgetapp.services.repository.income.LocalIncomeRepository
+import com.example.budgetapp.domain.models.transaction.FixedTransaction
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
+import com.example.budgetapp.services.repository.fixed_income.LocalFixedIncomeRepository
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TransactionsCard(
+fun FixedTransactionsCard(
     cardName: String,
-    transactions: List<Transaction<*>>,
+    transactions: List<FixedTransaction<*>>,
     modifier: Modifier = Modifier,
     expanded: Boolean = true,
     onNewTransactionClicked: () -> Unit = {},
@@ -56,6 +55,7 @@ fun TransactionsCard(
 ){
 
     var expanded by rememberSaveable { mutableStateOf(expanded) }
+
     Surface(
         modifier = modifier
             .animateContentSize(
@@ -110,18 +110,14 @@ fun TransactionsCard(
                     Divider()
                     if(transactions.isNotEmpty()) {
                         LazyColumn(modifier = modifier.height(110.dp)) {
-                            transactions.sortedByDescending { it.date }.distinctBy { it.date.toLocalDate() }.forEach {
-                                val filteredTransactions =
-                                    transactions.filter { e -> e.date.toLocalDate().isEqual(it.date.toLocalDate()) }
-                                stickyHeader {
-                                    TransactionDateHeader(
-                                        date = it.date.toLocalDate(),
-                                        total = filteredTransactions.sumOf { it.value })
-                                }
-                                items(filteredTransactions.sortedBy { it.date }) { transaction ->
-                                    ItemTransactionsCard(transaction = transaction)
-                                    Divider()
-                                }
+                            item {
+                                TransactionDateHeader(
+                                    date = null,
+                                    transactions.sumOf { it.value })
+                            }
+                            items(transactions.sortedBy { it.date }) { transaction ->
+                                ItemTransactionsCard(transaction = transaction)
+                                Divider()
                             }
                         }
                     }else{
@@ -132,11 +128,13 @@ fun TransactionsCard(
                             textAlign = TextAlign.Center)
                         Divider()
                     }
+
                     Text(
                         modifier = modifier.clickable { onSeeMoreClicked() },
                         text = "Ver mais",
                         color = Color(0xFF0077CD),
-                        textAlign = TextAlign.Center)
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
@@ -145,10 +143,10 @@ fun TransactionsCard(
 
 @Preview(showBackground = true)
 @Composable
-fun TransactionCardPreview(){
+fun FixedTransactionCardPreview(){
     BudgetAppTheme {
-        TransactionsCard(
-            cardName = "Receitas",
-            transactions = LocalIncomeRepository.fetchAll() as List<Transaction<*>>)
+        FixedTransactionsCard(
+            cardName = "Receitas Fixas",
+            transactions = LocalFixedIncomeRepository.fetchAll() as List<FixedTransaction<*>>)
     }
 }

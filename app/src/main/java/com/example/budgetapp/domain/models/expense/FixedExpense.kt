@@ -1,7 +1,5 @@
 package com.example.budgetapp.domain.models.expense
 
-import com.example.budgetapp.domain.models.ICategories
-import com.example.budgetapp.domain.models.income.FIXED_INCOME_CATEGORIES
 import com.example.budgetapp.domain.models.transaction.FixedTransaction
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -9,13 +7,13 @@ import java.time.LocalDateTime
 class FixedExpense(
     date: LocalDateTime,
     value: Double,
-    category: FIXED_INCOME_CATEGORIES,
+    category: ExpenseCategory,
     description: String,
     active : Boolean = true,
     endDate: LocalDate? = null,
-    lastDate: LocalDate = if (date.toLocalDate().isBefore(LocalDate.now())) date.toLocalDate() else LocalDate.now()
+    lastDate: LocalDate = if (date.toLocalDate().isBefore(LocalDate.now())) date.toLocalDate() else date.toLocalDate().minusMonths(1)
 
-) : FixedTransaction<FIXED_INCOME_CATEGORIES>(
+) : FixedTransaction<ExpenseCategory>(
     date = date,
     value = value,
     category = category,
@@ -27,4 +25,5 @@ class FixedExpense(
     init {
         require(value < 0.0){"Fixed Income requires negative value!"}
     }
+
 }

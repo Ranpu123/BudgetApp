@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.example.budgetapp.presentation.components
 
 import androidx.compose.foundation.clickable
@@ -10,7 +8,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.rounded.Close
@@ -26,7 +23,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -42,27 +38,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 import com.example.budgetapp.domain.models.expense.ExpenseCategory
-import com.example.budgetapp.presentation.viewModels.ExpenseBottomSheetViewModel
+import com.example.budgetapp.presentation.viewModels.FExpenseBottomSheetViewModel
 import com.example.budgetapp.utils.currencyToDouble
 import com.example.budgetapp.utils.formatCurrency
-
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddExpenseBottomSheet(
-    bottomSheetViewModel: ExpenseBottomSheetViewModel,
+fun AddFExpenseBottomSheet(
+    bottomSheetViewModel: FExpenseBottomSheetViewModel,
     modifier: Modifier =  Modifier,
     onDismiss: () -> Unit = {},
-    onAdd: () -> Unit = {}
+    onAdd: ()-> Unit
 ){
 
-    val addExpensetSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val addExpensetSheetState = rememberModalBottomSheetState (skipPartiallyExpanded = true)
     val datePickerState = rememberDatePickerState()
 
     var isDatePickerVisible by remember {
@@ -90,7 +82,7 @@ fun AddExpenseBottomSheet(
         ) {
             Text(
                 modifier = modifier.fillMaxWidth(),
-                text = "Adicionar Gasto",
+                text = "Adicionar Gasto Fixo",
                 color = Color.Black,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
@@ -255,4 +247,3 @@ fun AddExpenseBottomSheet(
         }
     }
 }
-

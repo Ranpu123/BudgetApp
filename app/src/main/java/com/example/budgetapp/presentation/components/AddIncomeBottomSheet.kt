@@ -10,7 +10,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.rounded.Close
@@ -26,7 +25,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -42,24 +40,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-import com.example.budgetapp.domain.models.expense.ExpenseCategory
-import com.example.budgetapp.presentation.viewModels.ExpenseBottomSheetViewModel
+import com.example.budgetapp.domain.models.income.IncomeCategory
+import com.example.budgetapp.presentation.viewModels.IncomeBottomSheetViewModel
 import com.example.budgetapp.utils.currencyToDouble
 import com.example.budgetapp.utils.formatCurrency
-
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddExpenseBottomSheet(
-    bottomSheetViewModel: ExpenseBottomSheetViewModel,
+fun AddIncomeBottomSheet(
+    bottomSheetViewModel: IncomeBottomSheetViewModel,
     modifier: Modifier =  Modifier,
     onDismiss: () -> Unit = {},
-    onAdd: () -> Unit = {}
+    onAdd: ()-> Unit = {}
 ){
 
     val addExpensetSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -79,7 +76,6 @@ fun AddExpenseBottomSheet(
         addExpensetSheetState.expand()
     }
 
-
     if(addExpensetSheetState.isVisible) {
         ModalBottomSheet(
             sheetState = addExpensetSheetState,
@@ -90,7 +86,7 @@ fun AddExpenseBottomSheet(
         ) {
             Text(
                 modifier = modifier.fillMaxWidth(),
-                text = "Adicionar Gasto",
+                text = "Adicionar Receita",
                 color = Color.Black,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
@@ -109,14 +105,13 @@ fun AddExpenseBottomSheet(
                     fontSize = 13.sp
                 )
                 dropDownMenu(
-                    defaultSelected = category.displayName,
-                    suggestions = ExpenseCategory.entries.toList().sortedBy { it.displayName },
+                    suggestions = IncomeCategory.entries.toList().sortedBy { it.displayName },
                     onChoice = {
-                        category = it as ExpenseCategory
+                        category = it as IncomeCategory
                         description = category.displayName
-                    }
+                    },
+                    defaultSelected = category.displayName
                 )
-
                 Text(
                     modifier = modifier.fillMaxWidth(),
                     text = "Descrição",
@@ -230,6 +225,8 @@ fun AddExpenseBottomSheet(
                     )
                 }
 
+
+
                 if (isDatePickerVisible) {
                     DatePickerDialog(
                         onDismissRequest = { isDatePickerVisible = false },
@@ -255,4 +252,3 @@ fun AddExpenseBottomSheet(
         }
     }
 }
-

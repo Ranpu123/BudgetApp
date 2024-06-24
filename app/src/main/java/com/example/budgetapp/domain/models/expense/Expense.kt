@@ -1,16 +1,15 @@
 package com.example.budgetapp.domain.models.expense
 
-import com.example.budgetapp.domain.models.ICategories
 import com.example.budgetapp.domain.models.transaction.Transaction
 import java.time.LocalDateTime
 
 open class Expense(
     date: LocalDateTime,
     value: Double,
-    category: EXPENSE_CATEGORIES,
+    category: ExpenseCategory,
     description: String,
 
-) : Transaction<EXPENSE_CATEGORIES>(
+    ) : Transaction<ExpenseCategory>(
     date = date,
     value = value,
     category = category,

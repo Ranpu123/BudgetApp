@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.example.budgetapp.presentation.components
 
 import androidx.compose.foundation.clickable
@@ -10,7 +8,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.rounded.Close
@@ -26,7 +23,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -42,27 +38,24 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-import com.example.budgetapp.domain.models.expense.ExpenseCategory
-import com.example.budgetapp.presentation.viewModels.ExpenseBottomSheetViewModel
+import com.example.budgetapp.domain.models.income.IncomeCategory
+import com.example.budgetapp.presentation.viewModels.FIncomeBottomSheetViewModel
 import com.example.budgetapp.utils.currencyToDouble
 import com.example.budgetapp.utils.formatCurrency
-
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddExpenseBottomSheet(
-    bottomSheetViewModel: ExpenseBottomSheetViewModel,
+fun AddFIncomeBottomSheet(
+    bottomSheetViewModel: FIncomeBottomSheetViewModel,
     modifier: Modifier =  Modifier,
     onDismiss: () -> Unit = {},
-    onAdd: () -> Unit = {}
+    onAdd: ()-> Unit
 ){
 
-    val addExpensetSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val addExpensetSheetState = rememberModalBottomSheetState (skipPartiallyExpanded = true)
     val datePickerState = rememberDatePickerState()
 
     var isDatePickerVisible by remember {
@@ -90,7 +83,7 @@ fun AddExpenseBottomSheet(
         ) {
             Text(
                 modifier = modifier.fillMaxWidth(),
-                text = "Adicionar Gasto",
+                text = "Adicionar Receita Fixa",
                 color = Color.Black,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
@@ -110,9 +103,9 @@ fun AddExpenseBottomSheet(
                 )
                 dropDownMenu(
                     defaultSelected = category.displayName,
-                    suggestions = ExpenseCategory.entries.toList().sortedBy { it.displayName },
+                    suggestions = IncomeCategory.entries.toList().sortedBy { it.displayName },
                     onChoice = {
-                        category = it as ExpenseCategory
+                        category = it as IncomeCategory
                         description = category.displayName
                     }
                 )
@@ -137,7 +130,7 @@ fun AddExpenseBottomSheet(
                         )
                     }
                 )
-                if (!uiState.descriptionError.isNullOrBlank()){
+                if (!uiState.descriptionError.isNullOrBlank()) {
                     Text(
                         modifier = modifier.fillMaxWidth(),
                         text = uiState.descriptionError.orEmpty(),
@@ -193,7 +186,7 @@ fun AddExpenseBottomSheet(
                         )
                     }
                 )
-                if (!uiState.valueError.isNullOrBlank()){
+                if (!uiState.valueError.isNullOrBlank()) {
                     Text(
                         modifier = modifier.fillMaxWidth(),
                         text = uiState.valueError.orEmpty(),
@@ -209,7 +202,11 @@ fun AddExpenseBottomSheet(
                     colors = ButtonDefaults.buttonColors(Color(0xFF009A33)),
                     shape = RoundedCornerShape(15.dp),
                     onClick = {
-                        if(bottomSheetViewModel.validadeForm(description, currencyToDouble(value))){
+                        if (bottomSheetViewModel.validadeForm(
+                                description,
+                                currencyToDouble(value)
+                            )
+                        ) {
                             bottomSheetViewModel.addNewTransaction(
                                 description = description,
                                 value = currencyToDouble(value),
@@ -255,4 +252,3 @@ fun AddExpenseBottomSheet(
         }
     }
 }
-
