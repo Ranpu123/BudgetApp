@@ -8,10 +8,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.budgetapp.R
 import com.example.budgetapp.utils.formatCurrency
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -39,7 +41,7 @@ fun TransactionDateHeader(
                 color = Color.Black,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,
-                text = "Total: "
+                text = stringResource(R.string.header_total)
             )
             Text(
                 modifier = modifier
@@ -66,10 +68,15 @@ fun TransactionDateHeader(
     Divider(color = Color.Black)
 }
 
+@Composable
 fun toFormattedDate(date: LocalDate): String{
     if (date.isEqual(LocalDate.now())) {
-        return "Hoje"
+        return stringResource(R.string.today)
     }else {
         return date.format(DateTimeFormatter.ofPattern("dd, MMM yyyy")).toString()
     }
+}
+
+fun toFormattedMonthYear(date: LocalDate): String{
+    return date.format(DateTimeFormatter.ofPattern("MMMM - yyyy")).toString()
 }

@@ -36,12 +36,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.budgetapp.R
 
 import com.example.budgetapp.domain.models.expense.ExpenseCategory
 import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.ExpenseBottomSheetViewModel
@@ -90,7 +92,7 @@ fun AddExpenseBottomSheet(
         ) {
             Text(
                 modifier = modifier.fillMaxWidth(),
-                text = "Adicionar Gasto",
+                text = stringResource(id = R.string.cd_add_transaction, stringResource(id = R.string.expense)),
                 color = Color.Black,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
@@ -104,22 +106,22 @@ fun AddExpenseBottomSheet(
 
                 Text(
                     modifier = modifier.fillMaxWidth(),
-                    text = "Categoria",
+                    text = stringResource(id = R.string.field_category),
                     color = Color.Gray,
                     fontSize = 13.sp
                 )
                 dropDownMenu(
-                    defaultSelected = category.displayName,
-                    suggestions = ExpenseCategory.entries.toList().sortedBy { it.displayName },
+                    defaultSelected = category.asString(),
+                    suggestions = ExpenseCategory.entries.toList().sortedBy { it.asString() },
                     onChoice = {
                         category = it as ExpenseCategory
-                        description = category.displayName
+                        description = category.asString()
                     }
                 )
 
                 Text(
                     modifier = modifier.fillMaxWidth(),
-                    text = "Descrição",
+                    text = stringResource(id = R.string.field_description),
                     color = Color.Gray,
                     fontSize = 13.sp
                 )
@@ -132,7 +134,7 @@ fun AddExpenseBottomSheet(
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Rounded.Close,
-                            contentDescription = "Limpar Campo",
+                            contentDescription = stringResource(id = R.string.cd_clear_field),
                             modifier = Modifier.clickable { description = "" }
                         )
                     }
@@ -148,7 +150,7 @@ fun AddExpenseBottomSheet(
 
                 Text(
                     modifier = modifier.fillMaxWidth(),
-                    text = "Data",
+                    text = stringResource(id = R.string.field_date),
                     color = Color.Gray,
                     fontSize = 13.sp
                 )
@@ -166,7 +168,7 @@ fun AddExpenseBottomSheet(
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Filled.DateRange,
-                            contentDescription = "Data",
+                            contentDescription = stringResource(id = R.string.field_date),
                             tint = Color.Gray
                         )
                     }
@@ -174,7 +176,7 @@ fun AddExpenseBottomSheet(
 
                 Text(
                     modifier = modifier.fillMaxWidth(),
-                    text = "Valor",
+                    text = stringResource(id = R.string.field_value),
                     color = Color.Gray,
                     fontSize = 13.sp,
                 )
@@ -188,7 +190,7 @@ fun AddExpenseBottomSheet(
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Rounded.Close,
-                            contentDescription = "Limpar Campo",
+                            contentDescription = stringResource(id = R.string.cd_clear_field),
                             modifier = Modifier.clickable { value = formatCurrency("0") }
                         )
                     }
@@ -224,7 +226,7 @@ fun AddExpenseBottomSheet(
                     },
                 ) {
                     Text(
-                        text = "Adicionar",
+                        text = stringResource(id = R.string.btn_add),
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
                     )
@@ -239,12 +241,12 @@ fun AddExpenseBottomSheet(
                                     .toEpochMilli()
                                 isDatePickerVisible = false
                             }) {
-                                Text(text = "Confirmar")
+                                Text(text = stringResource(id = R.string.btn_confirm))
                             }
                         },
                         dismissButton = {
                             OutlinedButton(onClick = { isDatePickerVisible = false }) {
-                                Text(text = "Cancelar")
+                                Text(text = stringResource(id = R.string.btn_cancel))
                             }
                         },
                     ) {

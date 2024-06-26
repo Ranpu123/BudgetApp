@@ -17,11 +17,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
+import com.example.budgetapp.R
 import com.example.budgetapp.domain.models.transaction.FixedTransaction
 import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.presentation.components.AddExpenseBottomSheet
@@ -99,7 +103,7 @@ fun HomeView(
                         }
                 ) {
                     Text(
-                        text = "Olá, ${homeUiState.userName}!",
+                        text = stringResource(R.string.greetings, "Vinícius"),
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
                     )
@@ -130,7 +134,7 @@ fun HomeView(
                         }
                 ) {
                     TransactionsCard(
-                        cardName = "Gastos",
+                        cardName = stringResource(R.string.expenses),
                         transactions = homeUiState.expenses as List<Transaction<*>>,
                         modifier = modifier,
                         onNewTransactionClicked = { isAddExpenseOpen = true },
@@ -146,7 +150,7 @@ fun HomeView(
                         }
                 ) {
                     TransactionsCard(
-                        cardName = "Receitas",
+                        cardName = stringResource(R.string.incomes),
                         transactions = homeUiState.incomes as List<Transaction<*>>,
                         modifier = modifier,
                         expanded = false,
@@ -163,7 +167,7 @@ fun HomeView(
                         }
                 ) {
                     FixedTransactionsCard(
-                        cardName = "Gastos Fixos",
+                        cardName = stringResource(R.string.fixed_expenses),
                         transactions = homeUiState.fixedExpense as List<FixedTransaction<*>>,
                         modifier = modifier,
                         expanded = false,
@@ -180,7 +184,7 @@ fun HomeView(
                         }
                 ) {
                     FixedTransactionsCard(
-                        cardName = "Receitas Fixas",
+                        cardName = stringResource(R.string.fixed_incomes),
                         transactions = homeUiState.fixedIncome as List<FixedTransaction<*>>,
                         modifier = modifier,
                         expanded = false,
@@ -252,12 +256,3 @@ fun HomeView(
         }
     }
 }
-
-/*
-@Preview(showBackground = true)
-@Composable
-fun HomePreview(){
-    BudgetAppTheme {
-        HomeView()
-    }
-}*/

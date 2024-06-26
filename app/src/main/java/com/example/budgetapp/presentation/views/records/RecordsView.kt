@@ -16,14 +16,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.toLowerCase
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.budgetapp.R
 import com.example.budgetapp.presentation.graphs.RecordNavigationGraph
+import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -44,8 +48,14 @@ fun RecordsView(
             fixed = isFixed
         )
         when(page){
-            BottomBarScreen.Incomes.route -> navController.navigate(BottomBarScreen.Incomes.route)
-            BottomBarScreen.Expenses.route -> navController.navigate(BottomBarScreen.Expenses.route)
+            BottomBarScreen.Incomes.route -> navController.navigate(BottomBarScreen.Incomes.route) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }
+            BottomBarScreen.Expenses.route -> navController.navigate(BottomBarScreen.Expenses.route){
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }
         }
     }
 }
@@ -61,7 +71,7 @@ fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-
+    val context = LocalContext.current
 
     BottomAppBar(containerColor = Color(0xFF00BD40)) {
         screens.forEach{ screen ->
@@ -71,7 +81,10 @@ fun BottomBar(navController: NavHostController) {
                 ?.any {it.route == screen.route } == true
 
             NavigationBarItem(
-                label = { Text(text = screen.title, color = if(isSelected) Color.White else Color(0XFF014D19)) },
+                label = {Text(
+                        text = context.getString(screen.title).lowercase(Locale.getDefault()),
+                        color = if(isSelected) Color.White else Color(0XFF014D19)
+                )},
                 selected = isSelected,
                 colors = NavigationBarItemDefaults.colors(
                     unselectedIconColor = Color(0XFF014D19),
@@ -87,7 +100,7 @@ fun BottomBar(navController: NavHostController) {
                 icon = {
                     Icon(
                         imageVector = ImageVector.vectorResource(screen.icon),
-                        contentDescription = "Navigation Icon"
+                        contentDescription = null
                     )
                 }
             )

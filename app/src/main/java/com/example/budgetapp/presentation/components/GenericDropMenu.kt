@@ -36,12 +36,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import com.example.budgetapp.R
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 
 @Composable
@@ -49,7 +51,7 @@ fun GenericDropDownMenu(
     modifier: Modifier = Modifier,
     options: List<String> = emptyList(),
     onChoice: (it: String) -> Unit = {},
-    defaultSelected: String = "Select an Option"
+    defaultSelected: String = stringResource(R.string.default_option)
 ) {
 
     var expanded by remember { mutableStateOf(false) }
@@ -67,29 +69,6 @@ fun GenericDropDownMenu(
 
 
     Column(modifier.wrapContentSize()) {
-        /*OutlinedTextField(
-            enabled = false,
-            value = selectedText,
-            shape = RoundedCornerShape(60.dp),
-            textStyle = TextStyle(color = Color.Black, textAlign = TextAlign.End, fontSize = 8.sp),
-            onValueChange = { selectedText = it },
-            modifier = Modifier
-                .height(40.dp)
-                .defaultMinSize(1.dp, 1.dp)
-                .clickable { expanded = !expanded }
-                .onGloballyPositioned { coordinates ->
-                    //This value is used to assign to the DropDown the same width
-                    textfieldSize = coordinates.size.toSize()
-                },
-            trailingIcon = {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-        )*/
-
         Surface(
             modifier = modifier
                 .border(
@@ -105,7 +84,6 @@ fun GenericDropDownMenu(
                     .padding(horizontal = 5.dp, vertical = 2.dp)
                     .clickable { expanded = !expanded }
                     .onGloballyPositioned { coordinates ->
-                        //This value is used to assign to the DropDown the same width
                         textfieldSize = coordinates.size.toSize()
                     },
                 horizontalArrangement = Arrangement.End,

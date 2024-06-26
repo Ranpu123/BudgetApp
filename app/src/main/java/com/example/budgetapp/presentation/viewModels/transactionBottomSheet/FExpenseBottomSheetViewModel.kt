@@ -26,7 +26,7 @@ class FExpenseBottomSheetViewModel(
     val uiState: StateFlow<TransactionBottomSheetUIState> = _uiState.asStateFlow()
 
     var category = mutableStateOf( ExpenseCategory.OTHER)
-    var description = mutableStateOf(ExpenseCategory.OTHER.displayName)
+    var description = mutableStateOf(ExpenseCategory.OTHER.asString())
     var value = mutableStateOf(formatCurrency("0"))
     var date = mutableStateOf(Instant.now().toEpochMilli())
 
@@ -63,7 +63,7 @@ class FExpenseBottomSheetViewModel(
 
     fun clearState(){
         _uiState.value = TransactionBottomSheetUIState()
-        description.value = ExpenseCategory.OTHER.displayName
+        description.value = ExpenseCategory.OTHER.asString()
         value.value = formatCurrency("0")
         date.value = Instant.now().toEpochMilli()
         category.value = ExpenseCategory.OTHER

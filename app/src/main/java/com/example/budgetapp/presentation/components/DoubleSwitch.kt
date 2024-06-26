@@ -29,8 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.budgetapp.R
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 
 @Composable
@@ -73,7 +75,7 @@ fun DoubleSwitch(
             )
             {
                 Text(
-                    "Variáveis",
+                    stringResource(R.string.variable),
                     color = Color(0xFF014D19)
                 )
             }
@@ -92,7 +94,7 @@ fun DoubleSwitch(
                 },
             ){
                 Text(
-                    "Fixos",
+                    stringResource(R.string.fixed),
                     color = Color(0xFF014D19)
                 )
             }
@@ -113,7 +115,7 @@ fun DoubleSwitch(
                     onClick = {},
                 ){
                     Text(
-                        "Variáveis",
+                        stringResource(R.string.variable),
                         color = Color(0xFF009A33)
                     )
                 }
@@ -131,7 +133,7 @@ fun DoubleSwitch(
                     onClick = {},
                 ){
                     Text(
-                        "Fixos",
+                        stringResource(R.string.fixed),
                         color = Color(0xFF009A33)
                     )
                 }

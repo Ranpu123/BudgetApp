@@ -5,18 +5,13 @@ package com.example.budgetapp.presentation.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,7 +20,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -48,17 +42,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import com.example.budgetapp.R
 import com.example.budgetapp.domain.models.ICategories
 import com.example.budgetapp.domain.models.income.Income
 import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import com.example.budgetapp.services.repository.income.LocalIncomeRepository
-
+import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -69,12 +66,12 @@ fun RecordCard(
     onNewTransactionClicked: ()->Unit = { },
     showAdd: Boolean = true
 ){
-
+    val dropMenuOptions = stringArrayResource(R.array.records_drop_menu_options)
 
     var scrollstate = rememberScrollState()
     var filterBy by remember{ mutableStateOf(true) }
 
-    var filters = transactions.sortedByDescending { it.date }.distinctBy { it.date.toLocalDate() }
+    var filters = transactions.sortedByDescending { it.date }.distinctBy { it.date.toLocalDate().withDayOfMonth(1) }
 
     var dropDownSize by remember { mutableStateOf(Size.Zero) }
 
@@ -106,7 +103,7 @@ fun RecordCard(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Add,
-                            contentDescription = "Adicionar",
+                            contentDescription = stringResource(R.string.cd_add_transaction),
                             tint = Color.Black
                         )
                     }
@@ -115,12 +112,12 @@ fun RecordCard(
                 GenericDropDownMenu(
                     modifier = Modifier
                         .width(with(LocalDensity.current) { dropDownSize.width.toDp() / 3 }),
-                    options = listOf("Mês", "Categoria"),
-                    defaultSelected = "Mês",
+                    options = dropMenuOptions.toList(),
+                    defaultSelected = dropMenuOptions[0],
                     onChoice = {
-                        if(it == "Mês"){
+                        if(it == dropMenuOptions[0]){
                             filterBy = true
-                            filters = transactions.sortedByDescending { it.date }.distinctBy { it.date.toLocalDate() }
+                            filters = transactions.sortedByDescending { it.date }.distinctBy { it.date.toLocalDate().withDayOfMonth(1) }
                         }else{
                             filterBy = false
                             filters = transactions.distinctBy { it.category }
@@ -137,7 +134,7 @@ fun RecordCard(
 
                         val filtered = transactions.filter {
                             if(filterBy){
-                                it.date.toLocalDate().isEqual(filter.date.toLocalDate())
+                                it.date.toLocalDate().withDayOfMonth(1).isEqual(filter.date.toLocalDate().withDayOfMonth(1))
                             }else{
                                 it.category == filter.category
                             }
@@ -146,8 +143,8 @@ fun RecordCard(
                         stickyHeader {
                             TransactionDateHeader(
                                 total = filtered.sumOf { it.value },
-                                title = if(filterBy) toFormattedDate(filter.date.toLocalDate())
-                                            else (filter.category as ICategories).displayName
+                                title = if(filterBy) toFormattedMonthYear(filter.date.toLocalDate())
+                                            else (filter.category as ICategories).asString()
                             )
                         }
                         items(
@@ -173,7 +170,7 @@ fun RecordCard(
                 } else {
                     item(){
                         Text(
-                            text = "Nenhum lançamento encontrado!",
+                            text = stringResource(R.string.nothing_found),
                             color = Color.Gray,
                             textAlign = TextAlign.Center)
                         Divider()

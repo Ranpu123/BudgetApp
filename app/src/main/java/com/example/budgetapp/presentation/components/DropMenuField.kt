@@ -1,17 +1,18 @@
 package com.example.budgetapp.presentation.components
 
-import android.provider.ContactsContract.Contacts.AggregationSuggestions
-import android.text.Selection
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.*
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,10 +23,11 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import com.example.budgetapp.R
 import com.example.budgetapp.domain.models.ICategories
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 
@@ -33,7 +35,7 @@ import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 fun dropDownMenu(
     suggestions: List<ICategories> = emptyList<ICategories>(),
     onChoice: (it:ICategories) -> Unit = {},
-    defaultSelected: String = "Select an Option"
+    defaultSelected: String = stringResource(R.string.default_option)
 ) {
 
     var expanded by remember { mutableStateOf(false) }
@@ -63,7 +65,7 @@ fun dropDownMenu(
                     textfieldSize = coordinates.size.toSize()
                 },
             trailingIcon = {
-                Icon(icon, "contentDescription")
+                Icon(icon, null)
             }
         )
         DropdownMenu(
@@ -76,13 +78,13 @@ fun dropDownMenu(
             suggestions.forEach { category ->
                 DropdownMenuItem(
                     onClick = {
-                        selectedText = category.displayName
+                        selectedText = category.asString()
                         expanded = false
                         onChoice(category)
                     },
                     text = {
                         Text(
-                            text = category.displayName,
+                            text = category.asString(),
                             color = Color.Black,
                             modifier = Modifier
                                 .onGloballyPositioned { coordinates ->

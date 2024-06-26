@@ -23,11 +23,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.example.budgetapp.R
 import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.presentation.components.AddExpenseBottomSheet
 import com.example.budgetapp.presentation.components.AddFExpenseBottomSheet
@@ -130,7 +133,7 @@ fun RecordsIncomes(
                             centerHorizontallyTo(parent)
                             bottom.linkTo(switch.top, margin = 3.dp)
                         },
-                    text = "Relatórios",
+                    text = stringResource(R.string.records),
                     fontWeight = FontWeight.Normal,
                     fontSize = 20.sp,
                 )
