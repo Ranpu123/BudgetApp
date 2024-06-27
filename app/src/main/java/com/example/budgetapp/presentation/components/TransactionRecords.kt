@@ -68,10 +68,9 @@ fun RecordCard(
 ){
     val dropMenuOptions = stringArrayResource(R.array.records_drop_menu_options)
 
-    var scrollstate = rememberScrollState()
     var filterBy by remember{ mutableStateOf(true) }
 
-    var filters = transactions.sortedByDescending { it.date }.distinctBy { it.date.toLocalDate().withDayOfMonth(1) }
+    var filters by remember { mutableStateOf(transactions.sortedByDescending { it.date }.distinctBy { it.date.toLocalDate().withDayOfMonth(1) }) }
 
     var dropDownSize by remember { mutableStateOf(Size.Zero) }
 
