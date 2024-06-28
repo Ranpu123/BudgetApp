@@ -46,6 +46,7 @@ import com.example.budgetapp.R
 import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.services.repository.income.LocalIncomeRepository
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
+import com.example.budgetapp.utils.sortByDay
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -114,15 +115,14 @@ fun TransactionsCard(
                     Divider()
                     if(transactions.isNotEmpty()) {
                         LazyColumn(modifier = modifier.height(110.dp)) {
-                            transactions.sortedByDescending { it.date }.distinctBy { it.date.toLocalDate() }.forEach {
-                                val filteredTransactions =
-                                    transactions.filter { e -> e.date.toLocalDate().isEqual(it.date.toLocalDate()) }
+                            sortByDay(transactions).forEach {(_, items) ->
+
                                 stickyHeader {
                                     TransactionDateHeader(
-                                        date = it.date.toLocalDate(),
-                                        total = filteredTransactions.sumOf { it.value })
+                                        date = items.first().date.toLocalDate(),
+                                        total = items.sumOf { it.value })
                                 }
-                                items(filteredTransactions.sortedBy { it.date }) { transaction ->
+                                items(items.sortedBy { it.date }) { transaction ->
                                     ItemTransactionsCard(
                                         transaction = transaction,
                                     )

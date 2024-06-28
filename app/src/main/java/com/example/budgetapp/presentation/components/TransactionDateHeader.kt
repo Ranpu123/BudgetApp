@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.budgetapp.R
 import com.example.budgetapp.utils.formatCurrency
+import com.example.budgetapp.utils.toFormattedDate
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -68,15 +69,3 @@ fun TransactionDateHeader(
     Divider(color = Color.Black)
 }
 
-@Composable
-fun toFormattedDate(date: LocalDate): String{
-    if (date.isEqual(LocalDate.now())) {
-        return stringResource(R.string.today)
-    }else {
-        return date.format(DateTimeFormatter.ofPattern("dd, MMM yyyy")).toString()
-    }
-}
-
-fun toFormattedMonthYear(date: LocalDate): String{
-    return date.format(DateTimeFormatter.ofPattern("MMMM - yyyy")).toString()
-}

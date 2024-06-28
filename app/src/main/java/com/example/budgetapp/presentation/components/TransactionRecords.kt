@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -42,7 +41,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.style.TextAlign
@@ -56,6 +54,9 @@ import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import com.example.budgetapp.services.repository.income.LocalIncomeRepository
 import androidx.compose.ui.res.stringResource
+import com.example.budgetapp.utils.sortByCategory
+import com.example.budgetapp.utils.sortByMonth
+import com.example.budgetapp.utils.toFormattedMonthYear
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -70,7 +71,8 @@ fun RecordCard(
 
     var filterBy by remember{ mutableStateOf(true) }
 
-    var filters by remember { mutableStateOf(transactions.sortedByDescending { it.date }.distinctBy { it.date.toLocalDate().withDayOfMonth(1) }) }
+    var filters:Map<Any?, List<Transaction<*>>> by remember { mutableStateOf(mapOf()) }
+    filters = sortByMonth(transactions)
 
     var dropDownSize by remember { mutableStateOf(Size.Zero) }
 
@@ -116,10 +118,10 @@ fun RecordCard(
                     onChoice = {
                         if(it == dropMenuOptions[0]){
                             filterBy = true
-                            filters = transactions.sortedByDescending { it.date }.distinctBy { it.date.toLocalDate().withDayOfMonth(1) }
+                            filters = sortByMonth(transactions)
                         }else{
                             filterBy = false
-                            filters = transactions.distinctBy { it.category }
+                            filters = sortByCategory(transactions)
                         }
                     }
                 )
@@ -129,25 +131,17 @@ fun RecordCard(
                 modifier = Modifier
             ) {
                 if (transactions.isNotEmpty()) {
-                    filters.forEach { filter ->
-
-                        val filtered = transactions.filter {
-                            if(filterBy){
-                                it.date.toLocalDate().withDayOfMonth(1).isEqual(filter.date.toLocalDate().withDayOfMonth(1))
-                            }else{
-                                it.category == filter.category
-                            }
-                        }
+                    filters.forEach { (_, items) ->
 
                         stickyHeader {
                             TransactionDateHeader(
-                                total = filtered.sumOf { it.value },
-                                title = if(filterBy) toFormattedMonthYear(filter.date.toLocalDate())
-                                            else (filter.category as ICategories).asString()
+                                total = items.sumOf { it.value },
+                                title = if(filterBy) toFormattedMonthYear(items.first().date.toLocalDate())
+                                            else (items.first().category as ICategories).asString()
                             )
                         }
                         items(
-                            items = filtered,
+                            items = items,
                             key = { it.id }
                         ) { item ->
                             SwipeToDeleteContainer<Transaction<*>>(
@@ -179,6 +173,9 @@ fun RecordCard(
         }
     }
 }
+
+
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
