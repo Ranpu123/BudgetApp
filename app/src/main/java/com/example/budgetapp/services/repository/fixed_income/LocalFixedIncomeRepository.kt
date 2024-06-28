@@ -1,5 +1,6 @@
 package com.example.budgetapp.services.repository.fixed_income
 
+import android.util.Log
 import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
 import com.example.budgetapp.domain.models.income.FixedIncome
 import com.example.budgetapp.domain.models.income.IncomeCategory

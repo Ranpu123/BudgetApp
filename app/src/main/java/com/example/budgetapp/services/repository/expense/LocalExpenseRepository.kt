@@ -31,6 +31,36 @@ object LocalExpenseRepository: IExpenseRepository {
             category = ExpenseCategory.LIGHTING,
             description = "Conta Luz"
         ),
+        Expense(
+            date = LocalDateTime.parse("2024-06-02T08:30:00"),
+            value = -105.00,
+            category = ExpenseCategory.LIGHTING,
+            description = "Conta Luz"
+        ),
+        Expense(
+            date = LocalDateTime.parse("2024-06-02T08:30:00"),
+            value = -105.00,
+            category = ExpenseCategory.LIGHTING,
+            description = "Conta Luz"
+        ),
+        Expense(
+            date = LocalDateTime.parse("2024-06-02T08:30:00"),
+            value = -105.00,
+            category = ExpenseCategory.LIGHTING,
+            description = "Conta Luz"
+        ),
+        Expense(
+            date = LocalDateTime.parse("2024-06-02T08:30:00"),
+            value = -105.00,
+            category = ExpenseCategory.LIGHTING,
+            description = "Conta Luz"
+        ),
+        Expense(
+            date = LocalDateTime.parse("2024-06-02T08:30:00"),
+            value = -105.00,
+            category = ExpenseCategory.LIGHTING,
+            description = "Conta Luz"
+        ),
     )
     override fun fetchAll(): MutableList<Expense> {
         return expenses

@@ -45,7 +45,6 @@ open class FixedTransaction<T>(
 
             val res = ChronoUnit.MONTHS.between(lastDate.withDayOfMonth(validDayofMonth(date.dayOfMonth, lastMonth)),
                 lastMonth.withDayOfMonth(validDayofMonth(date.dayOfMonth, lastMonth)))
-            Log.e("ISDUE", "IM INSIDE THE THINGY " + lastMonth.withDayOfMonth(validDayofMonth(date.dayOfMonth, lastMonth)))
             return res.toInt()
 
         }else{

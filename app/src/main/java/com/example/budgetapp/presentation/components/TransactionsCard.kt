@@ -36,13 +36,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.budgetapp.R
 import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.services.repository.income.LocalIncomeRepository
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
+import com.example.budgetapp.utils.sortByDay
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -56,6 +60,7 @@ fun TransactionsCard(
 ){
 
     var expanded by rememberSaveable { mutableStateOf(expanded) }
+
     Surface(
         modifier = modifier
             .animateContentSize(
@@ -84,7 +89,7 @@ fun TransactionsCard(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Adicionar Gasto",
+                        contentDescription = stringResource(R.string.cd_add_transaction, cardName),
                         tint = Color.Black
                     )
                 }
@@ -96,7 +101,7 @@ fun TransactionsCard(
                 )
                 Icon(
                     imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                    contentDescription = "Expandir Cartão",
+                    contentDescription = stringResource(R.string.cd_expand_card),
                     tint = Color(0xFFABABAB),
                     modifier = modifier.clickable { expanded = !expanded }
                 )
@@ -110,31 +115,32 @@ fun TransactionsCard(
                     Divider()
                     if(transactions.isNotEmpty()) {
                         LazyColumn(modifier = modifier.height(110.dp)) {
-                            transactions.sortedByDescending { it.date }.distinctBy { it.date.toLocalDate() }.forEach {
-                                val filteredTransactions =
-                                    transactions.filter { e -> e.date.toLocalDate().isEqual(it.date.toLocalDate()) }
+                            sortByDay(transactions).forEach {(_, items) ->
+
                                 stickyHeader {
                                     TransactionDateHeader(
-                                        date = it.date.toLocalDate(),
-                                        total = filteredTransactions.sumOf { it.value })
+                                        date = items.first().date.toLocalDate(),
+                                        total = items.sumOf { it.value })
                                 }
-                                items(filteredTransactions.sortedBy { it.date }) { transaction ->
-                                    ItemTransactionsCard(transaction = transaction)
+                                items(items.sortedBy { it.date }) { transaction ->
+                                    ItemTransactionsCard(
+                                        transaction = transaction,
+                                    )
                                     Divider()
                                 }
                             }
                         }
                     }else{
                         Text(
-                            modifier = modifier.clickable { onSeeMoreClicked() },
-                            text = "Nada encontrado, tente adicionar um novo.",
+                            modifier = modifier.clickable { onNewTransactionClicked() },
+                            text = stringResource(R.string.nothing_found),
                             color = Color.Gray,
                             textAlign = TextAlign.Center)
                         Divider()
                     }
                     Text(
                         modifier = modifier.clickable { onSeeMoreClicked() },
-                        text = "Ver mais",
+                        text = stringResource(R.string.see_more),
                         color = Color(0xFF0077CD),
                         textAlign = TextAlign.Center)
                 }

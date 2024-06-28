@@ -1,4 +1,4 @@
-package com.example.budgetapp.presentation.viewModels
+package com.example.budgetapp.presentation.viewModels.home
 
 import com.example.budgetapp.domain.models.expense.Expense
 import com.example.budgetapp.domain.models.expense.FixedExpense

@@ -1,3 +1,85 @@
 <resources>
-    <string name="app_name">BudgetApp</string>
+    <string name="app_name" translatable="false">BudgetApp</string>
+    //HomeView
+    <string name="greetings">Olá, %1$s!</string>
+    <string name="expenses">Gastos</string>
+    <string name="expense">Gasto</string>
+    <string name="incomes">Receitas</string>
+    <string name="income">Receita</string>
+    <string name="fixed_expenses">Gastos Fixos</string>
+    <string name="fixed_expense">Gasto Fixo</string>
+    <string name="fixed_incomes">Receitas Fixas</string>
+    <string name="fixed_income">Receita Fixa</string>
+
+    //Records
+    <string name="records">Relatórios</string>
+    <string name="overview">Visão Geral</string>
+
+    //TransactionCard
+    <string name="nothing_found">Nada encontrado, tente adicionar um novo lançamento.</string>
+    <string name="see_more">Ver mais</string>
+    <string name="cd_expand_card">Expandir Cartão</string>
+    <string name="cd_add_transaction">Adicionar %1$s</string>
+    
+    //TransactionRecords
+    <array name="records_drop_menu_options">
+        <item>Mês</item>
+        <item>Categoria</item>
+    </array>
+
+    //TransactionDateHeader
+    <string name="header_total">Total: </string>
+    <string name="today">Hoje</string>
+    
+    //DropMenu
+    <string name="default_option">Selecione uma opção</string>
+    
+    //DoubleSwitch
+    <string name="variable">Variáveis</string>
+    <string name="fixed">Fixos</string>
+
+    //CardSaldo
+    <string name="balance">Saldo</string>
+    <string name="cd_update">Atualizar</string>
+
+    //BottomSheet
+    <string name="field_category">Categoria</string>
+    <string name="field_description">Descrição</string>
+    <string name="field_date">Data</string>
+    <string name="field_value">Valor</string>
+    <string name="cd_clear_field">Limpar Campo</string>
+
+    //Buttons
+    <string name="btn_confirm">Confirmar</string>
+    <string name="btn_cancel">Cancelar</string>
+    <string name="btn_add">Adicionar</string>
+
+    //IncomeCategory
+    <string name="commission">Comissão</string>
+    <string name="gift">Presente</string>
+    <string name="interest">Juros</string>
+    <string name="investment">Investimento</string>
+    <string name="salary">Salário</string>
+    <string name="sell">Venda</string>
+    <string name="tips">Gorjeta</string>
+    <string name="other">Outros</string>
+
+    //ExpenseCategory
+    <string name="food">Alimentação</string>
+    <string name="grocery">Mercado</string>
+    <string name="health">Saúde</string>
+    <string name="lighting">Luz</string>
+    <string name="rent">Aluguel</string>
+    <string name="restaurant">Restaurante</string>
+    <string name="tax">Imposto</string>
+    <string name="water">Água</string>
+    <string name="gas">Gás</string>
+    <string name="fuel">Combustível</string>
+    <string name="streaming">Streaming</string>
+    <string name="internet">Internet</string>
+    <string name="phone_plan">Plano de Celular</string>
+    <string name="insurance">Seguro</string>
+    <string name="installment">Prestação</string>
+
+
 </resources>

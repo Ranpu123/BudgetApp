@@ -18,11 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.budgetapp.R
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import com.example.budgetapp.presentation.ui.theme.Green20
 import com.example.budgetapp.presentation.ui.theme.Green40
@@ -48,7 +50,7 @@ fun CardSaldo(
                         .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                         .weight(1f)
                 ) {
-                    Text(text = "Saldo", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    Text(text = stringResource(id = R.string.balance), fontWeight = FontWeight.Bold, fontSize = 20.sp)
                     Text(
                         text = formatCurrency(totalBalance),
                         fontWeight = FontWeight.Bold,
@@ -60,7 +62,7 @@ fun CardSaldo(
                 ){
                     Icon(
                         imageVector = Icons.Filled.Refresh,
-                        contentDescription = "Atualizar",
+                        contentDescription = stringResource(id = R.string.cd_update),
                         tint = Color.White,
                         modifier = Modifier.clickable { onReloadClicked() }
                     )
@@ -82,10 +84,10 @@ fun CardSaldo(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = Icons.Filled.KeyboardArrowDown,
-                                contentDescription = "Entradas",
+                                contentDescription = stringResource(id = R.string.incomes),
                                 tint = Color(0xFF52FF00)
                             )
-                            Text("Entradas", fontWeight = FontWeight.Medium, fontSize = 15.sp)
+                            Text(stringResource(id = R.string.incomes), fontWeight = FontWeight.Medium, fontSize = 15.sp)
                         }
                         Text(formatCurrency(incomeBalance), textAlign = TextAlign.Start, fontSize = 16.sp)
                     }
@@ -93,10 +95,10 @@ fun CardSaldo(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = Icons.Filled.KeyboardArrowUp,
-                                contentDescription = "Saídas",
+                                contentDescription = stringResource(id = R.string.expenses),
                                 tint = Color(0xFFFF0000)
                             )
-                            Text("Saídas", fontWeight = FontWeight.Medium, fontSize = 15.sp)
+                            Text(stringResource(id = R.string.expenses), fontWeight = FontWeight.Medium, fontSize = 15.sp)
                         }
                         Text(formatCurrency(expenseBalance), textAlign = TextAlign.End, fontSize = 16.sp)
                     }
