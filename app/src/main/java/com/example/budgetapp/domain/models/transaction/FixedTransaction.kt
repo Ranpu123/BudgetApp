@@ -1,12 +1,14 @@
 package com.example.budgetapp.domain.models.transaction
 
 import android.util.Log
+import androidx.room.Entity
 import com.example.budgetapp.domain.models.ICategories
 import com.example.budgetapp.utils.validDayofMonth
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
+@Entity
 open class FixedTransaction<T>(
     date: LocalDateTime,
     value: Double,

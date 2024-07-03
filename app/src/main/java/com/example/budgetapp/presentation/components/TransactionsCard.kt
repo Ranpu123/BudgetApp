@@ -148,7 +148,7 @@ fun TransactionsCard(
         }
     }
 }
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun TransactionCardPreview(){
@@ -157,4 +157,4 @@ fun TransactionCardPreview(){
             cardName = "Receitas",
             transactions = LocalIncomeRepository.fetchAll() as List<Transaction<*>>)
     }
-}
+}*/

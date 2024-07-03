@@ -1,77 +1,70 @@
 package com.example.budgetapp.presentation.viewModels.home
 
 
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
-import com.example.budgetapp.domain.models.ICategories
+import androidx.lifecycle.viewModelScope
 import com.example.budgetapp.domain.models.expense.Expense
 import com.example.budgetapp.domain.models.expense.FixedExpense
 import com.example.budgetapp.domain.models.income.FixedIncome
 import com.example.budgetapp.domain.models.income.Income
 import com.example.budgetapp.domain.models.transaction.FixedTransaction
-import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
 import com.example.budgetapp.domain.repository_interfaces.IIncomeRepository
-import com.example.budgetapp.services.repository.expense.LocalExpenseRepository
 import com.example.budgetapp.services.repository.fixed_expense.LocalFixedExpenseRepository
 import com.example.budgetapp.services.repository.fixed_income.LocalFixedIncomeRepository
-import com.example.budgetapp.services.repository.income.LocalIncomeRepository
 import com.example.budgetapp.utils.validDayofMonth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 import java.time.LocalTime
+import kotlin.math.exp
 
 class HomeViewModel(
-    private val expenseRepository: IExpenseRepository = LocalExpenseRepository,
-    private val incomeRepository: IIncomeRepository = LocalIncomeRepository,
-    private val fixedExpenseRepository: IFixedExpenseRepository = LocalFixedExpenseRepository,
-    private val fixedIncomeRepository: IFixedIncomeRepository = LocalFixedIncomeRepository,
+    private val expenseRepository: IExpenseRepository,
+    private val incomeRepository: IIncomeRepository,
+    private val fixedExpenseRepository: IFixedExpenseRepository,
+    private val fixedIncomeRepository: IFixedIncomeRepository,
 
 
     ): ViewModel() {
 
-    private var _expenses = mutableListOf<Expense>()
-    private var _incomes = mutableListOf<Income>()
-
-    private var _fixedIncomes = mutableListOf<FixedIncome>()
-    private var _fixedExpenses = mutableListOf<FixedExpense>()
-
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
-
     init {
-        updateAll()
+        startObserver()
     }
 
-    private fun fetchData(){
-        _expenses = expenseRepository.fetchAll()
-        _incomes = incomeRepository.fetchAll()
-        _fixedExpenses = fixedExpenseRepository.fetchAll()
-        _fixedIncomes = fixedIncomeRepository.fetchAll()
-    }
+    fun startObserver(){
+        viewModelScope.launch{
+            combine(
+                incomeRepository.fetchAll(),
+                expenseRepository.fetchAll(),
 
-    private fun updateHomeState(){
-        _uiState.value = HomeUiState(
-            expenses = _expenses,
-            incomes = _incomes,
-            fixedExpense = _fixedExpenses,
-            fixedIncome = _fixedIncomes,
-            userName = "Vinícius",
-            balance = getTotalBalance(),
-            incomeBalance = getIncomeBalance(),
-            expenseBalance = getExpenseBalance()
-        )
-    }
+            ){
+                incomes, expenses ->
 
-    fun updateAll(){
-        fetchData()
-        checkDueTransactions(_fixedExpenses)
-        checkDueTransactions(_fixedIncomes)
-        fetchData()
-        updateHomeState()
+                HomeUiState(
+                    expenses = expenses,
+                    incomes = incomes,
+                    balance = getTotalBalance(incomes, expenses),
+                    incomeBalance = getIncomeBalance(incomes),
+                    expenseBalance = getExpenseBalance(expenses),
+                    userName = "Vinícius",
+                )
+            }.catch {
+                e->
+                _uiState.value = HomeUiState(errorMsg = e.message)
+            }.collect{
+                _uiState.value = it
+            }
+        }
     }
     private fun checkDueTransactions(fixedTransactions: List<FixedTransaction<*>>){
         fixedTransactions.forEach(){ transaction ->
@@ -116,22 +109,22 @@ class HomeViewModel(
         }
     }
 
-    private fun getTotalBalance(): Double {
+    private fun getTotalBalance(incomes: List<Income>, expenses: List<Expense>): Double {
         var total: Double = 0.0
-        total += getIncomeBalance()
-        total += getExpenseBalance()
+        total += getIncomeBalance(incomes)
+        total += getExpenseBalance(expenses)
         return total
     }
 
-    private fun getIncomeBalance(): Double{
+    private fun getIncomeBalance(incomes: List<Income>): Double{
         var total: Double = 0.0
-        total += _incomes.sumOf { it.value }
+        total += incomes.sumOf { it.value }
         return total
     }
 
-    private fun getExpenseBalance(): Double{
+    private fun getExpenseBalance(expenses: List<Expense>): Double{
         var total: Double = 0.0
-        total += _expenses.sumOf { it.value }
+        total += expenses.sumOf { it.value }
         return total
     }
 }

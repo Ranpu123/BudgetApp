@@ -1,8 +1,11 @@
 package com.example.budgetapp.domain.models.income
 
+import androidx.room.Entity
 import com.example.budgetapp.domain.models.transaction.Transaction
 import java.time.LocalDateTime
 
+
+@Entity
 class Income(
     date: LocalDateTime,
     value: Double,

@@ -39,7 +39,7 @@ import com.example.budgetapp.presentation.viewModels.records.RecordsViewModel
 @Composable
 fun RecordsOverview(
     modifier: Modifier = Modifier,
-    viewModel: RecordsViewModel = RecordsViewModel(),
+    viewModel: RecordsViewModel,
     onReturnClicked: () -> Unit = {}
 ){
     val UiState by viewModel.uiState.collectAsState()
@@ -168,11 +168,11 @@ fun RecordsOverview(
         }
     }
 }
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun PreviewRecordsOverview(){
     BudgetAppTheme {
         RecordsOverview()
     }
-}
+}*/

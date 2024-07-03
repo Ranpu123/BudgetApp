@@ -10,17 +10,15 @@ import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
 import com.example.budgetapp.domain.repository_interfaces.IIncomeRepository
-import com.example.budgetapp.services.repository.expense.LocalExpenseRepository
 import com.example.budgetapp.services.repository.fixed_expense.LocalFixedExpenseRepository
 import com.example.budgetapp.services.repository.fixed_income.LocalFixedIncomeRepository
-import com.example.budgetapp.services.repository.income.LocalIncomeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class RecordsViewModel(
-    private val expenseRepository: IExpenseRepository = LocalExpenseRepository,
-    private val incomeRepository: IIncomeRepository = LocalIncomeRepository,
+    private val expenseRepository: IExpenseRepository,
+    private val incomeRepository: IIncomeRepository,
     private val fixedExpenseRepository: IFixedExpenseRepository = LocalFixedExpenseRepository,
     private val fixedIncomeRepository: IFixedIncomeRepository = LocalFixedIncomeRepository,
 ): ViewModel() {

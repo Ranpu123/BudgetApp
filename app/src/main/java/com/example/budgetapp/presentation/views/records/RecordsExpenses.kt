@@ -48,7 +48,7 @@ import org.koin.compose.KoinContext
 @Composable
 fun RecordsExpenses(
     modifier: Modifier = Modifier,
-    viewModel: RecordsViewModel = RecordsViewModel(),
+    viewModel: RecordsViewModel,
     isFixed: Boolean = false,
     onReturnClicked: () -> Unit = {}
 ){
