@@ -34,14 +34,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.budgetapp.R
 import com.example.budgetapp.domain.models.income.IncomeCategory
-import com.example.budgetapp.presentation.viewModels.IncomeBottomSheetViewModel
+import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.IncomeBottomSheetViewModel
 import com.example.budgetapp.utils.currencyToDouble
 import com.example.budgetapp.utils.formatCurrency
 import java.time.Instant
@@ -86,7 +88,7 @@ fun AddIncomeBottomSheet(
         ) {
             Text(
                 modifier = modifier.fillMaxWidth(),
-                text = "Adicionar Receita",
+                text = stringResource(id = R.string.cd_add_transaction, stringResource(id = R.string.income)),
                 color = Color.Black,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
@@ -100,21 +102,21 @@ fun AddIncomeBottomSheet(
 
                 Text(
                     modifier = modifier.fillMaxWidth(),
-                    text = "Categoria",
+                    text = stringResource(id = R.string.field_category),
                     color = Color.Gray,
                     fontSize = 13.sp
                 )
                 dropDownMenu(
-                    suggestions = IncomeCategory.entries.toList().sortedBy { it.displayName },
+                    suggestions = IncomeCategory.entries.toList().sortedBy { it.asString() },
                     onChoice = {
                         category = it as IncomeCategory
-                        description = category.displayName
+                        description = category.asString()
                     },
-                    defaultSelected = category.displayName
+                    defaultSelected = category.asString()
                 )
                 Text(
                     modifier = modifier.fillMaxWidth(),
-                    text = "Descrição",
+                    text = stringResource(id = R.string.field_description),
                     color = Color.Gray,
                     fontSize = 13.sp
                 )
@@ -127,7 +129,7 @@ fun AddIncomeBottomSheet(
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Rounded.Close,
-                            contentDescription = "Limpar Campo",
+                            contentDescription = stringResource(id = R.string.cd_clear_field),
                             modifier = Modifier.clickable { description = "" }
                         )
                     }
@@ -143,7 +145,7 @@ fun AddIncomeBottomSheet(
 
                 Text(
                     modifier = modifier.fillMaxWidth(),
-                    text = "Data",
+                    text = stringResource(id = R.string.field_date),
                     color = Color.Gray,
                     fontSize = 13.sp
                 )
@@ -161,7 +163,7 @@ fun AddIncomeBottomSheet(
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Filled.DateRange,
-                            contentDescription = "Data",
+                            contentDescription = stringResource(id = R.string.field_date),
                             tint = Color.Gray
                         )
                     }
@@ -169,7 +171,7 @@ fun AddIncomeBottomSheet(
 
                 Text(
                     modifier = modifier.fillMaxWidth(),
-                    text = "Valor",
+                    text = stringResource(id = R.string.field_value),
                     color = Color.Gray,
                     fontSize = 13.sp,
                 )
@@ -183,7 +185,7 @@ fun AddIncomeBottomSheet(
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Rounded.Close,
-                            contentDescription = "Limpar Campo",
+                            contentDescription = stringResource(id = R.string.cd_clear_field),
                             modifier = Modifier.clickable { value = formatCurrency("0") }
                         )
                     }
@@ -219,7 +221,7 @@ fun AddIncomeBottomSheet(
                     },
                 ) {
                     Text(
-                        text = "Adicionar",
+                        text = stringResource(id = R.string.btn_add),
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
                     )
@@ -236,12 +238,12 @@ fun AddIncomeBottomSheet(
                                     .toEpochMilli()
                                 isDatePickerVisible = false
                             }) {
-                                Text(text = "Confirmar")
+                                Text(text = stringResource(id = R.string.btn_confirm))
                             }
                         },
                         dismissButton = {
                             OutlinedButton(onClick = { isDatePickerVisible = false }) {
-                                Text(text = "Cancelar")
+                                Text(text = stringResource(id = R.string.btn_cancel))
                             }
                         },
                     ) {

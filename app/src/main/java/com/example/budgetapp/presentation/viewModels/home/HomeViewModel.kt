@@ -1,14 +1,14 @@
-package com.example.budgetapp.presentation.viewModels
+package com.example.budgetapp.presentation.viewModels.home
 
-import android.util.Log
+
 import androidx.lifecycle.ViewModel
-import com.example.budgetapp.domain.models.expense.ExpenseCategory
+import com.example.budgetapp.domain.models.ICategories
 import com.example.budgetapp.domain.models.expense.Expense
 import com.example.budgetapp.domain.models.expense.FixedExpense
 import com.example.budgetapp.domain.models.income.FixedIncome
-import com.example.budgetapp.domain.models.income.IncomeCategory
 import com.example.budgetapp.domain.models.income.Income
 import com.example.budgetapp.domain.models.transaction.FixedTransaction
+import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
@@ -21,7 +21,6 @@ import com.example.budgetapp.utils.validDayofMonth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.time.LocalDate
 import java.time.LocalTime
 
 class HomeViewModel(

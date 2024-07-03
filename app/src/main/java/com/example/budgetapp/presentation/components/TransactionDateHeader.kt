@@ -8,16 +8,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.budgetapp.R
 import com.example.budgetapp.utils.formatCurrency
+import com.example.budgetapp.utils.toFormattedDate
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun TransactionDateHeader(date: LocalDate?, total: Double, modifier: Modifier = Modifier){
+fun TransactionDateHeader(
+    total: Double,
+    date: LocalDate? = null,
+    title: String = "",
+    modifier: Modifier = Modifier
+){
     Surface(modifier = modifier.fillMaxWidth()) {
         ConstraintLayout(
             modifier = modifier
@@ -34,7 +42,7 @@ fun TransactionDateHeader(date: LocalDate?, total: Double, modifier: Modifier = 
                 color = Color.Black,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,
-                text = "Total: "
+                text = stringResource(R.string.header_total)
             )
             Text(
                 modifier = modifier
@@ -47,18 +55,17 @@ fun TransactionDateHeader(date: LocalDate?, total: Double, modifier: Modifier = 
                 fontSize = 12.sp,
                 text = formatCurrency(total)
             )
-            if(date != null) {
-                Text(
-                    modifier = modifier
-                        .constrainAs(data) { centerTo(parent) },
-                    color = Color.Black,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 12.sp,
-                    text = if (date.isEqual(LocalDate.now())) "Hoje"
-                    else date.format(DateTimeFormatter.ofPattern("dd, MMM yyyy")).toString()
-                )
-            }
+
+            Text(
+                modifier = modifier
+                    .constrainAs(data) { centerTo(parent) },
+                color = Color.Black,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 12.sp,
+                text = if(date != null) toFormattedDate(date) else title
+            )
         }
     }
     Divider(color = Color.Black)
 }
+

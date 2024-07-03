@@ -1,4 +1,4 @@
-package com.example.budgetapp.presentation.viewModels
+package com.example.budgetapp.presentation.viewModels.transactionBottomSheet
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -26,7 +26,7 @@ class FIncomeBottomSheetViewModel(
     val uiState: StateFlow<TransactionBottomSheetUIState> = _uiState.asStateFlow()
 
     var category = mutableStateOf( IncomeCategory.OTHER)
-    var description = mutableStateOf(IncomeCategory.OTHER.displayName)
+    var description = mutableStateOf(IncomeCategory.OTHER.asString())
     var value = mutableStateOf(formatCurrency("0"))
     var date = mutableStateOf(Instant.now().toEpochMilli())
 
@@ -65,7 +65,7 @@ class FIncomeBottomSheetViewModel(
 
     fun clearState(){
         _uiState.value = TransactionBottomSheetUIState()
-        description.value = IncomeCategory.OTHER.displayName
+        description.value = IncomeCategory.OTHER.asString()
         value.value = formatCurrency("0")
         date.value = Instant.now().toEpochMilli()
         category.value = IncomeCategory.OTHER
