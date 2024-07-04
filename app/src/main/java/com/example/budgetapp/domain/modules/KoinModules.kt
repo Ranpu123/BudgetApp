@@ -30,6 +30,7 @@ import org.koin.dsl.module
 fun provideDatabase(context: Context): AppDatabase =
     Room.databaseBuilder(context, AppDatabase::class.java,"appDatabase")
         .allowMainThreadQueries()
+        .fallbackToDestructiveMigration()
         .build()
 
 fun provideIncomeDao(db: AppDatabase): IncomeDao = db.incomeDao()

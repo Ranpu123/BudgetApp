@@ -9,7 +9,7 @@ class LocalExpenseRepository(
     private val dao: ExpenseDao
 ): IExpenseRepository {
 
-    override suspend fun fetchAll(): Flow<List<Expense>> {
+    override fun fetchAll(): Flow<List<Expense>> {
         return dao.fetchAll()
     }
 
@@ -21,7 +21,7 @@ class LocalExpenseRepository(
         return dao.remove(expense)
     }
 
-    override suspend fun updateExpense(expense: Expense): Int {
+    override suspend fun updateExpense(expense: Expense): Long {
         return dao.update(expense)
     }
 }

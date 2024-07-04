@@ -143,7 +143,7 @@ fun FixedTransactionsCard(
         }
     }
 }
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun FixedTransactionCardPreview(){
@@ -152,4 +152,4 @@ fun FixedTransactionCardPreview(){
             cardName = "Receitas Fixas",
             transactions = LocalFixedIncomeRepository.fetchAll() as List<FixedTransaction<*>>)
     }
-}
+}*/

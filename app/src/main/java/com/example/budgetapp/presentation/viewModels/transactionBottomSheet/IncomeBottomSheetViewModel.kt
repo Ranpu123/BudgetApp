@@ -2,6 +2,7 @@ package com.example.budgetapp.presentation.viewModels.transactionBottomSheet
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.budgetapp.domain.models.income.IncomeCategory
 import com.example.budgetapp.domain.models.income.Income
 import com.example.budgetapp.domain.repository_interfaces.IIncomeRepository
@@ -11,6 +12,7 @@ import com.example.budgetapp.utils.formatCurrency
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -36,14 +38,16 @@ class IncomeBottomSheetViewModel(
         category: IncomeCategory,
         description: String,
     ){
-        repository.addIncome(
-            Income(
-                date = date.atTime(LocalTime.now()),
-                value = if(value < 0.0) +value else value,
-                category = category,
-                description = description
+        viewModelScope.launch {
+            repository.addIncome(
+                Income(
+                    date = date.atTime(LocalTime.now()),
+                    value = if (value < 0.0) +value else value,
+                    category = category,
+                    description = description
+                )
             )
-        )
+        }
     }
 
     fun validadeForm(description: String, value: Double): Boolean{

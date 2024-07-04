@@ -65,10 +65,6 @@ fun HomeView(
         var isAddFixedIncomeOpen by rememberSaveable { mutableStateOf(false) }
         var isAddFixedExpenseOpen by rememberSaveable { mutableStateOf(false) }
 
-        LaunchedEffect(key1 = Unit) {
-            viewModel.updateAll()
-        }
-
         Surface(
             modifier = modifier
                 .fillMaxSize()
@@ -201,7 +197,6 @@ fun HomeView(
                         isAddExpenseOpen = false
                     },
                     onAdd = {
-                        viewModel.updateAll()
                         isAddExpenseOpen = false
                     },
                     bottomSheetViewModel = expenseBottomSheetViewModel,
@@ -216,7 +211,6 @@ fun HomeView(
                         isAddIncomeOpen = false
                     },
                     onAdd = {
-                        viewModel.updateAll()
                         isAddIncomeOpen = false
                     },
                     bottomSheetViewModel = incomeBottomSheetViewModel
@@ -231,7 +225,6 @@ fun HomeView(
                         isAddFixedExpenseOpen = false
                     },
                     onAdd = {
-                        viewModel.updateAll()
                         isAddFixedExpenseOpen = false
                     },
                     bottomSheetViewModel = fExpenseBottomSheetViewModel
@@ -246,7 +239,6 @@ fun HomeView(
                         isAddFixedIncomeOpen = false
                     },
                     onAdd = {
-                        viewModel.updateAll()
                         isAddFixedIncomeOpen = false
                     },
                     bottomSheetViewModel = fIncomeBottomSheetViewModel

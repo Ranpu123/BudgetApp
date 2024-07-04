@@ -11,7 +11,7 @@ class LocalIncomeRepository(
     private val dao: IncomeDao
 ): IIncomeRepository {
 
-    override suspend fun fetchAll(): Flow<List<Income>> {
+    override fun fetchAll(): Flow<List<Income>> {
         return dao.fetchAll()
     }
 
@@ -23,7 +23,7 @@ class LocalIncomeRepository(
         return dao.remove(income)
     }
 
-    override suspend fun updateIncome(income: Income): Int {
+    override suspend fun updateIncome(income: Income): Long {
         return dao.update(income)
     }
 }

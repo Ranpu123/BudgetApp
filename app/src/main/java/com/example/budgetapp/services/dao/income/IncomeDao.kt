@@ -11,14 +11,15 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface IncomeDao {
     @Query("Select * FROM Income")
-    suspend fun fetchAll(): Flow<List<Income>>
+    fun fetchAll(): Flow<List<Income>>
 
     @Insert
     suspend fun add(income: Income): Long
 
+    @Upsert
+    suspend fun update(income: Income): Long
+
     @Delete
     suspend fun remove(income: Income): Int
 
-    @Upsert
-    suspend fun update(income: Income): Int
 }

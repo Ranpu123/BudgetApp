@@ -4,6 +4,8 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.budgetapp.domain.models.expense.Expense
+import com.example.budgetapp.domain.models.expense.FixedExpense
+import com.example.budgetapp.domain.models.income.FixedIncome
 import com.example.budgetapp.domain.models.income.Income
 import com.example.budgetapp.services.dao.fixedIncome.FixedIncomeDao
 import com.example.budgetapp.services.dao.expense.ExpenseDao
@@ -11,8 +13,8 @@ import com.example.budgetapp.services.dao.fixedExpense.FixedExpenseDao
 import com.example.budgetapp.services.dao.income.IncomeDao
 
 @Database(
-    entities = [Income::class, Expense::class],
-    version = 1,
+    entities = [Income::class, Expense::class, FixedExpense::class, FixedIncome::class],
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

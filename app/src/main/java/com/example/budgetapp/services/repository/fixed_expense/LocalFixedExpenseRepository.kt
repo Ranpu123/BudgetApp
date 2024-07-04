@@ -10,7 +10,7 @@ class LocalFixedExpenseRepository(
     private val dao: FixedExpenseDao
 ): IFixedExpenseRepository {
 
-    override suspend fun fetchAll(): Flow<List<FixedExpense>> {
+    override fun fetchAll(): Flow<List<FixedExpense>> {
         return dao.fetchAll()
     }
 
@@ -19,10 +19,10 @@ class LocalFixedExpenseRepository(
     }
 
     override suspend fun removeFixedExpense(fixedExpense: FixedExpense): Int {
-        return dao.delete(fixedExpense)
+        return dao.remove(fixedExpense)
     }
 
-    override suspend fun updateFixedExpense(fixedExpense: FixedExpense): Int {
+    override suspend fun updateFixedExpense(fixedExpense: FixedExpense): Long {
         return dao.update(fixedExpense)
     }
 }

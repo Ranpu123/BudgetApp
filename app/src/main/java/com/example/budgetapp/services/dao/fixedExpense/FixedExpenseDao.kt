@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FixedExpenseDao {
     @Query("SELECT * FROM FixedExpense")
-    suspend fun fetchAll(): Flow<List<FixedExpense>>
+    fun fetchAll(): Flow<List<FixedExpense>>
 
     @Insert
     suspend fun add(fixedExpense: FixedExpense): Long
 
     @Upsert
-    suspend fun update(fixedExpense: FixedExpense): Int
+    suspend fun update(fixedExpense: FixedExpense): Long
 
     @Delete
-    suspend fun delete(fixedExpense: FixedExpense): Int
+    suspend fun remove(fixedExpense: FixedExpense): Int
 }

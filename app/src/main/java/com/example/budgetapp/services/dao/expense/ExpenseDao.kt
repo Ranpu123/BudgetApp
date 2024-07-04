@@ -14,11 +14,12 @@ interface ExpenseDao {
     fun fetchAll(): Flow<List<Expense>>
 
     @Insert
-    fun add(expense: Expense): Long
-
-    @Delete
-    fun remove(expense: Expense): Int
+    suspend fun add(expense: Expense): Long
 
     @Upsert
-    fun update(expense: Expense): Int
+    suspend fun update(expense: Expense): Long
+
+    @Delete
+    suspend fun remove(expense: Expense): Int
+
 }

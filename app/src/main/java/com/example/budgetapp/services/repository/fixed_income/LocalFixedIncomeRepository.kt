@@ -12,7 +12,7 @@ class LocalFixedIncomeRepository(
     private val dao: FixedIncomeDao
 ): IFixedIncomeRepository {
 
-    override suspend fun fetchAll(): Flow<List<FixedIncome>> {
+    override fun fetchAll(): Flow<List<FixedIncome>> {
         return dao.fetchAll()
     }
 
@@ -21,10 +21,10 @@ class LocalFixedIncomeRepository(
     }
 
     override suspend fun removeFixedIncome(fixedIncome: FixedIncome): Int {
-        return dao.delete(fixedIncome)
+        return dao.remove(fixedIncome)
     }
 
-    override suspend fun updateFixedIncome(fixedIncome: FixedIncome): Int {
+    override suspend fun updateFixedIncome(fixedIncome: FixedIncome): Long {
         return dao.update(fixedIncome)
     }
 }

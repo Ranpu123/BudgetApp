@@ -10,4 +10,6 @@ class RecordsUiState(
     val incomes: List<Income> = listOf(),
     val fixedExpense: List<FixedExpense> = listOf(),
     val fixedIncome: List<FixedIncome> = listOf(),
+    val isLoading: Boolean = false,
+    val errorMsg: String? = null
 )
