@@ -3,6 +3,7 @@ package com.example.budgetapp.presentation.viewModels.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.budgetapp.domain.models.expense.Expense
 import com.example.budgetapp.domain.models.expense.FixedExpense
 import com.example.budgetapp.domain.models.income.FixedIncome
@@ -25,6 +26,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import java.time.LocalTime
 
 class HomeViewModel(
@@ -32,17 +36,37 @@ class HomeViewModel(
     private val incomeRepository: IIncomeRepository,
     private val fixedExpenseRepository: IFixedExpenseRepository,
     private val fixedIncomeRepository: IFixedIncomeRepository,
-    var times: Int = 0
-
     ): ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState(isLoading = true))
-    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
-
-    init {
-        observeTransactions()
-        observeFixedTransaction()
-    }
+    val uiState: StateFlow<HomeUiState> = combine(
+        _uiState,
+        incomeRepository.fetchAll().flowOn(Dispatchers.IO),
+        expenseRepository.fetchAll().flowOn(Dispatchers.IO),
+        fixedIncomeRepository.fetchAll().flowOn(Dispatchers.IO),
+        fixedExpenseRepository.fetchAll().flowOn(Dispatchers.IO)
+    ){ uiState, incomes, expenses, fixedIncome, fixedExpense ->
+        println("REDESENHOU")
+        uiState.copy(
+            expenses = expenses,
+            incomes = incomes,
+            fixedExpense = fixedExpense,
+            fixedIncome = fixedIncome,
+            balance = getTotalBalance(incomes, expenses),
+            incomeBalance = getIncomeBalance(incomes),
+            expenseBalance = getExpenseBalance(expenses),
+            userName = "Vinícius",
+            isLoading = false
+        )
+    }.catch {
+        _uiState.value.copy(
+            errorMsg = "${it.message}"
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = HomeUiState(isLoading = true)
+    )
 
     fun updateAll(){
 
@@ -58,35 +82,6 @@ class HomeViewModel(
         viewModelScope.launch {
             fixedExpenseRepository.fetchAll().flowOn(Dispatchers.IO).distinctUntilChanged().collectLatest{
                 checkDueTransactions(it)
-            }
-        }
-    }
-
-    fun observeTransactions(){
-         viewModelScope.launch{
-            combine(
-                incomeRepository.fetchAll(),
-                expenseRepository.fetchAll(),
-                fixedIncomeRepository.fetchAll(),
-                fixedExpenseRepository.fetchAll()
-            ){
-                incomes, expenses, fixedIncome, fixedExpense ->
-                HomeUiState(
-                    expenses = expenses,
-                    incomes = incomes,
-                    fixedExpense = fixedExpense,
-                    fixedIncome = fixedIncome,
-                    balance = getTotalBalance(incomes, expenses),
-                    incomeBalance = getIncomeBalance(incomes),
-                    expenseBalance = getExpenseBalance(expenses),
-                    userName = "Vinícius",
-                    isLoading = false
-                )
-            }.catch {
-                e->
-                _uiState.value = HomeUiState(errorMsg = e.message)
-            }.collect{
-                _uiState.value = it
             }
         }
     }
