@@ -14,7 +14,7 @@ import com.example.budgetapp.services.dao.income.IncomeDao
 
 @Database(
     entities = [Income::class, Expense::class, FixedExpense::class, FixedIncome::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

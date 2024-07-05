@@ -14,28 +14,17 @@ import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
 import com.example.budgetapp.domain.repository_interfaces.IIncomeRepository
 import com.example.budgetapp.utils.validDayofMonth
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.produce
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.async
 import java.time.LocalTime
 
 class HomeViewModel(
@@ -43,11 +32,11 @@ class HomeViewModel(
     private val incomeRepository: IIncomeRepository,
     private val fixedExpenseRepository: IFixedExpenseRepository,
     private val fixedIncomeRepository: IFixedIncomeRepository,
-
+    var times: Int = 0
 
     ): ViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeUiState())
+    private val _uiState = MutableStateFlow(HomeUiState(isLoading = true))
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
@@ -56,22 +45,18 @@ class HomeViewModel(
     }
 
     fun updateAll(){
-        viewModelScope.launch {
-            fixedExpenseRepository.fetchAll().first{checkDueTransactions(it); true}
-            //checkDueTransactions(fixedExpenseRepository.fetchAll().single())
-        }
+
     }
 
     private fun observeFixedTransaction(){
         viewModelScope.launch {
-            fixedIncomeRepository.fetchAll().collect(){
+            fixedIncomeRepository.fetchAll().flowOn(Dispatchers.IO).distinctUntilChanged().collectLatest{
                 checkDueTransactions(it)
             }
         }
 
         viewModelScope.launch {
-            fixedExpenseRepository.fetchAll().collect(){
-                println(it)
+            fixedExpenseRepository.fetchAll().flowOn(Dispatchers.IO).distinctUntilChanged().collectLatest{
                 checkDueTransactions(it)
             }
         }
@@ -86,7 +71,6 @@ class HomeViewModel(
                 fixedExpenseRepository.fetchAll()
             ){
                 incomes, expenses, fixedIncome, fixedExpense ->
-
                 HomeUiState(
                     expenses = expenses,
                     incomes = incomes,
@@ -96,6 +80,7 @@ class HomeViewModel(
                     incomeBalance = getIncomeBalance(incomes),
                     expenseBalance = getExpenseBalance(expenses),
                     userName = "Vinícius",
+                    isLoading = false
                 )
             }.catch {
                 e->
@@ -106,14 +91,15 @@ class HomeViewModel(
         }
     }
 
-    private fun checkDueTransactions(fixedTransactions: List<FixedTransaction<*>>){
+    private fun checkDueTransactions(fixedTransactions: List<FixedTransaction<*>>) {
         viewModelScope.launch {
+            var updatedFixedExpense = mutableListOf<FixedExpense>()
+            var updatedFixedIncome = mutableListOf<FixedIncome>()
             fixedTransactions.forEach() { transaction ->
                 val delayedMonths = transaction.isDue()
                 if (delayedMonths > 0) {
                     val curTime = LocalTime.now()
                     for (i in 1..delayedMonths) {
-
                         var date = transaction.lastDate
                             .plusMonths(1)
                             .withDayOfMonth(
@@ -143,14 +129,15 @@ class HomeViewModel(
                             )
                         }
                         transaction.lastDate = date
-
                     }
                     when (transaction) {
-                        is FixedExpense -> fixedExpenseRepository.updateFixedExpense(transaction)
-                        is FixedIncome -> fixedIncomeRepository.updateFixedIncome(transaction)
+                        is FixedExpense -> updatedFixedExpense.add(transaction)
+                        is FixedIncome -> updatedFixedIncome.add(transaction)
                     }
                 }
             }
+            async {fixedIncomeRepository.updateFixedIncome(updatedFixedIncome)}.await()
+            async {fixedExpenseRepository.updateFixedExpense(updatedFixedExpense)}.await()
         }
     }
 

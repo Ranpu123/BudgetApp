@@ -25,4 +25,8 @@ class LocalFixedExpenseRepository(
     override suspend fun updateFixedExpense(fixedExpense: FixedExpense): Long {
         return dao.update(fixedExpense)
     }
+
+    override suspend fun updateFixedExpense(fixedExpenses: List<FixedExpense>): Int {
+        return dao.update(fixedExpenses)
+    }
 }

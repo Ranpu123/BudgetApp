@@ -143,7 +143,7 @@ fun RecordCard(
                         }
                         items(
                             items = items,
-                            key = { it.id }
+                            key = { it.id!! }
                         ) { item ->
                             SwipeToDeleteContainer<Transaction<*>>(
                                 item = item,

@@ -9,4 +9,5 @@ interface IFixedIncomeRepository {
     suspend fun addFixedIncome(fixedIncome: FixedIncome): Long
     suspend fun removeFixedIncome(fixedIncome: FixedIncome): Int
     suspend fun updateFixedIncome(fixedIncome: FixedIncome): Long
+    suspend fun updateFixedIncome(fixedIncomes: List<FixedIncome>): Int
 }

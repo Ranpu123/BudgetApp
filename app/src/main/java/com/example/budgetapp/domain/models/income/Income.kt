@@ -21,4 +21,5 @@ class Income(
     init {
         require(value > 0.0) {"Income requires positive value!"}
     }
+
 }

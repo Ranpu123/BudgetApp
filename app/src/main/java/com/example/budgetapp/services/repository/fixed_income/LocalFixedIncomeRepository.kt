@@ -27,4 +27,8 @@ class LocalFixedIncomeRepository(
     override suspend fun updateFixedIncome(fixedIncome: FixedIncome): Long {
         return dao.update(fixedIncome)
     }
+
+    override suspend fun updateFixedIncome(fixedIncomes: List<FixedIncome>): Int {
+        return dao.update(fixedIncomes)
+    }
 }

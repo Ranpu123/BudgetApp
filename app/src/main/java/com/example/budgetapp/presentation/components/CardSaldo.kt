@@ -2,10 +2,13 @@ package com.example.budgetapp.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -37,71 +40,200 @@ fun CardSaldo(
     expenseBalance: Double,
     modifier: Modifier = Modifier,
     onReloadClicked: () -> Unit = {},
+    isLoading: Boolean = false
 ) {
     Surface(
         color = Green40,
         modifier = modifier,
         shape = RoundedCornerShape(29.dp)
     ) {
-        Column {
-            Row (modifier = modifier.fillMaxWidth()){
-                Column(
-                    modifier = modifier
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-                        .weight(1f)
-                ) {
-                    Text(text = stringResource(id = R.string.balance), fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                    Text(
-                        text = formatCurrency(totalBalance),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 24.sp
-                    )
-                }
-                Column(modifier = modifier
-                    .padding(end = 16.dp, top = 16.dp)
-                ){
-                    Icon(
-                        imageVector = Icons.Filled.Refresh,
-                        contentDescription = stringResource(id = R.string.cd_update),
-                        tint = Color.White,
-                        modifier = Modifier.clickable { onReloadClicked() }
-                    )
-                }
+        if(isLoading) {
+            loadingContent(modifier, onReloadClicked)
+        }else{
+            loadedContent(modifier, totalBalance, onReloadClicked, incomeBalance, expenseBalance)
+        }
+    }
+}
 
-            }
-            Surface(
-                modifier = modifier.fillMaxWidth(),
-                color = Green20,
-                shape = RoundedCornerShape(29.dp)
+@Composable
+private fun loadingContent(modifier: Modifier, onReloadClicked: () -> Unit) {
+    Column {
+        Row(modifier = modifier.fillMaxWidth()) {
+            Column(
+                modifier = modifier
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                    .weight(1f)
             ) {
-                Row(
-                    modifier = modifier
-                        .padding(16.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Filled.KeyboardArrowDown,
-                                contentDescription = stringResource(id = R.string.incomes),
-                                tint = Color(0xFF52FF00)
-                            )
-                            Text(stringResource(id = R.string.incomes), fontWeight = FontWeight.Medium, fontSize = 15.sp)
-                        }
-                        Text(formatCurrency(incomeBalance), textAlign = TextAlign.Start, fontSize = 16.sp)
+                Text(
+                    text = stringResource(id = R.string.balance),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+                Text(
+                    modifier = Modifier.shimmerEffect(),
+                    text = "R$ 00.000,00",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp,
+                    color = Color.Transparent
+                )
+            }
+            Column(
+                modifier = modifier
+                    .padding(end = 16.dp, top = 16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Refresh,
+                    contentDescription = stringResource(id = R.string.cd_update),
+                    tint = Color.White,
+                    modifier = Modifier.clickable { onReloadClicked() }
+                )
+            }
+        }
+        Surface(
+            modifier = modifier.fillMaxWidth(),
+            color = Green20,
+            shape = RoundedCornerShape(29.dp)
+        ) {
+            Row(
+                modifier = modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Filled.KeyboardArrowDown,
+                            contentDescription = stringResource(id = R.string.incomes),
+                            tint = Color(0xFF52FF00)
+                        )
+                        Text(
+                            stringResource(id = R.string.incomes),
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 15.sp
+                        )
                     }
-                    Column {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Filled.KeyboardArrowUp,
-                                contentDescription = stringResource(id = R.string.expenses),
-                                tint = Color(0xFFFF0000)
-                            )
-                            Text(stringResource(id = R.string.expenses), fontWeight = FontWeight.Medium, fontSize = 15.sp)
-                        }
-                        Text(formatCurrency(expenseBalance), textAlign = TextAlign.End, fontSize = 16.sp)
+                    Text(
+                        modifier = Modifier.shimmerEffect(),
+                        text = "R$ 00.000,00",
+                        textAlign = TextAlign.Start,
+                        fontSize = 16.sp,
+                        color = Color.Transparent
+                    )
+                }
+                Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Filled.KeyboardArrowUp,
+                            contentDescription = stringResource(id = R.string.expenses),
+                            tint = Color(0xFFFF0000)
+                        )
+                        Text(
+                            stringResource(id = R.string.expenses),
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 15.sp
+                        )
                     }
+                    Text(
+                        modifier = Modifier.shimmerEffect(),
+                        text = "R$ 00.000,00",
+                        textAlign = TextAlign.Start,
+                        fontSize = 16.sp,
+                        color = Color.Transparent
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun loadedContent(
+    modifier: Modifier,
+    totalBalance: Double,
+    onReloadClicked: () -> Unit,
+    incomeBalance: Double,
+    expenseBalance: Double
+) {
+    Column {
+        Row(modifier = modifier.fillMaxWidth()) {
+            Column(
+                modifier = modifier
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                    .weight(1f)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.balance),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+                Text(
+                    text = formatCurrency(totalBalance),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp
+                )
+            }
+            Column(
+                modifier = modifier
+                    .padding(end = 16.dp, top = 16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Refresh,
+                    contentDescription = stringResource(id = R.string.cd_update),
+                    tint = Color.White,
+                    modifier = Modifier.clickable { onReloadClicked() }
+                )
+            }
+
+        }
+        Surface(
+            modifier = modifier.fillMaxWidth(),
+            color = Green20,
+            shape = RoundedCornerShape(29.dp)
+        ) {
+            Row(
+                modifier = modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Filled.KeyboardArrowDown,
+                            contentDescription = stringResource(id = R.string.incomes),
+                            tint = Color(0xFF52FF00)
+                        )
+                        Text(
+                            stringResource(id = R.string.incomes),
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 15.sp
+                        )
+                    }
+                    Text(
+                        formatCurrency(incomeBalance),
+                        textAlign = TextAlign.Start,
+                        fontSize = 16.sp
+                    )
+                }
+                Column {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Filled.KeyboardArrowUp,
+                            contentDescription = stringResource(id = R.string.expenses),
+                            tint = Color(0xFFFF0000)
+                        )
+                        Text(
+                            stringResource(id = R.string.expenses),
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 15.sp
+                        )
+                    }
+                    Text(
+                        formatCurrency(expenseBalance),
+                        textAlign = TextAlign.End,
+                        fontSize = 16.sp
+                    )
                 }
             }
         }
@@ -115,7 +247,21 @@ fun cardSaldoPreview() {
         CardSaldo(
             totalBalance = 1500.00,
             expenseBalance = 250.00,
-            incomeBalance = 1750.00
+            incomeBalance = 1750.00,
+            isLoading = false
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 320)
+@Composable
+fun cardSaldoLoadingPreview() {
+    BudgetAppTheme {
+        CardSaldo(
+            totalBalance = 1500.00,
+            expenseBalance = 250.00,
+            incomeBalance = 1750.00,
+            isLoading = true
         )
     }
 }

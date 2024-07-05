@@ -10,10 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.budgetapp.R
+import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import com.example.budgetapp.utils.formatCurrency
 import com.example.budgetapp.utils.toFormattedDate
 import java.time.LocalDate
@@ -68,4 +70,52 @@ fun TransactionDateHeader(
     }
     Divider(color = Color.Black)
 }
+
+@Composable
+fun ShimmerTransactionDateHeader(
+    modifier: Modifier = Modifier
+){
+    Surface(modifier = modifier.fillMaxWidth()) {
+        ConstraintLayout(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(2.dp),
+        ) {
+            val (data, valor) = createRefs()
+
+            Text(
+                modifier = modifier
+                    .shimmerEffect()
+                    .constrainAs(valor) {
+                        end.linkTo(parent.end)
+                        centerVerticallyTo(parent)
+                    },
+                color = Color.Transparent,
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp,
+                text = "R$ 00.000,00"
+            )
+
+            Text(
+                modifier = modifier
+                    .shimmerEffect()
+                    .constrainAs(data) { centerTo(parent) },
+                color = Color.Transparent,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 12.sp,
+                text = "PlaceHolder Title"
+            )
+        }
+    }
+    Divider(color = Color.Black)
+}
+
+@Preview
+@Composable
+fun PreviewTransactionHeader(){
+    BudgetAppTheme {
+        ShimmerTransactionDateHeader()
+    }
+}
+
 

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import androidx.room.Upsert
 import com.example.budgetapp.domain.models.expense.FixedExpense
 import com.example.budgetapp.domain.models.income.FixedIncome
@@ -19,6 +20,9 @@ interface FixedIncomeDao {
 
     @Upsert
     suspend fun update(fixedIncome: FixedIncome): Long
+
+    @Update
+    suspend fun update(fixedIncomes: List<FixedIncome>): Int
 
     @Delete
     suspend fun remove(fixedIncome: FixedIncome): Int

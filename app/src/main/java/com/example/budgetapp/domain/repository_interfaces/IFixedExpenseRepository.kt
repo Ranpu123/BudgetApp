@@ -8,4 +8,5 @@ interface IFixedExpenseRepository {
     suspend fun addFixedExpense(fixedExpense: FixedExpense): Long
     suspend fun removeFixedExpense(fixedExpense: FixedExpense): Int
     suspend fun updateFixedExpense(fixedExpense: FixedExpense): Long
+    suspend fun updateFixedExpense(fixedExpenses: List<FixedExpense>): Int
 }

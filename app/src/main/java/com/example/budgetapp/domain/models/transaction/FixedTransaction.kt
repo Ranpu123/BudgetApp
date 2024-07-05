@@ -24,6 +24,18 @@ open class FixedTransaction<T>(
     description = description,
 ) where T: Enum<T>,T: ICategories {
 
+    override fun equals(other: Any?): Boolean {
+        when(other){
+            is FixedTransaction<*> -> {
+                return super.equals(other) &&
+                        other.active == this.active &&
+                        other.endDate?.isEqual(this.endDate) ?: (other.endDate == this.endDate) &&
+                        other.lastDate.isEqual(this.lastDate)
+            }
+            else -> return false
+        }
+    }
+
     private fun findCorrectDate(date: LocalDate): LocalDate{
         return if (date.isBefore(LocalDate.now())) date else date.minusMonths(1)
     }
