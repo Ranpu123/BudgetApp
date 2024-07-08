@@ -148,9 +148,9 @@ fun RecordsOverview(
                         transactions = fixedTransactions,
                         onDelete = {
                             viewModel.removeTransaction(it)
-                            viewModel.updateAll()
                         },
-                        showAdd = false
+                        showAdd = false,
+                        isLoading = UiState.isLoading
                     )
                 } else {
                     RecordCard(
@@ -159,9 +159,9 @@ fun RecordsOverview(
                         transactions = transactions,
                         onDelete = {
                             viewModel.removeTransaction(it)
-                            viewModel.updateAll()
                         },
-                        showAdd = false
+                        showAdd = false,
+                        isLoading = UiState.isLoading
                     )
                 }
             }

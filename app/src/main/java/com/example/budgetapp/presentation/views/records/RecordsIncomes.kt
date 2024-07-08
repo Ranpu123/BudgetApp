@@ -168,11 +168,11 @@ fun RecordsIncomes(
                             transactions = fixedTransactions,
                             onDelete = {
                                 viewModel.removeTransaction(it)
-                                viewModel.updateAll()
                             },
                             onNewTransactionClicked = {
                                 isAddFixedIncomeOpen = !isAddFixedIncomeOpen
-                            }
+                            },
+                            isLoading = UiState.isLoading
                         )
                     } else {
                         RecordCard(
@@ -181,9 +181,9 @@ fun RecordsIncomes(
                             transactions = transactions,
                             onDelete = {
                                 viewModel.removeTransaction(it)
-                                viewModel.updateAll()
                             },
-                            onNewTransactionClicked = { isAddIncomeOpen = !isAddIncomeOpen }
+                            onNewTransactionClicked = { isAddIncomeOpen = !isAddIncomeOpen },
+                            isLoading = UiState.isLoading
                         )
                     }
                 }
@@ -197,7 +197,6 @@ fun RecordsIncomes(
                     isAddIncomeOpen = false
                 },
                 onAdd = {
-                    viewModel.updateAll()
                     isAddIncomeOpen = false
                 },
                 bottomSheetViewModel = incomeBottomSheetViewModel
@@ -212,7 +211,6 @@ fun RecordsIncomes(
                     isAddFixedIncomeOpen = false
                 },
                 onAdd = {
-                    viewModel.updateAll()
                     isAddFixedIncomeOpen = false
                 },
                 bottomSheetViewModel = fIncomeBottomSheetViewModel

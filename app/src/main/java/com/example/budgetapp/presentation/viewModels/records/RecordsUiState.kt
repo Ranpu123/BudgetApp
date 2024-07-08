@@ -5,7 +5,7 @@ import com.example.budgetapp.domain.models.expense.FixedExpense
 import com.example.budgetapp.domain.models.income.FixedIncome
 import com.example.budgetapp.domain.models.income.Income
 
-class RecordsUiState(
+data class RecordsUiState(
     val expenses: List<Expense> = listOf(),
     val incomes: List<Income> = listOf(),
     val fixedExpense: List<FixedExpense> = listOf(),

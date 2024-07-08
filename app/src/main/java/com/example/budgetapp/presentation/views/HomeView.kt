@@ -61,8 +61,10 @@ fun HomeView(
     viewModel: HomeViewModel
 ){
     KoinContext {
+
         val homeUiState by viewModel.uiState.collectAsStateWithLifecycle()
         val snackbarHostState = remember { SnackbarHostState() }
+
         val expenseBottomSheetViewModel = koinViewModel<ExpenseBottomSheetViewModel>()
         val incomeBottomSheetViewModel = koinViewModel<IncomeBottomSheetViewModel>()
         val fExpenseBottomSheetViewModel = koinViewModel<FExpenseBottomSheetViewModel>()
@@ -168,7 +170,7 @@ fun HomeView(
                         incomeBalance = homeUiState.incomeBalance,
                         expenseBalance = homeUiState.expenseBalance,
                         modifier = modifier,
-                        onReloadClicked = { viewModel.updateAll() },
+                        onReloadClicked = { viewModel.refresh() },
                         isLoading = homeUiState.isLoading
                     )
                 }

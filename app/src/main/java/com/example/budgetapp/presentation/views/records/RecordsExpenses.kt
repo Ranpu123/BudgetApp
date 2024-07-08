@@ -166,11 +166,11 @@ fun RecordsExpenses(
                             transactions = fixedTransactions,
                             onDelete = {
                                 viewModel.removeTransaction(it)
-                                viewModel.updateAll()
                             },
                             onNewTransactionClicked = {
                                 isAddFixedExpenseOpen = !isAddFixedExpenseOpen
-                            }
+                            },
+                            isLoading = UiState.isLoading
                         )
                     } else {
                         RecordCard(
@@ -179,9 +179,9 @@ fun RecordsExpenses(
                             transactions = transactions,
                             onDelete = {
                                 viewModel.removeTransaction(it)
-                                viewModel.updateAll()
                             },
-                            onNewTransactionClicked = { isAddExpenseOpen = !isAddExpenseOpen }
+                            onNewTransactionClicked = { isAddExpenseOpen = !isAddExpenseOpen },
+                            isLoading = UiState.isLoading
                         )
                     }
                 }
@@ -194,7 +194,6 @@ fun RecordsExpenses(
                     isAddExpenseOpen = false
                 },
                 onAdd = {
-                    viewModel.updateAll()
                     isAddExpenseOpen = false
                 },
                 bottomSheetViewModel = expenseBottomSheetViewModel,
@@ -209,7 +208,6 @@ fun RecordsExpenses(
                     isAddFixedExpenseOpen = false
                 },
                 onAdd = {
-                    viewModel.updateAll()
                     isAddFixedExpenseOpen = false
                 },
                 bottomSheetViewModel = fExpenseBottomSheetViewModel

@@ -14,8 +14,8 @@ open class Transaction<T> (
     var value: Double,
     open var category: T,
     var description: String,
-    @PrimaryKey(autoGenerate = true)
-    var id: Int? = null,
+    @PrimaryKey
+    var id: UUID = UUID.randomUUID(),
 )where T: Enum<T>, T : ICategories{
     init {
         require( value != 0.0)

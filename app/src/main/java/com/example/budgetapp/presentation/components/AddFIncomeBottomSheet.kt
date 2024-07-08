@@ -2,7 +2,9 @@ package com.example.budgetapp.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -82,6 +84,7 @@ fun AddFIncomeBottomSheet(
                 onDismiss()
                 bottomSheetViewModel.clearState()
             },
+            windowInsets = WindowInsets.ime
         ) {
             Text(
                 modifier = modifier.fillMaxWidth(),
