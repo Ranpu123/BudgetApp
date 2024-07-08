@@ -168,11 +168,3 @@ fun RecordsOverview(
         }
     }
 }
-/*
-@Preview(showBackground = true)
-@Composable
-fun PreviewRecordsOverview(){
-    BudgetAppTheme {
-        RecordsOverview()
-    }
-}*/

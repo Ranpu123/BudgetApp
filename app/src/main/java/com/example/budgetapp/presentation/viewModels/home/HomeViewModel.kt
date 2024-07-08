@@ -91,7 +91,6 @@ class HomeViewModel(
             }.distinctUntilChanged().collectLatest{
                 checkDueTransactions(it)
             }
-
     }
 
 

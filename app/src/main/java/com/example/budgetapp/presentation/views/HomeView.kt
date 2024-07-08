@@ -78,14 +78,14 @@ fun HomeView(
         val scope = rememberCoroutineScope()
 
         LaunchedEffect(key1 = homeUiState) {
-            if(!homeUiState.errorMsg.isNullOrEmpty()) {
+            //if(!homeUiState.errorMsg.isNullOrEmpty()) {
                 scope.launch {
                     snackbarHostState.showSnackbar(
                         "${homeUiState.errorMsg}",
                         duration = SnackbarDuration.Long
                     )
                 }
-            }
+            //}
         }
 
         Surface(

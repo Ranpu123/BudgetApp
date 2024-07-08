@@ -229,8 +229,7 @@ fun PreviewRecordCard(){
             modifier = Modifier,
             transactions = emptyList(),
             onDelete = {
-                //LocalIncomeRepository.removeIncome(it as Income)
-                //transactions = LocalIncomeRepository.fetchAll()
+
             },
             isLoading = true
         )
