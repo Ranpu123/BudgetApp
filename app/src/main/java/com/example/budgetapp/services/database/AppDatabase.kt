@@ -7,9 +7,9 @@ import com.example.budgetapp.domain.models.expense.Expense
 import com.example.budgetapp.domain.models.expense.FixedExpense
 import com.example.budgetapp.domain.models.income.FixedIncome
 import com.example.budgetapp.domain.models.income.Income
-import com.example.budgetapp.services.dao.fixedIncome.FixedIncomeDao
+import com.example.budgetapp.services.dao.fixed_income.FixedIncomeDao
 import com.example.budgetapp.services.dao.expense.ExpenseDao
-import com.example.budgetapp.services.dao.fixedExpense.FixedExpenseDao
+import com.example.budgetapp.services.dao.fixed_expense.FixedExpenseDao
 import com.example.budgetapp.services.dao.income.IncomeDao
 
 @Database(

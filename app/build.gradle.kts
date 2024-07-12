@@ -54,6 +54,7 @@ dependencies {
 
     val room_version = "2.6.1"
     val lifecycle_version = "2.8.3"
+    val retrofit_version = "2.11.0"
 
     implementation("androidx.room:room-runtime:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
@@ -61,6 +62,9 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
+
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit_version")
 
     implementation ("androidx.compose.ui:ui-text-google-fonts:1.6.1")
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")

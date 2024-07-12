@@ -19,9 +19,15 @@ import com.example.budgetapp.domain.modules.RecordsModule
 import com.example.budgetapp.domain.modules.RepositoryModule
 import com.example.budgetapp.domain.modules.DatabaseModule
 import com.example.budgetapp.domain.modules.HomePageModule
+import com.example.budgetapp.domain.modules.RemoteNetworkModule
 import com.example.budgetapp.presentation.graphs.RootNavigationGraph
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import com.example.budgetapp.presentation.viewModels.home.HomeViewModel
+import com.example.budgetapp.services.remote.IBudgetAppAPI
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -49,7 +55,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun startModules(){
+    private fun startModules(){
         stopKoin()
         startKoin(){
             androidLogger()
@@ -62,6 +68,7 @@ class MainActivity : ComponentActivity() {
                 FixedIncomeBottomSheetModule,
                 RecordsModule,
                 DatabaseModule,
+                RemoteNetworkModule,
                 RepositoryModule
             )
         }

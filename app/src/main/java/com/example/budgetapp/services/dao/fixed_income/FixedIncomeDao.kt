@@ -1,4 +1,4 @@
-package com.example.budgetapp.services.dao.fixedIncome
+package com.example.budgetapp.services.dao.fixed_income
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Upsert
-import com.example.budgetapp.domain.models.expense.FixedExpense
 import com.example.budgetapp.domain.models.income.FixedIncome
 import kotlinx.coroutines.flow.Flow
 

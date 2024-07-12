@@ -2,7 +2,7 @@ package com.example.budgetapp.services.repository.fixed_expense
 
 import com.example.budgetapp.domain.repository_interfaces.IFixedExpenseRepository
 import com.example.budgetapp.domain.models.expense.FixedExpense
-import com.example.budgetapp.services.dao.fixedExpense.FixedExpenseDao
+import com.example.budgetapp.services.dao.fixed_expense.FixedExpenseDao
 import kotlinx.coroutines.flow.Flow
 
 

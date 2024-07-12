@@ -1,10 +1,9 @@
-package com.example.budgetapp.services.dao.fixedExpense
+package com.example.budgetapp.services.dao.fixed_expense
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
 import androidx.room.Upsert
 import com.example.budgetapp.domain.models.expense.FixedExpense

@@ -2,6 +2,8 @@ package com.example.budgetapp.domain.modules
 
 import android.content.Context
 import androidx.room.Room
+import com.example.budgetapp.domain.models.expense.ExpenseCategory
+import com.example.budgetapp.domain.models.income.IncomeCategory
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
@@ -14,18 +16,47 @@ import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.FInc
 import com.example.budgetapp.presentation.viewModels.home.HomeViewModel
 import com.example.budgetapp.presentation.viewModels.records.RecordsViewModel
 import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.IncomeBottomSheetViewModel
+import com.example.budgetapp.services.ExpenseCategoryAdapter
+import com.example.budgetapp.services.IncomeCategoryAdapter
+import com.example.budgetapp.services.LocalDateAdapter
+import com.example.budgetapp.services.LocalDateTimeAdapter
 import com.example.budgetapp.services.dao.expense.ExpenseDao
-import com.example.budgetapp.services.dao.fixedExpense.FixedExpenseDao
-import com.example.budgetapp.services.dao.fixedIncome.FixedIncomeDao
+import com.example.budgetapp.services.dao.fixed_expense.FixedExpenseDao
+import com.example.budgetapp.services.dao.fixed_income.FixedIncomeDao
 import com.example.budgetapp.services.dao.income.IncomeDao
 import com.example.budgetapp.services.database.AppDatabase
+import com.example.budgetapp.services.remote.IBudgetAppAPI
 import com.example.budgetapp.services.repository.expense.LocalExpenseRepository
+import com.example.budgetapp.services.repository.expense.RemoteExpenseRepository
 import com.example.budgetapp.services.repository.fixed_expense.LocalFixedExpenseRepository
 import com.example.budgetapp.services.repository.fixed_income.LocalFixedIncomeRepository
 import com.example.budgetapp.services.repository.income.LocalIncomeRepository
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+fun provideBudgetAppAPI(): IBudgetAppAPI =
+    Retrofit.Builder()
+        .baseUrl("http://10.0.2.2:3000")
+        .addConverterFactory(
+            GsonConverterFactory.create(
+                GsonBuilder()
+                    .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeAdapter())
+                    .registerTypeAdapter(LocalDate::class.java, LocalDateAdapter())
+                    .registerTypeAdapter(ExpenseCategory::class.java, ExpenseCategoryAdapter().nullSafe())
+                    .registerTypeAdapter(IncomeCategory::class.java, IncomeCategoryAdapter().nullSafe())
+                    .create()
+            )
+        )
+        .build()
+        .create(IBudgetAppAPI::class.java)
 
 fun provideDatabase(context: Context): AppDatabase =
     Room.databaseBuilder(context, AppDatabase::class.java,"appDatabase")
@@ -44,6 +75,10 @@ val DatabaseModule = module {
     single { provideExpenseDao(get()) }
     single { provideFixedExpenseDao(get()) }
     single { provideFixedIncomeDao(get()) }
+}
+
+val RemoteNetworkModule = module {
+    single { provideBudgetAppAPI() }
 }
 
 val HomePageModule = module{
@@ -92,8 +127,8 @@ val RecordsModule = module {
 }
 
 val RepositoryModule = module {
-    factory<IExpenseRepository> {LocalExpenseRepository(get())}
-    factory<IFixedExpenseRepository>{LocalFixedExpenseRepository(get())}
+    factory<IExpenseRepository> { LocalExpenseRepository(get()) }
+    factory<IFixedExpenseRepository>{ LocalFixedExpenseRepository(get()) }
     factory<IIncomeRepository> { LocalIncomeRepository(get()) }
     factory<IFixedIncomeRepository>{LocalFixedIncomeRepository(get())}
 }
