@@ -2,7 +2,7 @@ package com.example.budgetapp.services.repository.expense
 
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.models.expense.Expense
-import com.example.budgetapp.services.dao.expense.ExpenseDao
+import com.example.budgetapp.services.local.dao.expense.ExpenseDao
 import kotlinx.coroutines.flow.Flow
 
 class LocalExpenseRepository(

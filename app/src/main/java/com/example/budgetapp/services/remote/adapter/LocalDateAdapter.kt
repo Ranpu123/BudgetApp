@@ -1,4 +1,4 @@
-package com.example.budgetapp.services
+package com.example.budgetapp.services.remote.adapter
 
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader

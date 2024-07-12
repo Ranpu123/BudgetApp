@@ -16,22 +16,20 @@ import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.FInc
 import com.example.budgetapp.presentation.viewModels.home.HomeViewModel
 import com.example.budgetapp.presentation.viewModels.records.RecordsViewModel
 import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.IncomeBottomSheetViewModel
-import com.example.budgetapp.services.ExpenseCategoryAdapter
-import com.example.budgetapp.services.IncomeCategoryAdapter
-import com.example.budgetapp.services.LocalDateAdapter
-import com.example.budgetapp.services.LocalDateTimeAdapter
-import com.example.budgetapp.services.dao.expense.ExpenseDao
-import com.example.budgetapp.services.dao.fixed_expense.FixedExpenseDao
-import com.example.budgetapp.services.dao.fixed_income.FixedIncomeDao
-import com.example.budgetapp.services.dao.income.IncomeDao
-import com.example.budgetapp.services.database.AppDatabase
+import com.example.budgetapp.services.remote.adapter.ExpenseCategoryAdapter
+import com.example.budgetapp.services.remote.adapter.IncomeCategoryAdapter
+import com.example.budgetapp.services.remote.adapter.LocalDateAdapter
+import com.example.budgetapp.services.remote.adapter.LocalDateTimeAdapter
+import com.example.budgetapp.services.local.dao.expense.ExpenseDao
+import com.example.budgetapp.services.local.dao.fixed_expense.FixedExpenseDao
+import com.example.budgetapp.services.local.dao.fixed_income.FixedIncomeDao
+import com.example.budgetapp.services.local.dao.income.IncomeDao
+import com.example.budgetapp.services.local.database.AppDatabase
 import com.example.budgetapp.services.remote.IBudgetAppAPI
 import com.example.budgetapp.services.repository.expense.LocalExpenseRepository
-import com.example.budgetapp.services.repository.expense.RemoteExpenseRepository
 import com.example.budgetapp.services.repository.fixed_expense.LocalFixedExpenseRepository
 import com.example.budgetapp.services.repository.fixed_income.LocalFixedIncomeRepository
 import com.example.budgetapp.services.repository.income.LocalIncomeRepository
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -40,7 +38,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 fun provideBudgetAppAPI(): IBudgetAppAPI =
     Retrofit.Builder()

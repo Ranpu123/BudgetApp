@@ -1,4 +1,4 @@
-package com.example.budgetapp.services.dao.fixed_income
+package com.example.budgetapp.services.local.dao.fixed_income
 
 import androidx.room.Dao
 import androidx.room.Delete

@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity
-class FixedIncome(
+open class FixedIncome(
     date: LocalDateTime,
     value: Double,
     category: IncomeCategory,

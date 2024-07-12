@@ -2,7 +2,7 @@ package com.example.budgetapp.services.repository.fixed_income
 
 import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
 import com.example.budgetapp.domain.models.income.FixedIncome
-import com.example.budgetapp.services.dao.fixed_income.FixedIncomeDao
+import com.example.budgetapp.services.local.dao.fixed_income.FixedIncomeDao
 import kotlinx.coroutines.flow.Flow
 
 class LocalFixedIncomeRepository(

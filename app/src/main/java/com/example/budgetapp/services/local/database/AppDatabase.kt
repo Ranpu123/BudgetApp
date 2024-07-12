@@ -1,4 +1,4 @@
-package com.example.budgetapp.services.database
+package com.example.budgetapp.services.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -7,10 +7,10 @@ import com.example.budgetapp.domain.models.expense.Expense
 import com.example.budgetapp.domain.models.expense.FixedExpense
 import com.example.budgetapp.domain.models.income.FixedIncome
 import com.example.budgetapp.domain.models.income.Income
-import com.example.budgetapp.services.dao.fixed_income.FixedIncomeDao
-import com.example.budgetapp.services.dao.expense.ExpenseDao
-import com.example.budgetapp.services.dao.fixed_expense.FixedExpenseDao
-import com.example.budgetapp.services.dao.income.IncomeDao
+import com.example.budgetapp.services.local.dao.fixed_income.FixedIncomeDao
+import com.example.budgetapp.services.local.dao.expense.ExpenseDao
+import com.example.budgetapp.services.local.dao.fixed_expense.FixedExpenseDao
+import com.example.budgetapp.services.local.dao.income.IncomeDao
 
 @Database(
     entities = [Income::class, Expense::class, FixedExpense::class, FixedIncome::class],

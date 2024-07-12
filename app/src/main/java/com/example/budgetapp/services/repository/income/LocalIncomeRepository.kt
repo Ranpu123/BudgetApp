@@ -3,7 +3,7 @@ package com.example.budgetapp.services.repository.income
 import com.example.budgetapp.domain.models.income.IncomeCategory
 import com.example.budgetapp.domain.repository_interfaces.IIncomeRepository
 import com.example.budgetapp.domain.models.income.Income
-import com.example.budgetapp.services.dao.income.IncomeDao
+import com.example.budgetapp.services.local.dao.income.IncomeDao
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 

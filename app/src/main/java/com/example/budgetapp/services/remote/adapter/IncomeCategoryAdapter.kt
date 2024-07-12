@@ -1,4 +1,4 @@
-package com.example.budgetapp.services
+package com.example.budgetapp.services.remote.adapter
 
 import com.example.budgetapp.domain.models.income.IncomeCategory
 import com.google.gson.TypeAdapter

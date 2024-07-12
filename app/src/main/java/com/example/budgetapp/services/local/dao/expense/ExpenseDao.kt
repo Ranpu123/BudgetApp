@@ -1,4 +1,4 @@
-package com.example.budgetapp.services.dao.expense
+package com.example.budgetapp.services.local.dao.expense
 
 import androidx.room.Dao
 import androidx.room.Delete
