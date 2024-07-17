@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.sp
 import com.example.budgetapp.R
 import com.example.budgetapp.domain.models.transaction.FixedTransaction
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
-import com.example.budgetapp.services.dao.fixed_income.FixedIncomeDao_Impl
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -157,7 +156,7 @@ fun FixedTransactionsCard(
         }
     }
 }
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun FixedTransactionCardPreview(){
@@ -166,4 +165,4 @@ fun FixedTransactionCardPreview(){
             cardName = "Receitas Fixas",
             transactions = FixedIncomeDao_Impl.getRequiredConverters() as List<FixedTransaction<*>>)
     }
-}
+}*/

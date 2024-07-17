@@ -2,6 +2,7 @@ package com.example.budgetapp.domain.modules
 
 import android.content.Context
 import androidx.room.Room
+import androidx.work.WorkManager
 import com.example.budgetapp.domain.models.expense.ExpenseCategory
 import com.example.budgetapp.domain.models.income.IncomeCategory
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
@@ -27,9 +28,13 @@ import com.example.budgetapp.services.local.dao.income.IncomeDao
 import com.example.budgetapp.services.local.database.AppDatabase
 import com.example.budgetapp.services.remote.IBudgetAppAPI
 import com.example.budgetapp.services.repository.expense.LocalExpenseRepository
+import com.example.budgetapp.services.repository.expense.SyncExpenseRepository
 import com.example.budgetapp.services.repository.fixed_expense.LocalFixedExpenseRepository
+import com.example.budgetapp.services.repository.fixed_expense.SyncFixedExpenseRepository
 import com.example.budgetapp.services.repository.fixed_income.LocalFixedIncomeRepository
+import com.example.budgetapp.services.repository.fixed_income.SyncFixedIncomeRepository
 import com.example.budgetapp.services.repository.income.LocalIncomeRepository
+import com.example.budgetapp.services.repository.income.SyncIncomeRepository
 import com.google.gson.GsonBuilder
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -76,11 +81,12 @@ val DatabaseModule = module {
 
 val RemoteNetworkModule = module {
     single { provideBudgetAppAPI() }
+    single { WorkManager.getInstance(androidContext()) }
 }
 
 val HomePageModule = module{
     viewModel<HomeViewModel> {
-        HomeViewModel(get(), get(), get(), get())
+        HomeViewModel(get(), get(), get(), get(), get())
     }
 }
 
@@ -124,8 +130,8 @@ val RecordsModule = module {
 }
 
 val RepositoryModule = module {
-    factory<IExpenseRepository> { LocalExpenseRepository(get()) }
-    factory<IFixedExpenseRepository>{ LocalFixedExpenseRepository(get()) }
-    factory<IIncomeRepository> { LocalIncomeRepository(get()) }
-    factory<IFixedIncomeRepository>{LocalFixedIncomeRepository(get())}
+    factory<IExpenseRepository> { SyncExpenseRepository(get(), get()) }
+    factory<IFixedExpenseRepository>{ SyncFixedExpenseRepository(get(), get()) }
+    factory<IIncomeRepository> { SyncIncomeRepository(get(), get()) }
+    factory<IFixedIncomeRepository>{SyncFixedIncomeRepository(get(), get())}
 }

@@ -21,7 +21,7 @@ open class Transaction<T> (
         require( value != 0.0)
     }
     override fun toString() : String {
-        return "${category.displayName} $description"
+        return "${category.displayName} \n$description \nID: $id"
     }
 
     override fun equals(other: Any?): Boolean {

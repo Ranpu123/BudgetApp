@@ -7,6 +7,7 @@ import com.example.budgetapp.utils.validDayofMonth
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
+import java.util.UUID
 
 @Entity
 open class FixedTransaction<T>(
@@ -14,10 +15,12 @@ open class FixedTransaction<T>(
     value: Double,
     category: T,
     description: String,
+    id: UUID = UUID.randomUUID(),
     var active : Boolean = true,
     var endDate: LocalDate? = null,
     var lastDate: LocalDate = if (date.toLocalDate().isBefore(LocalDate.now())) date.toLocalDate() else date.toLocalDate().minusMonths(1)
 ): Transaction<T>(
+    id = id,
     date = date,
     value = value,
     category = category,
