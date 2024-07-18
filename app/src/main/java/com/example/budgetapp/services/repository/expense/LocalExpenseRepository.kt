@@ -1,82 +1,27 @@
 package com.example.budgetapp.services.repository.expense
 
-import com.example.budgetapp.domain.models.expense.ExpenseCategory
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.models.expense.Expense
-import java.time.LocalDateTime
+import com.example.budgetapp.services.dao.expense.ExpenseDao
+import kotlinx.coroutines.flow.Flow
 
-object LocalExpenseRepository: IExpenseRepository {
-    private val expenses: MutableList<Expense> = mutableListOf(
-        Expense(
-            date = LocalDateTime.parse("2024-06-06T10:30:00"),
-            value = -50.00,
-            category = ExpenseCategory.FUEL,
-            description = "Gasolina Fox"
-        ),
-        Expense(
-            date = LocalDateTime.parse("2024-06-01T11:30:00"),
-            value = -25.00,
-            category = ExpenseCategory.RESTAURANT,
-            description = "Almoço"
-        ),
-        Expense(
-            date = LocalDateTime.parse("2024-06-02T08:30:00"),
-            value = -5.00,
-            category = ExpenseCategory.RESTAURANT,
-            description = "Café"
-        ),
-        Expense(
-            date = LocalDateTime.parse("2024-06-02T08:30:00"),
-            value = -105.00,
-            category = ExpenseCategory.LIGHTING,
-            description = "Conta Luz"
-        ),
-        Expense(
-            date = LocalDateTime.parse("2024-06-02T08:30:00"),
-            value = -105.00,
-            category = ExpenseCategory.LIGHTING,
-            description = "Conta Luz"
-        ),
-        Expense(
-            date = LocalDateTime.parse("2024-06-02T08:30:00"),
-            value = -105.00,
-            category = ExpenseCategory.LIGHTING,
-            description = "Conta Luz"
-        ),
-        Expense(
-            date = LocalDateTime.parse("2024-06-02T08:30:00"),
-            value = -105.00,
-            category = ExpenseCategory.LIGHTING,
-            description = "Conta Luz"
-        ),
-        Expense(
-            date = LocalDateTime.parse("2024-06-02T08:30:00"),
-            value = -105.00,
-            category = ExpenseCategory.LIGHTING,
-            description = "Conta Luz"
-        ),
-        Expense(
-            date = LocalDateTime.parse("2024-06-02T08:30:00"),
-            value = -105.00,
-            category = ExpenseCategory.LIGHTING,
-            description = "Conta Luz"
-        ),
-    )
-    override fun fetchAll(): MutableList<Expense> {
-        return expenses
+class LocalExpenseRepository(
+    private val dao: ExpenseDao
+): IExpenseRepository {
+
+    override fun fetchAll(): Flow<List<Expense>> {
+        return dao.fetchAll()
     }
 
-    override fun addExpense(expense: Expense) {
-        expenses.add(expense)
+    override suspend fun addExpense(expense: Expense): Long {
+        return dao.add(expense)
     }
 
-    override fun removeExpense(expense: Expense) {
-        expenses.remove(expense)
+    override suspend fun removeExpense(expense: Expense): Int {
+        return dao.remove(expense)
     }
 
-    override fun updateExpense(expense: Expense) {
-        if(expenses.removeIf { it.id.compareTo(expense.id) == 0 }){
-            expenses.add(expense)
-        }
+    override suspend fun updateExpense(expense: Expense): Long {
+        return dao.update(expense)
     }
 }

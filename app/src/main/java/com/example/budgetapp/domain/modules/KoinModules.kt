@@ -1,5 +1,7 @@
 package com.example.budgetapp.domain.modules
 
+import android.content.Context
+import androidx.room.Room
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
@@ -12,20 +14,39 @@ import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.FInc
 import com.example.budgetapp.presentation.viewModels.home.HomeViewModel
 import com.example.budgetapp.presentation.viewModels.records.RecordsViewModel
 import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.IncomeBottomSheetViewModel
+import com.example.budgetapp.services.dao.expense.ExpenseDao
+import com.example.budgetapp.services.dao.fixedExpense.FixedExpenseDao
+import com.example.budgetapp.services.dao.fixedIncome.FixedIncomeDao
+import com.example.budgetapp.services.dao.income.IncomeDao
+import com.example.budgetapp.services.database.AppDatabase
 import com.example.budgetapp.services.repository.expense.LocalExpenseRepository
 import com.example.budgetapp.services.repository.fixed_expense.LocalFixedExpenseRepository
 import com.example.budgetapp.services.repository.fixed_income.LocalFixedIncomeRepository
 import com.example.budgetapp.services.repository.income.LocalIncomeRepository
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val homePageModule = module{
+fun provideDatabase(context: Context): AppDatabase =
+    Room.databaseBuilder(context, AppDatabase::class.java,"appDatabase")
+        .allowMainThreadQueries()
+        .fallbackToDestructiveMigration()
+        .build()
 
-    single<IExpenseRepository> {LocalExpenseRepository}
-    single<IFixedExpenseRepository>{LocalFixedExpenseRepository}
-    single<IIncomeRepository> {LocalIncomeRepository}
-    single<IFixedIncomeRepository>{LocalFixedIncomeRepository}
+fun provideIncomeDao(db: AppDatabase): IncomeDao = db.incomeDao()
+fun provideExpenseDao(db: AppDatabase): ExpenseDao = db.expenseDao()
+fun provideFixedExpenseDao(db: AppDatabase): FixedExpenseDao = db.fixedExpenseDao()
+fun provideFixedIncomeDao(db: AppDatabase): FixedIncomeDao = db.fixedIncomeDao()
 
+val DatabaseModule = module {
+    single { provideDatabase(androidContext()) }
+    single { provideIncomeDao(get()) }
+    single { provideExpenseDao(get()) }
+    single { provideFixedExpenseDao(get()) }
+    single { provideFixedIncomeDao(get()) }
+}
+
+val HomePageModule = module{
     viewModel<HomeViewModel> {
         HomeViewModel(get(), get(), get(), get())
     }
@@ -37,53 +58,42 @@ val uiStateModule = module{
 }
 
 val ExpenseBottomSheetModule = module {
-
-    single<IExpenseRepository> {LocalExpenseRepository}
     includes(uiStateModule)
-
     viewModel<ExpenseBottomSheetViewModel>{
         ExpenseBottomSheetViewModel(get(), get(), get())
     }
 }
 
 val IncomeBottomSheetModule = module {
-
-    single<IIncomeRepository> {LocalIncomeRepository}
     includes(uiStateModule)
-
     viewModel<IncomeBottomSheetViewModel>{
         IncomeBottomSheetViewModel(get(), get(), get())
     }
 }
 
 val FixedExpenseBottomSheetModule = module {
-
-    single<IFixedExpenseRepository> {LocalFixedExpenseRepository}
     includes(uiStateModule)
-
     viewModel<FExpenseBottomSheetViewModel>{
         FExpenseBottomSheetViewModel(get(), get(), get())
     }
 }
 
 val FixedIncomeBottomSheetModule = module {
-
-    single<IFixedIncomeRepository> {LocalFixedIncomeRepository}
     includes(uiStateModule)
-
     viewModel<FIncomeBottomSheetViewModel>{
         FIncomeBottomSheetViewModel(get(), get(), get())
     }
 }
 
 val RecordsModule = module {
-
-    single<IExpenseRepository> {LocalExpenseRepository}
-    single<IFixedExpenseRepository>{LocalFixedExpenseRepository}
-    single<IIncomeRepository> {LocalIncomeRepository}
-    single<IFixedIncomeRepository>{LocalFixedIncomeRepository}
-
     viewModel<RecordsViewModel> {
         RecordsViewModel(get(), get(), get(), get())
     }
+}
+
+val RepositoryModule = module {
+    factory<IExpenseRepository> {LocalExpenseRepository(get())}
+    factory<IFixedExpenseRepository>{LocalFixedExpenseRepository(get())}
+    factory<IIncomeRepository> { LocalIncomeRepository(get()) }
+    factory<IFixedIncomeRepository>{LocalFixedIncomeRepository(get())}
 }

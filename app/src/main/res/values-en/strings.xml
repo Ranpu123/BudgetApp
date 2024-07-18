@@ -1,47 +1,70 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="greetings">Hi, %1$s!</string>
+    <string name="app_name" translatable="false">BudgetApp</string>
+    //HomeView
+    <string name="greetings">Hello, %1$s!</string>
     <string name="expenses">Expenses</string>
     <string name="expense">Expense</string>
-    <string name="incomes">Incomes</string>
-    <string name="income">Income</string>
+    <string name="incomes">Revenues</string>
+    <string name="income">Revenue</string>
     <string name="fixed_expenses">Fixed Expenses</string>
     <string name="fixed_expense">Fixed Expense</string>
-    <string name="fixed_incomes">Fixed Incomes</string>
-    <string name="fixed_income">Fixed Income</string>
-    <string name="records">Records</string>
+    <string name="fixed_incomes">Fixed Revenues</string>
+    <string name="fixed_income">Fixed Revenue</string>
+
+    //Records
+    <string name="records">Reports</string>
     <string name="overview">Overview</string>
-    <string name="nothing_found">Nothing found, try adding a new entry.</string>
-    <string name="see_more">See more</string>
+
+    //TransactionCard
+    <string name="nothing_found">Nothing found, try adding a new transaction.</string>
+    <string name="see_more">View more</string>
     <string name="cd_expand_card">Expand Card</string>
     <string name="cd_add_transaction">Add %1$s</string>
-    <string name="header_total">"Total: "</string>
-    <string name="today">Today</string>
-    <string name="default_option">Select an option</string>
-    <string name="variable">Variable</string>
-    <string name="fixed">Fixed</string>
-    <string name="balance">Balance</string>
-    <string name="cd_update">Update</string>
-    <string name="field_category">Category</string>
-    <string name="field_description">Description</string>
-    <string name="field_date">Date</string>
-    <string name="field_value">Amount</string>
-    <string name="cd_clear_field">Clear Field</string>
-    <string name="btn_confirm">Confirm</string>
-    <string name="btn_cancel">Cancel</string>
-    <string name="btn_add">Add</string>
+    
+    //TransactionRecords
     <array name="records_drop_menu_options">
         <item>Month</item>
         <item>Category</item>
     </array>
+
+    //TransactionDateHeader
+    <string name="header_total">Total:</string>
+    <string name="today">Today</string>
+    
+    //DropMenu
+    <string name="default_option">select an option</string>
+    
+    //DoubleSwitch
+    <string name="variable">Variable</string>
+    <string name="fixed">Fixed</string>
+
+    //CardSaldo
+    <string name="balance">Balance</string>
+    <string name="cd_update">Update</string>
+
+    //BottomSheet
+    <string name="field_category">Category</string>
+    <string name="field_description">Description</string>
+    <string name="field_date">Date</string>
+    <string name="field_value">Value</string>
+    <string name="cd_clear_field">Clear Field</string>
+
+    //Buttons
+    <string name="btn_confirm">Confirm</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_add">Add</string>
+
+    //IncomeCategory
     <string name="commission">Commission</string>
     <string name="gift">Gift</string>
     <string name="interest">Interest</string>
     <string name="investment">Investment</string>
     <string name="salary">Salary</string>
-    <string name="sell">Sell</string>
-    <string name="tips">Tip</string>
+    <string name="sell">Sale</string>
+    <string name="tips">Tips</string>
     <string name="other">Others</string>
+
+    //ExpenseCategory
     <string name="food">Food</string>
     <string name="grocery">Grocery</string>
     <string name="health">Health</string>
@@ -54,7 +77,9 @@
     <string name="fuel">Fuel</string>
     <string name="streaming">Streaming</string>
     <string name="internet">Internet</string>
-    <string name="phone_plan">Phone Plan</string>
+    <string name="phone_plan">Cellular Plan</string>
     <string name="insurance">Insurance</string>
     <string name="installment">Installment</string>
+
+
 </resources>

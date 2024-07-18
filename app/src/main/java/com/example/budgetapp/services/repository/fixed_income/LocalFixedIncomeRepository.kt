@@ -4,34 +4,31 @@ import android.util.Log
 import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
 import com.example.budgetapp.domain.models.income.FixedIncome
 import com.example.budgetapp.domain.models.income.IncomeCategory
+import com.example.budgetapp.services.dao.fixedIncome.FixedIncomeDao
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
-object LocalFixedIncomeRepository: IFixedIncomeRepository {
+class LocalFixedIncomeRepository(
+    private val dao: FixedIncomeDao
+): IFixedIncomeRepository {
 
-    private val fixedIncomes: MutableList<FixedIncome> = mutableListOf(
-        FixedIncome(
-            date = LocalDateTime.parse("2024-06-03T10:00:00"),
-            value = 1415.00,
-            category = IncomeCategory.SALARY,
-            description = "Salário",
-        )
-    )
-
-    override fun fetchAll(): MutableList<FixedIncome> {
-        return fixedIncomes
+    override fun fetchAll(): Flow<List<FixedIncome>> {
+        return dao.fetchAll()
     }
 
-    override fun addFixedIncome(fixedIncome: FixedIncome) {
-        fixedIncomes.add(fixedIncome)
+    override suspend fun addFixedIncome(fixedIncome: FixedIncome): Long {
+        return dao.add(fixedIncome)
     }
 
-    override fun removeFixedIncome(fixedIncome: FixedIncome) {
-        fixedIncomes.remove(fixedIncome)
+    override suspend fun removeFixedIncome(fixedIncome: FixedIncome): Int {
+        return dao.remove(fixedIncome)
     }
 
-    override fun updateFixedIncome(fixedIncome: FixedIncome) {
-        if(fixedIncomes.removeIf({it.id.compareTo(fixedIncome.id) == 0})){
-            fixedIncomes.add(fixedIncome)
-        }
+    override suspend fun updateFixedIncome(fixedIncome: FixedIncome): Long {
+        return dao.update(fixedIncome)
+    }
+
+    override suspend fun updateFixedIncome(fixedIncomes: List<FixedIncome>): Int {
+        return dao.update(fixedIncomes)
     }
 }

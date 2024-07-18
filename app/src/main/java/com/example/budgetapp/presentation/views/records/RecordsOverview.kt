@@ -39,7 +39,7 @@ import com.example.budgetapp.presentation.viewModels.records.RecordsViewModel
 @Composable
 fun RecordsOverview(
     modifier: Modifier = Modifier,
-    viewModel: RecordsViewModel = RecordsViewModel(),
+    viewModel: RecordsViewModel,
     onReturnClicked: () -> Unit = {}
 ){
     val UiState by viewModel.uiState.collectAsState()
@@ -148,9 +148,9 @@ fun RecordsOverview(
                         transactions = fixedTransactions,
                         onDelete = {
                             viewModel.removeTransaction(it)
-                            viewModel.updateAll()
                         },
-                        showAdd = false
+                        showAdd = false,
+                        isLoading = UiState.isLoading
                     )
                 } else {
                     RecordCard(
@@ -159,20 +159,12 @@ fun RecordsOverview(
                         transactions = transactions,
                         onDelete = {
                             viewModel.removeTransaction(it)
-                            viewModel.updateAll()
                         },
-                        showAdd = false
+                        showAdd = false,
+                        isLoading = UiState.isLoading
                     )
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewRecordsOverview(){
-    BudgetAppTheme {
-        RecordsOverview()
     }
 }

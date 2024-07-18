@@ -16,7 +16,9 @@ import com.example.budgetapp.domain.modules.FixedExpenseBottomSheetModule
 import com.example.budgetapp.domain.modules.FixedIncomeBottomSheetModule
 import com.example.budgetapp.domain.modules.IncomeBottomSheetModule
 import com.example.budgetapp.domain.modules.RecordsModule
-import com.example.budgetapp.domain.modules.homePageModule
+import com.example.budgetapp.domain.modules.RepositoryModule
+import com.example.budgetapp.domain.modules.DatabaseModule
+import com.example.budgetapp.domain.modules.HomePageModule
 import com.example.budgetapp.presentation.graphs.RootNavigationGraph
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import com.example.budgetapp.presentation.viewModels.home.HomeViewModel
@@ -53,12 +55,14 @@ class MainActivity : ComponentActivity() {
             androidLogger()
             androidContext(this@MainActivity)
             modules(
-                homePageModule,
+                HomePageModule,
                 ExpenseBottomSheetModule,
                 IncomeBottomSheetModule,
                 FixedExpenseBottomSheetModule,
                 FixedIncomeBottomSheetModule,
-                RecordsModule
+                RecordsModule,
+                DatabaseModule,
+                RepositoryModule
             )
         }
     }

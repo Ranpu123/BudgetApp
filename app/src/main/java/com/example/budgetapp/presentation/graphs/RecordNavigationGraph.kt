@@ -3,6 +3,7 @@ package com.example.budgetapp.presentation.graphs
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavArgument
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -51,7 +52,7 @@ fun RecordNavigationGraph(
                     isFixed = isFixed,
                     viewModel = recordsViewModel,
                     onReturnClicked = {
-                        parentNav.navigate(Graph.MAIN)
+                        parentNav.popBackStack()
                     }
                 )
                 isFixed = false
@@ -62,7 +63,7 @@ fun RecordNavigationGraph(
                     isFixed = isFixed,
                     viewModel = recordsViewModel,
                     onReturnClicked = {
-                        parentNav.navigate(Graph.MAIN)
+                        parentNav.popBackStack()
                     }
                 )
                 isFixed = false

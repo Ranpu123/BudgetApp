@@ -46,6 +46,7 @@ import com.example.budgetapp.R
 import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.services.repository.income.LocalIncomeRepository
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
+import com.example.budgetapp.services.dao.income.IncomeDao_Impl
 import com.example.budgetapp.utils.sortByDay
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -56,7 +57,8 @@ fun TransactionsCard(
     modifier: Modifier = Modifier,
     expanded: Boolean = true,
     onNewTransactionClicked: () -> Unit = {},
-    onSeeMoreClicked: () -> Unit = {}
+    onSeeMoreClicked: () -> Unit = {},
+    isLoading: Boolean = false
 ){
 
     var expanded by rememberSaveable { mutableStateOf(expanded) }
@@ -113,30 +115,42 @@ fun TransactionsCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Divider()
-                    if(transactions.isNotEmpty()) {
+                    if(isLoading){
                         LazyColumn(modifier = modifier.height(110.dp)) {
-                            sortByDay(transactions).forEach {(_, items) ->
-
-                                stickyHeader {
-                                    TransactionDateHeader(
-                                        date = items.first().date.toLocalDate(),
-                                        total = items.sumOf { it.value })
-                                }
-                                items(items.sortedBy { it.date }) { transaction ->
-                                    ItemTransactionsCard(
-                                        transaction = transaction,
-                                    )
-                                    Divider()
-                                }
+                            stickyHeader {
+                                ShimmerTransactionDateHeader()
+                            }
+                            items(3) {
+                                ShimmerItemTransactionsCard()
+                                Divider()
                             }
                         }
                     }else{
-                        Text(
-                            modifier = modifier.clickable { onNewTransactionClicked() },
-                            text = stringResource(R.string.nothing_found),
-                            color = Color.Gray,
-                            textAlign = TextAlign.Center)
-                        Divider()
+                        if(transactions.isNotEmpty()) {
+                            LazyColumn(modifier = modifier.height(110.dp)) {
+                                sortByDay(transactions).forEach {(_, items) ->
+
+                                    stickyHeader {
+                                        TransactionDateHeader(
+                                            date = items.first().date.toLocalDate(),
+                                            total = items.sumOf { it.value })
+                                    }
+                                    items(items.sortedBy { it.date }) { transaction ->
+                                        ItemTransactionsCard(
+                                            transaction = transaction,
+                                        )
+                                        Divider()
+                                    }
+                                }
+                            }
+                        }else{
+                            Text(
+                                modifier = modifier.clickable { onNewTransactionClicked() },
+                                text = stringResource(R.string.nothing_found),
+                                color = Color.Gray,
+                                textAlign = TextAlign.Center)
+                            Divider()
+                        }
                     }
                     Text(
                         modifier = modifier.clickable { onSeeMoreClicked() },
@@ -155,6 +169,17 @@ fun TransactionCardPreview(){
     BudgetAppTheme {
         TransactionsCard(
             cardName = "Receitas",
-            transactions = LocalIncomeRepository.fetchAll() as List<Transaction<*>>)
+            transactions = IncomeDao_Impl.getRequiredConverters() as List<Transaction<*>>)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ShimmerTransactionCardPreview(){
+    BudgetAppTheme {
+        TransactionsCard(
+            cardName = "Receitas",
+            transactions = IncomeDao_Impl.getRequiredConverters() as List<Transaction<*>>,
+            isLoading = true)
     }
 }

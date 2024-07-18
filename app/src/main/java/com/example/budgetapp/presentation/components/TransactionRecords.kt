@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -54,6 +55,7 @@ import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import com.example.budgetapp.services.repository.income.LocalIncomeRepository
 import androidx.compose.ui.res.stringResource
+import com.example.budgetapp.services.dao.income.IncomeDao
 import com.example.budgetapp.utils.sortByCategory
 import com.example.budgetapp.utils.sortByMonth
 import com.example.budgetapp.utils.toFormattedMonthYear
@@ -65,7 +67,8 @@ fun RecordCard(
     onDelete: (Transaction<*>) -> Unit = {},
     modifier: Modifier = Modifier,
     onNewTransactionClicked: ()->Unit = { },
-    showAdd: Boolean = true
+    showAdd: Boolean = true,
+    isLoading: Boolean = false
 ){
     val dropMenuOptions = stringArrayResource(R.array.records_drop_menu_options)
 
@@ -127,46 +130,61 @@ fun RecordCard(
                 )
             }
             Divider()
-            LazyColumn(
-                modifier = Modifier
-            ) {
-                if (transactions.isNotEmpty()) {
-                    filters.forEach { (_, items) ->
+            if(isLoading){
+                LazyColumn(modifier = Modifier) {
+                    stickyHeader {
+                        ShimmerTransactionDateHeader()
+                    }
+                    items(3) {
+                        ShimmerItemTransactionsCard(
+                            modifier = Modifier.padding(vertical = 5.dp)
+                        )
+                        Divider()
+                    }
+                }
+            }else{
+                LazyColumn(
+                    modifier = Modifier
+                ) {
+                    if (transactions.isNotEmpty()) {
+                        filters.forEach { (_, items) ->
 
-                        stickyHeader {
-                            TransactionDateHeader(
-                                total = items.sumOf { it.value },
-                                title = if(filterBy) toFormattedMonthYear(items.first().date.toLocalDate())
-                                            else (items.first().category as ICategories).asString()
-                            )
-                        }
-                        items(
-                            items = items,
-                            key = { it.id }
-                        ) { item ->
-                            SwipeToDeleteContainer<Transaction<*>>(
-                                item = item,
-                                onDelete = { onDelete(it) },
-                                content = {
-                                    Surface(
-                                    ) {
-                                        ItemTransactionsCard(
-                                            transaction = it,
-                                            modifier = Modifier.padding(vertical = 5.dp)
-                                        )
+                            stickyHeader {
+                                TransactionDateHeader(
+                                    total = items.sumOf { it.value },
+                                    title = if (filterBy) toFormattedMonthYear(items.first().date.toLocalDate())
+                                    else (items.first().category as ICategories).asString()
+                                )
+                            }
+                            items(
+                                items = items,
+                                key = { it.id }
+                            ) { item ->
+                                SwipeToDeleteContainer<Transaction<*>>(
+                                    item = item,
+                                    onDelete = { onDelete(it) },
+                                    content = {
+                                        Surface(
+                                        ) {
+                                            ItemTransactionsCard(
+                                                transaction = it,
+                                                modifier = Modifier.padding(vertical = 5.dp)
+                                            )
+                                        }
                                     }
-                                }
+                                )
+                                Divider()
+                            }
+                        }
+                    } else {
+                        item() {
+                            Text(
+                                text = stringResource(R.string.nothing_found),
+                                color = Color.Gray,
+                                textAlign = TextAlign.Center
                             )
                             Divider()
                         }
-                    }
-                } else {
-                    item(){
-                        Text(
-                            text = stringResource(R.string.nothing_found),
-                            color = Color.Gray,
-                            textAlign = TextAlign.Center)
-                        Divider()
                     }
                 }
             }
@@ -207,17 +225,13 @@ fun DeleteBackground(
 fun PreviewRecordCard(){
     BudgetAppTheme {
 
-        var transactions by remember {
-            mutableStateOf(LocalIncomeRepository.fetchAll())
-        }
-
         RecordCard(
             modifier = Modifier,
-            transactions = transactions,
+            transactions = emptyList(),
             onDelete = {
-                LocalIncomeRepository.removeIncome(it as Income)
-                transactions = LocalIncomeRepository.fetchAll()
-            }
+
+            },
+            isLoading = true
         )
     }
 }

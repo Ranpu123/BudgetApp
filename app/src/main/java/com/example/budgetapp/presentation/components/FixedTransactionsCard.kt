@@ -45,8 +45,11 @@ import androidx.compose.ui.unit.sp
 import com.example.budgetapp.R
 import com.example.budgetapp.domain.models.transaction.FixedTransaction
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
+import com.example.budgetapp.services.dao.fixedIncome.FixedIncomeDao
+import com.example.budgetapp.services.dao.fixedIncome.FixedIncomeDao_Impl
 import com.example.budgetapp.services.repository.fixed_income.LocalFixedIncomeRepository
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FixedTransactionsCard(
     cardName: String,
@@ -54,7 +57,8 @@ fun FixedTransactionsCard(
     modifier: Modifier = Modifier,
     expanded: Boolean = true,
     onNewTransactionClicked: () -> Unit = {},
-    onSeeMoreClicked: () -> Unit = {}
+    onSeeMoreClicked: () -> Unit = {},
+    isLoading: Boolean = false
 ){
 
     var expanded by rememberSaveable { mutableStateOf(expanded) }
@@ -111,25 +115,38 @@ fun FixedTransactionsCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Divider()
-                    if(transactions.isNotEmpty()) {
+                    if(isLoading){
                         LazyColumn(modifier = modifier.height(110.dp)) {
-                            item {
-                                TransactionDateHeader(
-                                    date = null,
-                                    total = transactions.sumOf { it.value })
+                            stickyHeader {
+                                ShimmerTransactionDateHeader()
                             }
-                            items(transactions.sortedBy { it.date }) { transaction ->
-                                ItemTransactionsCard(transaction = transaction)
+                            items(3) {
+                                ShimmerItemTransactionsCard()
                                 Divider()
                             }
                         }
-                    }else{
-                        Text(
-                            modifier = modifier.clickable { onSeeMoreClicked() },
-                            text = stringResource(R.string.nothing_found),
-                            color = Color.Gray,
-                            textAlign = TextAlign.Center)
-                        Divider()
+                    }else {
+                        if (transactions.isNotEmpty()) {
+                            LazyColumn(modifier = modifier.height(110.dp)) {
+                                item {
+                                    TransactionDateHeader(
+                                        date = null,
+                                        total = transactions.sumOf { it.value })
+                                }
+                                items(transactions.sortedBy { it.date }) { transaction ->
+                                    ItemTransactionsCard(transaction = transaction)
+                                    Divider()
+                                }
+                            }
+                        } else {
+                            Text(
+                                modifier = modifier.clickable { onNewTransactionClicked() },
+                                text = stringResource(R.string.nothing_found),
+                                color = Color.Gray,
+                                textAlign = TextAlign.Center
+                            )
+                            Divider()
+                        }
                     }
 
                     Text(
@@ -150,6 +167,6 @@ fun FixedTransactionCardPreview(){
     BudgetAppTheme {
         FixedTransactionsCard(
             cardName = "Receitas Fixas",
-            transactions = LocalFixedIncomeRepository.fetchAll() as List<FixedTransaction<*>>)
+            transactions = FixedIncomeDao_Impl.getRequiredConverters() as List<FixedTransaction<*>>)
     }
 }
