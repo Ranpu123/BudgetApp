@@ -11,6 +11,7 @@ import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
 import com.example.budgetapp.domain.repository_interfaces.IIncomeRepository
 import com.example.budgetapp.domain.use_cases.ValidateTransactionDescription
 import com.example.budgetapp.domain.use_cases.ValidateTransactionValue
+import com.example.budgetapp.presentation.SyncNotificationService
 import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.ExpenseBottomSheetViewModel
 import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.FExpenseBottomSheetViewModel
 import com.example.budgetapp.presentation.viewModels.transactionBottomSheet.FIncomeBottomSheetViewModel
@@ -77,6 +78,10 @@ val DatabaseModule = module {
     single { provideExpenseDao(get()) }
     single { provideFixedExpenseDao(get()) }
     single { provideFixedIncomeDao(get()) }
+}
+
+val NotificationModule = module {
+    single { SyncNotificationService(androidContext()) }
 }
 
 val RemoteNetworkModule = module {

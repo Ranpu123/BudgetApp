@@ -80,6 +80,8 @@
     <string name="phone_plan">Cellular Plan</string>
     <string name="insurance">Insurance</string>
     <string name="installment">Installment</string>
+    <string name="notification_title">Syncing Data</string>
+    <string name="notification_text">Synchronizing data with the servers</string>
 
 
 </resources>

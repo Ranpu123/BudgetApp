@@ -162,24 +162,3 @@ fun TransactionsCard(
         }
     }
 }
-/*
-@Preview(showBackground = true)
-@Composable
-fun TransactionCardPreview(){
-    BudgetAppTheme {
-        TransactionsCard(
-            cardName = "Receitas",
-            transactions = IncomeDao_Impl.getRequiredConverters() as List<Transaction<*>>)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ShimmerTransactionCardPreview(){
-    BudgetAppTheme {
-        TransactionsCard(
-            cardName = "Receitas",
-            transactions = IncomeDao_Impl.getRequiredConverters() as List<Transaction<*>>,
-            isLoading = true)
-    }
-}*/

@@ -156,13 +156,3 @@ fun FixedTransactionsCard(
         }
     }
 }
-/*
-@Preview(showBackground = true)
-@Composable
-fun FixedTransactionCardPreview(){
-    BudgetAppTheme {
-        FixedTransactionsCard(
-            cardName = "Receitas Fixas",
-            transactions = FixedIncomeDao_Impl.getRequiredConverters() as List<FixedTransaction<*>>)
-    }
-}*/

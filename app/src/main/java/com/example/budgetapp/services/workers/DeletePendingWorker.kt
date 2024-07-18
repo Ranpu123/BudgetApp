@@ -133,11 +133,11 @@ class DeletePendingWorker(
     ): Result {
         if (!res.isSuccessful) {
             Log.e("[Worker]", "${res.code()},  ${res.message()}")
-            when (res.code()) {
-                400 -> return Result.failure()
-                404 -> return Result.success()
-                500 -> return Result.retry()
-                else -> return Result.failure()
+            return when (res.code()) {
+                400 -> Result.failure()
+                404 -> Result.success()
+                500 -> Result.retry()
+                else -> Result.failure()
             }
         }
         return Result.success()

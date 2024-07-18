@@ -25,6 +25,7 @@ import com.example.budgetapp.domain.modules.RecordsModule
 import com.example.budgetapp.domain.modules.RepositoryModule
 import com.example.budgetapp.domain.modules.DatabaseModule
 import com.example.budgetapp.domain.modules.HomePageModule
+import com.example.budgetapp.domain.modules.NotificationModule
 import com.example.budgetapp.domain.modules.RemoteNetworkModule
 import com.example.budgetapp.presentation.graphs.RootNavigationGraph
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
@@ -59,6 +60,18 @@ class MainActivity : ComponentActivity() {
 
         val workManager: WorkManager by inject()
 
+        launchStartupWork(workManager)
+
+        setContent {
+            BudgetAppTheme {
+
+                RootNavigationGraph(navController = rememberNavController())
+
+            }
+        }
+    }
+
+    private fun launchStartupWork(workManager: WorkManager) {
         var data = Data.Builder()
         data.putInt("userId", 1)
 
@@ -75,14 +88,6 @@ class MainActivity : ComponentActivity() {
             .then(startupRequest)
             .then(fetchAllRequest)
             .enqueue()
-
-        setContent {
-            BudgetAppTheme {
-
-                RootNavigationGraph(navController = rememberNavController())
-
-            }
-        }
     }
 
     private fun startModules(){
@@ -99,7 +104,8 @@ class MainActivity : ComponentActivity() {
                 RecordsModule,
                 DatabaseModule,
                 RemoteNetworkModule,
-                RepositoryModule
+                RepositoryModule,
+                NotificationModule
             )
         }
     }
