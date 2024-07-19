@@ -58,10 +58,6 @@ class MainActivity : ComponentActivity() {
         startModules()
         enableEdgeToEdge()
 
-        val workManager: WorkManager by inject()
-
-        launchStartupWork(workManager)
-
         setContent {
             BudgetAppTheme {
 
@@ -71,24 +67,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun launchStartupWork(workManager: WorkManager) {
-        var data = Data.Builder()
-        data.putInt("userId", 1)
-
-        var startupRequest = createOneTimeWorkRequest(data, StartupWorker::class.java)
-        var deletePendingRequest = createOneTimeWorkRequest(data, DeletePendingWorker::class.java)
-        var fetchAllRequest = createOneTimeWorkRequest(data, FetchAllWorker::class.java)
-
-        workManager
-            .beginUniqueWork(
-                "sync_job",
-                ExistingWorkPolicy.REPLACE,
-                deletePendingRequest
-            )
-            .then(startupRequest)
-            .then(fetchAllRequest)
-            .enqueue()
-    }
 
     private fun startModules(){
         stopKoin()

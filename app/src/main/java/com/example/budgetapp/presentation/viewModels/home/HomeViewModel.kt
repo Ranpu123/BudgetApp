@@ -109,22 +109,8 @@ class HomeViewModel(
             trigger.emit(Unit)
         }
 
-        var data = Data.Builder()
-        data.putInt("userId", 1)
+        launchStartupWork(workManager)
 
-        var startupRequest = createOneTimeWorkRequest(data, StartupWorker::class.java)
-        var deletePendingRequest = createOneTimeWorkRequest(data, DeletePendingWorker::class.java)
-        var fetchAllRequest = createOneTimeWorkRequest(data, FetchAllWorker::class.java)
-
-        workManager
-            .beginUniqueWork(
-                "sync_job",
-                ExistingWorkPolicy.KEEP,
-                deletePendingRequest
-            )
-            .then(startupRequest)
-            .then(fetchAllRequest)
-            .enqueue()
     }
 
     private fun checkDueTransactions(fixedTransactions: List<FixedTransaction<*>>) {
@@ -194,5 +180,24 @@ class HomeViewModel(
         var total: Double = 0.0
         total += expenses.sumOf { it.value }
         return total
+    }
+
+    private fun launchStartupWork(workManager: WorkManager) {
+        var data = Data.Builder()
+        data.putInt("userId", 1)
+
+        var startupRequest = createOneTimeWorkRequest(data, StartupWorker::class.java)
+        var deletePendingRequest = createOneTimeWorkRequest(data, DeletePendingWorker::class.java)
+        var fetchAllRequest = createOneTimeWorkRequest(data, FetchAllWorker::class.java)
+
+        workManager
+            .beginUniqueWork(
+                "sync_job",
+                ExistingWorkPolicy.REPLACE,
+                deletePendingRequest
+            )
+            .then(startupRequest)
+            .then(fetchAllRequest)
+            .enqueue()
     }
 }

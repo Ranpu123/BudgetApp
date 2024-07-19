@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config>
+        <domain includeSubdomains="true">76.76.21.241</domain>
+        <domain includeSubdomains="true">budget-app-mockapi.vercel.app</domain>
+        <trust-anchors>
+            <certificates src="@raw/vercel"/>
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

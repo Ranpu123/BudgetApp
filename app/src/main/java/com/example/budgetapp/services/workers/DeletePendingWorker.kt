@@ -49,7 +49,6 @@ class DeletePendingWorker(
         if(userId == -1){
             Result.failure()
         }
-
         return withContext(Dispatchers.IO){
             try{
 
@@ -114,7 +113,10 @@ class DeletePendingWorker(
             toRemove.forEach {
                 var res = handleResponse(res = operation(it))
                 results.add(res)
-                removed.add(it)
+
+                if(res == Result.success()) {
+                    removed.add(it)
+                }
             }
         }
 

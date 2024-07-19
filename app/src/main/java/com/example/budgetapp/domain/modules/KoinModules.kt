@@ -47,7 +47,7 @@ import java.time.LocalDateTime
 
 fun provideBudgetAppAPI(): IBudgetAppAPI =
     Retrofit.Builder()
-        .baseUrl("http://10.0.2.2:3000")
+        .baseUrl("https://budget-app-mockapi.vercel.app/")
         .addConverterFactory(
             GsonConverterFactory.create(
                 GsonBuilder()
