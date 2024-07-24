@@ -38,6 +38,8 @@ import com.example.budgetapp.services.repository.fixed_income.SyncFixedIncomeRep
 import com.example.budgetapp.services.repository.income.LocalIncomeRepository
 import com.example.budgetapp.services.repository.income.SyncIncomeRepository
 import com.google.gson.GsonBuilder
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -45,9 +47,22 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.concurrent.TimeUnit
 
-fun provideBudgetAppAPI(): IBudgetAppAPI =
+
+fun provideInterceptor() =
+    HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
+fun provideOkhttpClient(interceptor: HttpLoggingInterceptor) =
+    OkHttpClient.Builder().apply {
+        this.addInterceptor(interceptor)
+            .connectTimeout(3, TimeUnit.SECONDS)
+            .readTimeout(20, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+    }.build()
+
+fun provideBudgetAppAPI(client: OkHttpClient): IBudgetAppAPI =
     Retrofit.Builder()
+        .client(client)
         .baseUrl(BuildConfig.SERVER_BASE_URL)
         .addConverterFactory(
             GsonConverterFactory.create(
@@ -86,7 +101,9 @@ val NotificationModule = module {
 }
 
 val RemoteNetworkModule = module {
-    single { provideBudgetAppAPI() }
+    single { provideInterceptor() }
+    single { provideOkhttpClient(get()) }
+    single { provideBudgetAppAPI(get()) }
     single { WorkManager.getInstance(androidContext()) }
 }
 

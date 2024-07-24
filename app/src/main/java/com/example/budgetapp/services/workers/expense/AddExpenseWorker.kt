@@ -18,6 +18,7 @@ import org.koin.core.component.inject
 import org.koin.core.context.GlobalContext.get
 import retrofit2.HttpException
 import java.io.IOException
+import java.net.SocketTimeoutException
 import java.sql.SQLException
 
 class AddExpenseWorker(context: Context, params: WorkerParameters): CoroutineWorker(context, params), KoinComponent{
@@ -49,9 +50,7 @@ class AddExpenseWorker(context: Context, params: WorkerParameters): CoroutineWor
                     update = {expense -> dao.update(RoomExpense.fromExpense(expense, userId, dirty = false))}
                 )
 
-            }catch (e: Exception){
-                Log.e("[Worker]", "Unexpected error: " + e.message.toString())
-                Result.failure()
+
             }catch (e: SQLException){
                 Log.e("[SQLite]", e.message.toString())
                 Result.retry()
@@ -61,6 +60,12 @@ class AddExpenseWorker(context: Context, params: WorkerParameters): CoroutineWor
             }catch (e: HttpException){
                 Log.e("[HTTP]", e.message.toString())
                 Result.retry()
+            }catch (e: SocketTimeoutException){
+                Log.e("[Network]", e.message.toString())
+                Result.retry()
+            }catch (e: Exception) {
+                Log.e("[Worker]", "Unexpected error: " + e.message.toString())
+                Result.failure()
             }
         }
     }

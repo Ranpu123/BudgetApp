@@ -25,6 +25,7 @@ import org.koin.core.component.inject
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
+import java.net.SocketTimeoutException
 import java.sql.SQLException
 
 class DeletePendingWorker(
@@ -84,9 +85,7 @@ class DeletePendingWorker(
                 data.putInt("userId", userId)
 
                 return@withContext Result.success(data.build())
-            }catch (e: Exception) {
-                Log.e("[Worker]", "Unexpected error: " + e.message.toString())
-                Result.failure()
+
             } catch (e: SQLException) {
                 Log.e("[SQLite]", e.message.toString())
                 Result.retry()
@@ -96,6 +95,12 @@ class DeletePendingWorker(
             } catch (e: HttpException) {
                 Log.e("[HTTP]", e.message.toString())
                 Result.retry()
+            } catch (e: SocketTimeoutException){
+                Log.e("[Network]", e.message.toString())
+                Result.retry()
+            }catch (e: Exception) {
+                Log.e("[Worker]", "Unexpected error: " + e.message.toString())
+                Result.failure()
             }
         }
     }
