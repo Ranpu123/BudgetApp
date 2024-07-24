@@ -3,6 +3,7 @@ package com.example.budgetapp.domain.modules
 import android.content.Context
 import androidx.room.Room
 import androidx.work.WorkManager
+import com.example.budgetapp.BuildConfig
 import com.example.budgetapp.domain.models.expense.ExpenseCategory
 import com.example.budgetapp.domain.models.income.IncomeCategory
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
@@ -47,7 +48,7 @@ import java.time.LocalDateTime
 
 fun provideBudgetAppAPI(): IBudgetAppAPI =
     Retrofit.Builder()
-        .baseUrl("https://budget-app-mockapi.vercel.app/")
+        .baseUrl(BuildConfig.SERVER_BASE_URL)
         .addConverterFactory(
             GsonConverterFactory.create(
                 GsonBuilder()

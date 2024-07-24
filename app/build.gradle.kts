@@ -23,11 +23,19 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "SERVER_BASE_URL", "\"https://budget-app-mockapi.vercel.app/\"")
+            applicationIdSuffix = ".release"
+        }
+        debug {
+            isDebuggable = true
+            applicationIdSuffix = ".debug"
+            buildConfigField("String", "SERVER_BASE_URL", "\"http://10.0.2.2:3000/\"")
         }
     }
     compileOptions {
@@ -39,6 +47,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
