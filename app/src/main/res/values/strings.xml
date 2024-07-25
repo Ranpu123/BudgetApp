@@ -81,5 +81,10 @@
     <string name="insurance">Seguro</string>
     <string name="installment">Prestação</string>
 
+    //SyncNotification
+    <string name="notification_title">Sincronizando Dados</string>
+    <string name="notification_text">Sincronizando dados com os servidores</string>
+
+
 
 </resources>

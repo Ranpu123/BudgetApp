@@ -1,4 +1,4 @@
-package com.example.budgetapp.services.database
+package com.example.budgetapp.services.local.database
 
 import androidx.room.TypeConverter
 import com.example.budgetapp.domain.models.expense.ExpenseCategory

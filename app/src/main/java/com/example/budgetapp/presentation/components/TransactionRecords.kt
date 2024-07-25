@@ -55,7 +55,7 @@ import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
 import com.example.budgetapp.services.repository.income.LocalIncomeRepository
 import androidx.compose.ui.res.stringResource
-import com.example.budgetapp.services.dao.income.IncomeDao
+import com.example.budgetapp.services.local.dao.income.IncomeDao
 import com.example.budgetapp.utils.sortByCategory
 import com.example.budgetapp.utils.sortByMonth
 import com.example.budgetapp.utils.toFormattedMonthYear

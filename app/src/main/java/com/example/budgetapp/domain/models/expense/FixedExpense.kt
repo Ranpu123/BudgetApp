@@ -4,18 +4,21 @@ import androidx.room.Entity
 import com.example.budgetapp.domain.models.transaction.FixedTransaction
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.UUID
 
-@Entity
-class FixedExpense(
+
+open class FixedExpense(
     date: LocalDateTime,
     value: Double,
     category: ExpenseCategory,
     description: String,
+    id: UUID = UUID.randomUUID(),
     active : Boolean = true,
     endDate: LocalDate? = null,
     lastDate: LocalDate = if (date.toLocalDate().isBefore(LocalDate.now())) date.toLocalDate() else date.toLocalDate().minusMonths(1)
 
 ) : FixedTransaction<ExpenseCategory>(
+    id = id,
     date = date,
     value = value,
     category = category,

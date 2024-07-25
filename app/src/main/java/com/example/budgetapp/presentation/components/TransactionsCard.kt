@@ -46,7 +46,7 @@ import com.example.budgetapp.R
 import com.example.budgetapp.domain.models.transaction.Transaction
 import com.example.budgetapp.services.repository.income.LocalIncomeRepository
 import com.example.budgetapp.presentation.ui.theme.BudgetAppTheme
-import com.example.budgetapp.services.dao.income.IncomeDao_Impl
+
 import com.example.budgetapp.utils.sortByDay
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -160,26 +160,5 @@ fun TransactionsCard(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun TransactionCardPreview(){
-    BudgetAppTheme {
-        TransactionsCard(
-            cardName = "Receitas",
-            transactions = IncomeDao_Impl.getRequiredConverters() as List<Transaction<*>>)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ShimmerTransactionCardPreview(){
-    BudgetAppTheme {
-        TransactionsCard(
-            cardName = "Receitas",
-            transactions = IncomeDao_Impl.getRequiredConverters() as List<Transaction<*>>,
-            isLoading = true)
     }
 }

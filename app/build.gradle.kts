@@ -23,11 +23,19 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "SERVER_BASE_URL", "\"https://budget-app-mockapi.vercel.app/\"")
+            applicationIdSuffix = ".release"
+        }
+        debug {
+            isDebuggable = true
+            applicationIdSuffix = ".debug"
+            buildConfigField("String", "SERVER_BASE_URL", "\"http://10.0.2.2:3000/\"")
         }
     }
     compileOptions {
@@ -39,6 +47,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -52,15 +61,24 @@ android {
 
 dependencies {
 
-    val room_version = "2.6.1"
-    val lifecycle_version = "2.8.3"
+    val roomVersion = "2.6.1"
+    val lifecycleVersion = "2.8.3"
+    val retrofitVersion = "2.11.0"
+    val workVersion = "2.9.0"
 
-    implementation("androidx.room:room-runtime:$room_version")
-    ksp("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
+    implementation("androidx.room:room-runtime:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
+
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+
+    implementation("androidx.work:work-runtime-ktx:$workVersion")
+
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     implementation ("androidx.compose.ui:ui-text-google-fonts:1.6.1")
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
