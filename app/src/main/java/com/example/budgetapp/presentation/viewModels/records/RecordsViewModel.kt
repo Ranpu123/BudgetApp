@@ -45,11 +45,10 @@ class RecordsViewModel(
             fixedIncome = fixedIncome,
             isLoading = false,
         )
-
-    }.catch {
-        _uiState.value.copy (
+    }.catch {e->
+        _uiState.value = _uiState.value.copy (
             isLoading = false,
-            errorMsg = "${it.message}"
+            errorMsg = "${e.message}"
         )
     }.stateIn(
         scope = viewModelScope,

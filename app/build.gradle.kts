@@ -15,7 +15,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.budgetapp.TestBudgetRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -44,8 +44,12 @@ android {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
+        resources.excludes.add("META-INF/*")
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+        jniLibs {
+            useLegacyPackaging = true
         }
     }
 }
@@ -56,6 +60,9 @@ dependencies {
     val lifecycleVersion = "2.8.3"
     val retrofitVersion = "2.11.0"
     val workVersion = "2.9.0"
+    val mockkVersion = "1.13.12"
+    val coroutinesVersion = "1.7.3"
+    val koinVersion = "3.5.6"
 
     implementation("androidx.room:room-runtime:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
@@ -77,6 +84,25 @@ dependencies {
     implementation ("io.insert-koin:koin-android")
     implementation("io.insert-koin:koin-androidx-compose")
 
+    testImplementation("app.cash.turbine:turbine:1.1.0")
+    testImplementation("io.insert-koin:koin-test:$koinVersion")
+    testImplementation("io.insert-koin:koin-test-junit4:$koinVersion")
+    testImplementation ("io.mockk:mockk:$mockkVersion")
+    testImplementation ("io.mockk:mockk-android:$mockkVersion")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
+    testImplementation(libs.junit)
+    testImplementation("junit:junit:4.12")
+
+    androidTestImplementation ("io.mockk:mockk-android:$mockkVersion")
+    androidTestImplementation ("io.mockk:mockk-agent:$mockkVersion")
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    implementation(libs.core.ktx)
+    implementation(libs.androidx.work.testing)
+    implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -87,12 +113,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
-    testImplementation(libs.junit)
-    testImplementation("junit:junit:4.12")
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

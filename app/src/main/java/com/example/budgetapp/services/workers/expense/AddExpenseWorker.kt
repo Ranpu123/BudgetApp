@@ -49,9 +49,6 @@ class AddExpenseWorker(context: Context, params: WorkerParameters): CoroutineWor
                     update = {expense -> dao.update(RoomExpense.fromExpense(expense, userId, dirty = false))}
                 )
 
-            }catch (e: Exception){
-                Log.e("[Worker]", "Unexpected error: " + e.message.toString())
-                Result.failure()
             }catch (e: SQLException){
                 Log.e("[SQLite]", e.message.toString())
                 Result.retry()
@@ -61,6 +58,9 @@ class AddExpenseWorker(context: Context, params: WorkerParameters): CoroutineWor
             }catch (e: HttpException){
                 Log.e("[HTTP]", e.message.toString())
                 Result.retry()
+            }catch (e: Exception) {
+                Log.e("[Worker]", "Unexpected error: " + e.message.toString())
+                Result.failure()
             }
         }
     }

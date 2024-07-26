@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -37,6 +38,7 @@ fun dropDownMenu(
     onChoice: (it:ICategories) -> Unit = {},
     defaultSelected: String = stringResource(R.string.default_option)
 ) {
+    val context = LocalContext.current
 
     var expanded by remember { mutableStateOf(false) }
 
@@ -78,13 +80,13 @@ fun dropDownMenu(
             suggestions.forEach { category ->
                 DropdownMenuItem(
                     onClick = {
-                        selectedText = category.asString()
+                        selectedText = category.asString(context)
                         expanded = false
                         onChoice(category)
                     },
                     text = {
                         Text(
-                            text = category.asString(),
+                            text = category.asString(context),
                             color = Color.Black,
                             modifier = Modifier
                                 .onGloballyPositioned { coordinates ->

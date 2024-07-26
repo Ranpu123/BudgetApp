@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -58,6 +59,7 @@ fun AddFIncomeBottomSheet(
     onDismiss: () -> Unit = {},
     onAdd: ()-> Unit
 ){
+    val context = LocalContext.current
 
     val addExpensetSheetState = rememberModalBottomSheetState (skipPartiallyExpanded = true)
     val datePickerState = rememberDatePickerState()
@@ -107,11 +109,11 @@ fun AddFIncomeBottomSheet(
                     fontSize = 13.sp
                 )
                 dropDownMenu(
-                    defaultSelected = category.asString(),
-                    suggestions = IncomeCategory.entries.toList().sortedBy { it.asString() },
+                    defaultSelected = category.asString(context),
+                    suggestions = IncomeCategory.entries.toList().sortedBy { it.asString(context) },
                     onChoice = {
                         category = it as IncomeCategory
-                        description = category.asString()
+                        description = category.asString(context)
                     }
                 )
 
@@ -207,7 +209,7 @@ fun AddFIncomeBottomSheet(
                     colors = ButtonDefaults.buttonColors(Color(0xFF009A33)),
                     shape = RoundedCornerShape(15.dp),
                     onClick = {
-                        if (bottomSheetViewModel.validadeForm(
+                        /*if (bottomSheetViewModel.validadeForm(
                                 description,
                                 currencyToDouble(value)
                             )
@@ -222,7 +224,10 @@ fun AddFIncomeBottomSheet(
                             )
                             onAdd()
                             bottomSheetViewModel.clearState()
-                        }
+                        }*/
+                              if(bottomSheetViewModel.checkForm()){
+                                  onAdd()
+                              }
                     },
                 ) {
                     Text(

@@ -13,11 +13,11 @@ fun formatCurrency(it: String): String {
     val symbol: String = currency.getSymbol()
 
     try {
-        val cleanS: String = it.replace("[$symbol,.\u00A0]".toRegex(), "")
+        val cleanS: String = it.replace("[  $symbol,. ]".toRegex(), "")
 
         val parsed: BigDecimal = BigDecimal(cleanS)
-            .setScale(2, RoundingMode.FLOOR)
-            .divide(BigDecimal(100), RoundingMode.FLOOR)
+            .setScale(2, RoundingMode.DOWN)
+            .divide(BigDecimal(100), RoundingMode.DOWN)
 
         val result: String = NumberFormat.getCurrencyInstance(Locale.getDefault())
             .format(parsed)
@@ -32,7 +32,7 @@ fun formatCurrency(it: Double): String {
     try {
 
         val parsed: BigDecimal = BigDecimal(it)
-            .setScale(2, RoundingMode.DOWN)
+            .setScale(2, RoundingMode.HALF_UP)
 
 
         val result: String = NumberFormat.getCurrencyInstance(Locale.getDefault())
