@@ -50,7 +50,6 @@ class AddExpenseWorker(context: Context, params: WorkerParameters): CoroutineWor
                     update = {expense -> dao.update(RoomExpense.fromExpense(expense, userId, dirty = false))}
                 )
 
-
             }catch (e: SQLException){
                 Log.e("[SQLite]", e.message.toString())
                 Result.retry()

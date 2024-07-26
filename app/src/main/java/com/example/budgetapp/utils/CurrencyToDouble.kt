@@ -11,11 +11,10 @@ fun currencyToDouble(it: String): Double {
     val symbol: String = currency.getSymbol()
 
     try {
-        val cleanS = it.replace("[$symbol,.\u00A0]".toRegex(), "")
+        val cleanS = it.replace("[  $symbol,.\u00A0]".toRegex(), "")
         val parsed = BigDecimal(cleanS)
             .setScale(2, RoundingMode.FLOOR)
             .divide(BigDecimal(100), RoundingMode.FLOOR)
-
         return parsed.toDouble()
     } catch (e: Exception) {
         Log.e("ERROR", e.toString())

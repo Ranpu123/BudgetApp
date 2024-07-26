@@ -67,10 +67,10 @@ class HomeViewModel(
                 userName = "Vinícius",
                 isLoading = false
             )
-        }.catch {
-                _uiState.value.copy(
-                    isLoading = false,
-                    errorMsg = "${it.message}"
+        }.catch { e ->
+                _uiState.value = HomeUiState(
+                    isLoading = true,
+                    errorMsg = "${e.message}"
                 )
         }
     }.stateIn(
@@ -113,7 +113,7 @@ class HomeViewModel(
 
     }
 
-    private fun checkDueTransactions(fixedTransactions: List<FixedTransaction<*>>) {
+    fun checkDueTransactions(fixedTransactions: List<FixedTransaction<*>>) {
         viewModelScope.launch {
             var updatedFixedExpense = mutableListOf<FixedExpense>()
             var updatedFixedIncome = mutableListOf<FixedIncome>()
@@ -182,7 +182,7 @@ class HomeViewModel(
         return total
     }
 
-    private fun launchStartupWork(workManager: WorkManager) {
+    fun launchStartupWork(workManager: WorkManager) {
         var data = Data.Builder()
         data.putInt("userId", 1)
 

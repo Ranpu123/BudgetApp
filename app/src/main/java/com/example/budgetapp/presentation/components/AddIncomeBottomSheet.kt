@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -62,7 +63,7 @@ fun AddIncomeBottomSheet(
     onDismiss: () -> Unit = {},
     onAdd: ()-> Unit = {}
 ){
-
+    val context = LocalContext.current
     val addExpensetSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val datePickerState = rememberDatePickerState()
 
@@ -110,12 +111,12 @@ fun AddIncomeBottomSheet(
                     fontSize = 13.sp
                 )
                 dropDownMenu(
-                    suggestions = IncomeCategory.entries.toList().sortedBy { it.asString() },
+                    suggestions = IncomeCategory.entries.toList().sortedBy { it.asString(context) },
                     onChoice = {
                         category = it as IncomeCategory
-                        description = category.asString()
+                        description = category.asString(context)
                     },
-                    defaultSelected = category.asString()
+                    defaultSelected = category.asString(context)
                 )
                 Text(
                     modifier = modifier.fillMaxWidth(),
@@ -209,7 +210,7 @@ fun AddIncomeBottomSheet(
                     colors = ButtonDefaults.buttonColors(Color(0xFF009A33)),
                     shape = RoundedCornerShape(15.dp),
                     onClick = {
-                        if(bottomSheetViewModel.validadeForm(description, currencyToDouble(value))){
+                        /*if(bottomSheetViewModel.validadeForm(description, currencyToDouble(value))){
                             bottomSheetViewModel.addNewTransaction(
                                 description = description,
                                 value = currencyToDouble(value),
@@ -220,7 +221,10 @@ fun AddIncomeBottomSheet(
                             )
                             onAdd()
                             bottomSheetViewModel.clearState()
-                        }
+                        }*/
+                              if(bottomSheetViewModel.checkForm()){
+                                  onAdd()
+                              }
                     },
                 ) {
                     Text(

@@ -1,5 +1,6 @@
 package com.example.budgetapp.domain.models.income
 
+import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -17,7 +18,7 @@ enum class IncomeCategory(@StringRes override val displayName: Int): ICategories
     TIPS(R.string.tips),
     OTHER(R.string.other);
 
-    override fun asString(): String{
-        return App.mContext.getString(this.displayName)
+    override fun asString(context: Context): String {
+        return context.getString(this.displayName)
     }
 }

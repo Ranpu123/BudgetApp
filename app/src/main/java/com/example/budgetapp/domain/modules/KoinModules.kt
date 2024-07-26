@@ -121,28 +121,28 @@ val uiStateModule = module{
 val ExpenseBottomSheetModule = module {
     includes(uiStateModule)
     viewModel<ExpenseBottomSheetViewModel>{
-        ExpenseBottomSheetViewModel(get(), get(), get())
+        ExpenseBottomSheetViewModel(get(), get(),  get(), androidContext())
     }
 }
 
 val IncomeBottomSheetModule = module {
     includes(uiStateModule)
     viewModel<IncomeBottomSheetViewModel>{
-        IncomeBottomSheetViewModel(get(), get(), get())
+        IncomeBottomSheetViewModel(get(), get(), get(), get())
     }
 }
 
 val FixedExpenseBottomSheetModule = module {
     includes(uiStateModule)
     viewModel<FExpenseBottomSheetViewModel>{
-        FExpenseBottomSheetViewModel(get(), get(), get())
+        FExpenseBottomSheetViewModel(get(), get(), get(), get())
     }
 }
 
 val FixedIncomeBottomSheetModule = module {
     includes(uiStateModule)
     viewModel<FIncomeBottomSheetViewModel>{
-        FIncomeBottomSheetViewModel(get(), get(), get())
+        FIncomeBottomSheetViewModel(get(), get(), get(), get())
     }
 }
 
