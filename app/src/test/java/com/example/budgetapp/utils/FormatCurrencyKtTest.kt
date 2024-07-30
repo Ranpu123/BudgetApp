@@ -16,28 +16,28 @@ class FormatCurrencyKtTest{
     }
 
     @Test
-    fun `valor string moeda com 99 centavos`(){
+    fun `when string has 99 cents should return formated currency ,99`(){
         var res = formatCurrency("R$ 9999")
 
         assertEquals("R$ 99,99", res)
     }
 
     @Test
-    fun `valor moeda com 99 centavos`(){
+    fun `when value has ,99 should return 99 cents`(){
         var res = formatCurrency(99.99)
 
         assertEquals("R$ 99,99", res)
     }
 
     @Test
-    fun `string invalida`(){
+    fun `when string is invalid should return 0`(){
         var res = formatCurrency("Texto")
 
         assertEquals("0", res)
     }
 
     @Test
-    fun `valor invalido`(){
+    fun `when value is invalid should return 0`(){
         var res = formatCurrency(Double.POSITIVE_INFINITY)
 
         assertEquals("0", res)

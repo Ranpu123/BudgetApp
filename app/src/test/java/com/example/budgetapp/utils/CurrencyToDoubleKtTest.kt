@@ -15,14 +15,14 @@ class CurrencyToDoubleKtTest{
     }
 
     @Test
-    fun `valor moeda com 99 centavos`(){
+    fun `when string has 99 cents should return ,99`(){
         var res = currencyToDouble("R$ 99.99")
 
         assertEquals(99.99, res, 0.0001)
     }
 
     @Test
-    fun `valor inválido`(){
+    fun `when string is invalid should return 0`(){
         var res = currencyToDouble("texto")
 
         assertEquals(0.0, res, 0.0001)

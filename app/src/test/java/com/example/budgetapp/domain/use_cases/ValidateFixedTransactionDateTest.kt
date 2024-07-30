@@ -14,7 +14,7 @@ class ValidateFixedTransactionDateTest{
 
 
     @Test
-    fun `data mesmo dia válida`(){
+    fun `When date is the current date should be valid`(){
         var res = ValidateFixedTransactionDate().execute(LocalDate.now())
         var expected = ValidateResult(true, null)
         assertEquals(expected.success, res.success)
@@ -22,7 +22,7 @@ class ValidateFixedTransactionDateTest{
     }
 
     @Test
-    fun `data anterior atual inválida`(){
+    fun `When date is before the current date should be invalid`(){
         var res = ValidateFixedTransactionDate().execute(LocalDate.now().minusDays(5))
         var expected = ValidateResult(false, "Date must be after ${LocalDate.now().format(
             DateTimeFormatter.ofPattern("dd/MM/yyyy"))}")
@@ -31,7 +31,7 @@ class ValidateFixedTransactionDateTest{
     }
 
     @Test
-    fun `data após atual válida`(){
+    fun `When date is after current date should be valid`(){
         var res = ValidateFixedTransactionDate().execute(LocalDate.now().plusDays(5))
         var expected = ValidateResult(true,null)
         assertEquals(expected.success, res.success)

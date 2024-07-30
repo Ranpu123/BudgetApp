@@ -4,23 +4,17 @@ package com.example.budgetapp.presentation.viewModels.transactionBottomSheet
 import android.content.Context
 import com.example.budgetapp.domain.models.expense.Expense
 import com.example.budgetapp.domain.models.expense.ExpenseCategory
-import com.example.budgetapp.domain.models.income.Income
-import com.example.budgetapp.domain.models.income.IncomeCategory
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.use_cases.ValidateResult
 import com.example.budgetapp.domain.use_cases.ValidateTransactionDescription
 import com.example.budgetapp.domain.use_cases.ValidateTransactionValue
 import com.example.budgetapp.utils.formatCurrency
 import io.mockk.coVerify
-import io.mockk.coVerifyOrder
 
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.verify
-import io.mockk.verifyOrder
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -32,7 +26,6 @@ import org.junit.Test
 import org.koin.test.KoinTest
 import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.UUID
 
@@ -68,14 +61,14 @@ class ExpenseBottomSheetViewModelTest: KoinTest {
     }
 
     @Test
-    fun `validateForm com dados validos`(){
+    fun `when validateForm() data is valid error message should be null`(){
         val description = "Outros"
         val value = 50.00
 
         every { validateValue.execute(value) } returns ValidateResult(true, null)
         every { validateDescription.execute(description) } returns ValidateResult(true, null)
 
-        val res = viewModel.validadeForm(description, value)
+        val res = viewModel.validateForm(description, value)
 
         assertTrue(res)
         assertNull(viewModel.uiState.value.descriptionError)
@@ -83,14 +76,14 @@ class ExpenseBottomSheetViewModelTest: KoinTest {
     }
 
     @Test
-    fun `validateForm com dados inválidos`(){
+    fun `when validateForm() data is invalid should set error message`(){
         val description = ""
         val value = 0.0
 
         every { validateValue.execute(value) } returns ValidateResult(false, "Value Error")
         every { validateDescription.execute(description) } returns ValidateResult(false, "Description Error")
 
-        val res = viewModel.validadeForm(description, value)
+        val res = viewModel.validateForm(description, value)
 
         assertFalse(res)
         assertEquals("Value Error", viewModel.uiState.value.valueError)
@@ -98,7 +91,7 @@ class ExpenseBottomSheetViewModelTest: KoinTest {
     }
 
     @Test
-    fun `limpar estado`(){
+    fun `when called clearState() should clear UI state`(){
         viewModel.clearState()
 
         assertEquals(TransactionBottomSheetUIState(), viewModel.uiState.value)
@@ -110,7 +103,7 @@ class ExpenseBottomSheetViewModelTest: KoinTest {
     }
     
     @Test
-    fun `When checkform() is successful should add new expense`() = runTest{
+    fun `when checkform() is successful should add new expense`() = runTest{
 
         var id = UUID.randomUUID()
         mockkStatic(UUID::class)
@@ -137,7 +130,7 @@ class ExpenseBottomSheetViewModelTest: KoinTest {
     }
 
     @Test
-    fun `When checkform() fails should not add new expense`() = runTest{
+    fun `when checkform() fails should not add new expense`() = runTest{
 
         var id = UUID.randomUUID()
         mockkStatic(UUID::class)

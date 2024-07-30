@@ -40,7 +40,7 @@ class SortTransactionsKtTest{
     )
 
     @Test
-    fun `agrupar por mês e ordenar por data`(){
+    fun `group by month and order by date`(){
         var res = sortByMonth(transactions.reversed())
 
         var expected = mapOf(
@@ -58,7 +58,7 @@ class SortTransactionsKtTest{
     }
 
     @Test
-    fun `agrupar por categoria`(){
+    fun `should group by category`(){
         var res = sortByCategory(transactions)
 
         var expected = mapOf(
@@ -77,7 +77,7 @@ class SortTransactionsKtTest{
     }
 
     @Test
-    fun `agrupar por data`(){
+    fun `should group by date`(){
         var res = sortByDay(transactions.reversed())
 
         var expected = mapOf(

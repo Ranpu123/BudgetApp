@@ -36,7 +36,7 @@ class FIncomeBottomSheetViewModel(
     var value = mutableStateOf(formatCurrency("0"))
     var date = mutableStateOf(Instant.now().toEpochMilli())
 
-    fun validadeForm(description: String, value: Double): Boolean{
+    fun validateForm(description: String, value: Double): Boolean{
         val valueResult = validateValue.execute(value)
         val descriptionResult = validateDescription.execute(description)
 
@@ -80,7 +80,7 @@ class FIncomeBottomSheetViewModel(
     }
 
     fun checkForm(): Boolean {
-        if(validadeForm(this.description.value, currencyToDouble(this.value.value))){
+        if(validateForm(this.description.value, currencyToDouble(this.value.value))){
             addNewTransaction(
                 date = Instant.ofEpochMilli(date.value)
                     .atZone(ZoneId.of("UTC"))

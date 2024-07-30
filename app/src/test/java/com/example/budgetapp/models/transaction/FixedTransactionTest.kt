@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 class FixedTransactionTest {
 
     @Test
-    fun payment_due_payed_return_0() {
+    fun `Payment due payed should return 0`() {
         val lastDay = LocalDateTime.now().minusDays(1)
         val transaction = FixedTransaction(
             date = lastDay,
@@ -26,7 +26,7 @@ class FixedTransactionTest {
     }
 
     @Test
-    fun payment_due_for_last_month_return_1() {
+    fun `Payment is due since last month return 1`() {
         val lastMonth = LocalDateTime.now().minusMonths(1).minusDays(1)
         val transaction = FixedTransaction(
             date = lastMonth,
@@ -41,7 +41,7 @@ class FixedTransactionTest {
     }
 
     @Test
-    fun payment_due_payed_smaller_day_return_0() {
+    fun `Payment due payed yesterday should return 0`() {
         val lastMonth = LocalDateTime.now().minusMonths(1).plusDays(1)
         val transaction = FixedTransaction(
             date = lastMonth.minusMonths(2),
@@ -57,7 +57,7 @@ class FixedTransactionTest {
     }
 
     @Test
-    fun payment_due_for_last_month_smaller_day_return_1() {
+    fun `Payment due for two months minus a day should return 1`() {
         val nextDay = LocalDateTime.now().plusDays(1)
         val transaction = FixedTransaction(
             date = nextDay.minusMonths(3),

@@ -1,11 +1,8 @@
 package com.example.budgetapp.presentation.viewModels.transactionBottomSheet
 
 import android.content.Context
-import com.example.budgetapp.domain.models.expense.Expense
-import com.example.budgetapp.domain.models.expense.ExpenseCategory
 import com.example.budgetapp.domain.models.income.Income
 import com.example.budgetapp.domain.models.income.IncomeCategory
-import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
 import com.example.budgetapp.domain.repository_interfaces.IIncomeRepository
 import com.example.budgetapp.domain.use_cases.ValidateResult
 import com.example.budgetapp.domain.use_cases.ValidateTransactionDescription
@@ -60,14 +57,14 @@ class IncomeBottomSheetViewModelTest: KoinTest{
     }
 
     @Test
-    fun `validateForm com dados validos`(){
+    fun `when validateForm() data is valid error message should be null`(){
         val description = "Outros"
         val value = 50.00
 
         every { validateValue.execute(value) } returns ValidateResult(true, null)
         every { validateDescription.execute(description) } returns ValidateResult(true, null)
 
-        val res = viewModel.validadeForm(description, value)
+        val res = viewModel.validateForm(description, value)
 
         assertTrue(res)
         assertNull(viewModel.uiState.value.descriptionError)
@@ -75,14 +72,14 @@ class IncomeBottomSheetViewModelTest: KoinTest{
     }
 
     @Test
-    fun `validateForm com dados inválidos`(){
+    fun `when validateForm() data is invalid should set error message`(){
         val description = ""
         val value = 0.0
 
         every { validateValue.execute(value) } returns ValidateResult(false, "Value Error")
         every { validateDescription.execute(description) } returns ValidateResult(true, "Description Error")
 
-        val res = viewModel.validadeForm(description, value)
+        val res = viewModel.validateForm(description, value)
 
         assertFalse(res)
         assertEquals("Value Error", viewModel.uiState.value.valueError)
@@ -90,7 +87,7 @@ class IncomeBottomSheetViewModelTest: KoinTest{
     }
 
     @Test
-    fun `limpar estado`(){
+    fun `when called clearState() should clear UI state`(){
         viewModel.clearState()
 
         assertEquals(TransactionBottomSheetUIState(), viewModel.uiState.value)
@@ -102,7 +99,7 @@ class IncomeBottomSheetViewModelTest: KoinTest{
     }
 
     @Test
-    fun `When checkform() is successful should add new income`() = runTest{
+    fun `when checkform() is successful should add new income`() = runTest{
 
         var id = UUID.randomUUID()
         mockkStatic(UUID::class)
@@ -129,7 +126,7 @@ class IncomeBottomSheetViewModelTest: KoinTest{
     }
 
     @Test
-    fun `When checkform() fails should not add new income`() = runTest{
+    fun `when checkform() fails should not add new income`() = runTest{
 
         var id = UUID.randomUUID()
         mockkStatic(UUID::class)
