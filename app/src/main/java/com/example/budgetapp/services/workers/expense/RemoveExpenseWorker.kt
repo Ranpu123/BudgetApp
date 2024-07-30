@@ -51,7 +51,7 @@ class RemoveExpenseWorker(context: Context, params: WorkerParameters): Coroutine
 
             }catch (e: SQLException){
                 Log.e("[SQLite]", e.message.toString())
-                Result.failure()
+                Result.retry()
             }catch (e: IOException){
                 Log.e("[Network]", e.message.toString())
                 Result.retry()

@@ -1,5 +1,6 @@
 package com.example.budgetapp.presentation.viewModels.records
 
+import app.cash.turbine.test
 import com.example.budgetapp.domain.models.income.Income
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedExpenseRepository
@@ -98,16 +99,24 @@ class RecordsViewModelTest{
 
     @Test
     fun `When flow emits exception should update to error state`() = runTest{
-        var errorFlow = flow<List<Income>> { RuntimeException("teste") }
+        Dispatchers.setMain(UnconfinedTestDispatcher())
 
-        coEvery { incomeRepository.fetchAll() } returns errorFlow
+        coEvery { incomeRepository.fetchAll() } returns flow<List<Income>> { throw Exception("Fake Error") }
         coEvery { expenseRepository.fetchAll() } returns flowOf(TransactionsTestHelper.expenses)
         coEvery { fixedIncomeRepository.fetchAll() } returns flowOf(TransactionsTestHelper.fixedIncomes)
         coEvery { fixedExpenseRepository.fetchAll() } returns flowOf(TransactionsTestHelper.fixedExpenses)
 
-        advanceUntilIdle()
+        viewModel = RecordsViewModel(
+            incomeRepository = incomeRepository,
+            fixedIncomeRepository = fixedIncomeRepository,
+            fixedExpenseRepository = fixedExpenseRepository,
+            expenseRepository = expenseRepository
+        )
 
-        assertEquals("test",viewModel.uiState.value.errorMsg)
+        advanceUntilIdle()
+        viewModel.uiState.test {
+            assertEquals("Fake Error",awaitItem().errorMsg)
+        }
 
     }
 

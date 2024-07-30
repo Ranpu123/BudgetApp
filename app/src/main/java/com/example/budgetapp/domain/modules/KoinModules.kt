@@ -51,7 +51,7 @@ import java.util.concurrent.TimeUnit
 
 
 fun provideInterceptor() =
-    HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
+    HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 fun provideOkhttpClient(interceptor: HttpLoggingInterceptor) =
     OkHttpClient.Builder().apply {
         this.addInterceptor(interceptor)

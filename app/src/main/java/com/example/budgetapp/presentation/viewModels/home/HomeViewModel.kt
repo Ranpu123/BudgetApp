@@ -1,5 +1,6 @@
 package com.example.budgetapp.presentation.viewModels.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.Data
@@ -33,6 +34,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalTime
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -48,7 +50,7 @@ class HomeViewModel(
 
     private val _uiState = MutableStateFlow(HomeUiState(isLoading = true))
     val uiState: StateFlow<HomeUiState> = trigger.flatMapLatest {
-        _uiState.value.copy(isLoading = true)
+        //_uiState.value.copy(isLoading = true)
         combine(
             _uiState,
             incomeRepository.fetchAll().flowOn(Dispatchers.IO),
@@ -68,10 +70,12 @@ class HomeViewModel(
                 isLoading = false
             )
         }.catch { e ->
-                _uiState.value = HomeUiState(
-                    isLoading = true,
+            emit(
+                HomeUiState(
+                    isLoading = false,
                     errorMsg = "${e.message}"
                 )
+            )
         }
     }.stateIn(
         scope = viewModelScope,

@@ -15,6 +15,7 @@ import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedExpenseRepository
 import com.example.budgetapp.domain.repository_interfaces.IFixedIncomeRepository
 import com.example.budgetapp.domain.repository_interfaces.IIncomeRepository
+import com.example.budgetapp.testUtils.TransactionsTestHelper
 import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.clearMocks
@@ -30,8 +31,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.newSingleThreadContext
@@ -195,16 +199,18 @@ class HomeViewModelTest{
 
     @Test
     fun `When flow emits exception should update to error state`() = runTest{
-        var errorFlow = flow<List<Income>> { RuntimeException("teste") }
+        Dispatchers.setMain(UnconfinedTestDispatcher())
 
-        coEvery { incomeRepository.fetchAll() } returns errorFlow
+        coEvery { incomeRepository.fetchAll() } returns flow<List<Income>> { throw Exception("Fake Error") }
         coEvery { expenseRepository.fetchAll() } returns flowOf(expenses)
         coEvery { fixedIncomeRepository.fetchAll() } returns flowOf(fixedIncomes)
         coEvery { fixedExpenseRepository.fetchAll() } returns flowOf(fixedExpenses)
 
         advanceUntilIdle()
-
-        assertEquals("test",viewModel.uiState.value.errorMsg)
+        viewModel.uiState.test {
+            awaitItem()
+            assertEquals("Fake Error",awaitItem().errorMsg)
+        }
 
     }
 

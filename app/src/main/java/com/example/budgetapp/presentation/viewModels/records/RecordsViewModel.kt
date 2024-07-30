@@ -1,5 +1,6 @@
 package com.example.budgetapp.presentation.viewModels.records
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.budgetapp.domain.models.expense.Expense
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -46,9 +48,11 @@ class RecordsViewModel(
             isLoading = false,
         )
     }.catch {e->
-        _uiState.value = _uiState.value.copy (
-            isLoading = false,
-            errorMsg = "${e.message}"
+        emit(
+            RecordsUiState(
+                isLoading = false,
+                errorMsg = "${e.message}"
+            )
         )
     }.stateIn(
         scope = viewModelScope,
