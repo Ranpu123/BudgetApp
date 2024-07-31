@@ -14,6 +14,8 @@ import com.example.budgetapp.services.workers.fixed_income.AddFixedIncomeWorker
 import com.example.budgetapp.services.workers.fixed_income.RemoveFixedIncomeWorker
 import com.example.budgetapp.services.workers.fixed_income.UpdateFixedIncomeLastDateWorker
 import com.example.budgetapp.services.workers.utils.createOneTimeWorkRequest
+import com.example.budgetapp.utils.BudgetAppConstants.TRANSACTION_ID
+import com.example.budgetapp.utils.BudgetAppConstants.USER_ID
 import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.TimeUnit
 
@@ -29,8 +31,8 @@ class SyncFixedIncomeRepository(
         var n = dao.add(RoomFixedIncome.fromFixedIncome(fixedIncome, 1))
 
         var data = Data.Builder()
-        data.putString("transactionId" ,fixedIncome.id.toString())
-        data.putInt("userId", 1)
+        data.putString(TRANSACTION_ID ,fixedIncome.id.toString())
+        data.putInt(USER_ID, 1)
 
         var addRequest = createOneTimeWorkRequest(data, AddFixedIncomeWorker::class.java)
         workManager.enqueue(addRequest)
@@ -42,7 +44,7 @@ class SyncFixedIncomeRepository(
         var n = dao.remove(fixedIncome.id.toString())
 
         var data = Data.Builder()
-        data.putString("transactionId" ,fixedIncome.id.toString())
+        data.putString(TRANSACTION_ID ,fixedIncome.id.toString())
 
         var removeRequest = createOneTimeWorkRequest(data, RemoveFixedIncomeWorker::class.java)
         workManager.enqueue(removeRequest)
@@ -59,8 +61,8 @@ class SyncFixedIncomeRepository(
 
         fixedIncomes.forEach {
             var data = Data.Builder()
-            data.putString("transactionId" ,it.id.toString())
-            data.putInt("userId", 1)
+            data.putString(TRANSACTION_ID ,it.id.toString())
+            data.putInt(USER_ID, 1)
 
             var updateRequest = createOneTimeWorkRequest(data, UpdateFixedIncomeLastDateWorker::class.java)
             workManager.enqueue(updateRequest)

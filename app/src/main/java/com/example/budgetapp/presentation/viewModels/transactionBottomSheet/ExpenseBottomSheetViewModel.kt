@@ -1,5 +1,6 @@
 package com.example.budgetapp.presentation.viewModels.transactionBottomSheet
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,7 @@ import com.example.budgetapp.domain.models.expense.Expense
 import com.example.budgetapp.domain.repository_interfaces.IExpenseRepository
 import com.example.budgetapp.domain.use_cases.ValidateTransactionDescription
 import com.example.budgetapp.domain.use_cases.ValidateTransactionValue
+import com.example.budgetapp.utils.currencyToDouble
 import com.example.budgetapp.utils.formatCurrency
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,11 +18,13 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
 
 class ExpenseBottomSheetViewModel(
     private val repository: IExpenseRepository,
     private val validateDescription: ValidateTransactionDescription = ValidateTransactionDescription(),
     private val validateValue: ValidateTransactionValue = ValidateTransactionValue(),
+    private val context: Context,
     private val transaction: Expense? = null,
 ): ViewModel() {
 
@@ -28,7 +32,7 @@ class ExpenseBottomSheetViewModel(
     val uiState: StateFlow<TransactionBottomSheetUIState> = _uiState.asStateFlow()
 
     var category = mutableStateOf( ExpenseCategory.OTHER)
-    var description = mutableStateOf(ExpenseCategory.OTHER.asString())
+    var description = mutableStateOf(ExpenseCategory.OTHER.asString(context))
     var value = mutableStateOf(formatCurrency("0"))
     var date = mutableStateOf(Instant.now().toEpochMilli())
 
@@ -50,7 +54,7 @@ class ExpenseBottomSheetViewModel(
         }
     }
 
-    fun validadeForm(description: String, value: Double): Boolean{
+    fun validateForm(description: String, value: Double): Boolean{
         val valueResult = validateValue.execute(value)
         val descriptionResult = validateDescription.execute(description)
 
@@ -61,7 +65,8 @@ class ExpenseBottomSheetViewModel(
         if(hasError){
             _uiState.value = TransactionBottomSheetUIState(
                 descriptionError = descriptionResult.errorMessage,
-                valueError = valueResult.errorMessage)
+                valueError = valueResult.errorMessage
+            )
             return false
         }
         return true
@@ -69,9 +74,23 @@ class ExpenseBottomSheetViewModel(
 
     fun clearState(){
         _uiState.value = TransactionBottomSheetUIState()
-        description.value = ExpenseCategory.OTHER.asString()
+        description.value = ExpenseCategory.OTHER.asString(context)
         value.value = formatCurrency("0")
         date.value = Instant.now().toEpochMilli()
         category.value = ExpenseCategory.OTHER
+    }
+
+    fun checkForm() {
+        if(validateForm(this.description.value, currencyToDouble(this.value.value))) {
+            addNewTransaction(
+                date = Instant.ofEpochMilli(date.value)
+                    .atZone(ZoneId.of("UTC"))
+                    .toLocalDate(),
+                value = currencyToDouble(value.value),
+                category = category.value,
+                description = description.value
+            )
+            _uiState.value = TransactionBottomSheetUIState(isDone = true)
+        }
     }
 }

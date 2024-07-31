@@ -1,6 +1,7 @@
 package com.example.budgetapp.utils
 
 import android.util.Log
+import com.example.budgetapp.utils.BudgetAppConstants.REGEX_CURRENCY
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Currency
@@ -11,11 +12,10 @@ fun currencyToDouble(it: String): Double {
     val symbol: String = currency.getSymbol()
 
     try {
-        val cleanS = it.replace("[$symbol,.\u00A0]".toRegex(), "")
+        val cleanS = it.replace("[$symbol$REGEX_CURRENCY]".toRegex(), "")
         val parsed = BigDecimal(cleanS)
             .setScale(2, RoundingMode.FLOOR)
             .divide(BigDecimal(100), RoundingMode.FLOOR)
-
         return parsed.toDouble()
     } catch (e: Exception) {
         Log.e("ERROR", e.toString())

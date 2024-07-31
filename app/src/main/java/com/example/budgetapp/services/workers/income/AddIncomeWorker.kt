@@ -13,6 +13,9 @@ import com.example.budgetapp.services.remote.models.ApiExpense
 import com.example.budgetapp.services.remote.models.ApiIncome
 import com.example.budgetapp.services.workers.utils.OperationHelper
 import com.example.budgetapp.services.workers.utils.isConnected
+import com.example.budgetapp.utils.BudgetAppConstants
+import com.example.budgetapp.utils.BudgetAppConstants.TRANSACTION_ID
+import com.example.budgetapp.utils.BudgetAppConstants.USER_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -37,8 +40,8 @@ class AddIncomeWorker(
             return Result.retry()
         }
 
-        var transactionId = inputData.getString("transactionId")
-        var userId = inputData.getInt("userId", -1)
+        var transactionId = inputData.getString(TRANSACTION_ID)
+        var userId = inputData.getInt(USER_ID, -1)
 
         if (transactionId.isNullOrBlank() && userId == -1) {
             Log.e("[Worker]", "transactionId or userId is empty")

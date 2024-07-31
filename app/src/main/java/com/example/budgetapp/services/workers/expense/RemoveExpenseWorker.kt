@@ -11,6 +11,8 @@ import com.example.budgetapp.services.local.models.RoomExpense
 import com.example.budgetapp.services.remote.IBudgetAppAPI
 import com.example.budgetapp.services.workers.utils.OperationHelper
 import com.example.budgetapp.services.workers.utils.isConnected
+import com.example.budgetapp.utils.BudgetAppConstants
+import com.example.budgetapp.utils.BudgetAppConstants.TRANSACTION_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -33,7 +35,8 @@ class RemoveExpenseWorker(context: Context, params: WorkerParameters): Coroutine
             return Result.retry()
         }
 
-        var transactionId = inputData.getString("transactionId")
+        var transactionId = inputData.getString(TRANSACTION_ID)
+
         if (transactionId.isNullOrBlank()) {
             Log.e("[Worker]", "transactionId is empty")
             Result.failure()
@@ -51,7 +54,7 @@ class RemoveExpenseWorker(context: Context, params: WorkerParameters): Coroutine
 
             }catch (e: SQLException){
                 Log.e("[SQLite]", e.message.toString())
-                Result.failure()
+                Result.retry()
             }catch (e: IOException){
                 Log.e("[Network]", e.message.toString())
                 Result.retry()

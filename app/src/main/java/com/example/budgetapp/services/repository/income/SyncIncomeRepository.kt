@@ -14,6 +14,8 @@ import com.example.budgetapp.services.workers.expense.AddExpenseWorker
 import com.example.budgetapp.services.workers.income.AddIncomeWorker
 import com.example.budgetapp.services.workers.income.RemoveIncomeWorker
 import com.example.budgetapp.services.workers.utils.createOneTimeWorkRequest
+import com.example.budgetapp.utils.BudgetAppConstants.TRANSACTION_ID
+import com.example.budgetapp.utils.BudgetAppConstants.USER_ID
 import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.TimeUnit
 
@@ -29,8 +31,8 @@ class SyncIncomeRepository(
         val n = dao.add(RoomIncome.fromIncome(income,1))
 
         var data = Data.Builder()
-        data.putString("transactionId" ,income.id.toString())
-        data.putInt("userId", 1)
+        data.putString(TRANSACTION_ID ,income.id.toString())
+        data.putInt(USER_ID, 1)
 
         var addRequest = createOneTimeWorkRequest(data, AddIncomeWorker::class.java)
         workManager.enqueue(addRequest)
@@ -42,7 +44,7 @@ class SyncIncomeRepository(
         val n = dao.remove(income.id.toString())
 
         var data = Data.Builder()
-        data.putString("transactionId" ,income.id.toString())
+        data.putString(TRANSACTION_ID ,income.id.toString())
 
         var addRequest = createOneTimeWorkRequest(data, RemoveIncomeWorker::class.java)
         workManager.enqueue(addRequest)

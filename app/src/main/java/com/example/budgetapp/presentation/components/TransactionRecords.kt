@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.style.TextAlign
@@ -70,6 +71,8 @@ fun RecordCard(
     showAdd: Boolean = true,
     isLoading: Boolean = false
 ){
+    val context = LocalContext.current
+
     val dropMenuOptions = stringArrayResource(R.array.records_drop_menu_options)
 
     var filterBy by remember{ mutableStateOf(true) }
@@ -153,7 +156,7 @@ fun RecordCard(
                                 TransactionDateHeader(
                                     total = items.sumOf { it.value },
                                     title = if (filterBy) toFormattedMonthYear(items.first().date.toLocalDate())
-                                    else (items.first().category as ICategories).asString()
+                                    else (items.first().category as ICategories).asString(context)
                                 )
                             }
                             items(

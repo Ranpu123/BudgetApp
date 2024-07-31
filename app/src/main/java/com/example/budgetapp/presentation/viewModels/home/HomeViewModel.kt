@@ -1,5 +1,6 @@
 package com.example.budgetapp.presentation.viewModels.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.Data
@@ -18,6 +19,8 @@ import com.example.budgetapp.services.workers.DeletePendingWorker
 import com.example.budgetapp.services.workers.FetchAllWorker
 import com.example.budgetapp.services.workers.StartupWorker
 import com.example.budgetapp.services.workers.utils.createOneTimeWorkRequest
+import com.example.budgetapp.utils.BudgetAppConstants.SYNC_JOB_NAME
+import com.example.budgetapp.utils.BudgetAppConstants.USER_ID
 import com.example.budgetapp.utils.validDayofMonth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,6 +36,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalTime
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -67,11 +71,13 @@ class HomeViewModel(
                 userName = "Vinícius",
                 isLoading = false
             )
-        }.catch {
-                _uiState.value.copy(
+        }.catch { e ->
+            emit(
+                HomeUiState(
                     isLoading = false,
-                    errorMsg = "${it.message}"
+                    errorMsg = "${e.message}"
                 )
+            )
         }
     }.stateIn(
         scope = viewModelScope,
@@ -113,7 +119,7 @@ class HomeViewModel(
 
     }
 
-    private fun checkDueTransactions(fixedTransactions: List<FixedTransaction<*>>) {
+    fun checkDueTransactions(fixedTransactions: List<FixedTransaction<*>>) {
         viewModelScope.launch {
             var updatedFixedExpense = mutableListOf<FixedExpense>()
             var updatedFixedIncome = mutableListOf<FixedIncome>()
@@ -127,7 +133,7 @@ class HomeViewModel(
                             .withDayOfMonth(
                                 validDayofMonth(
                                     transaction.date.dayOfMonth,
-                                    transaction.lastDate
+                                    transaction.lastDate.plusMonths(1)
                                 )
                             );
 
@@ -182,9 +188,9 @@ class HomeViewModel(
         return total
     }
 
-    private fun launchStartupWork(workManager: WorkManager) {
+    fun launchStartupWork(workManager: WorkManager) {
         var data = Data.Builder()
-        data.putInt("userId", 1)
+        data.putInt(USER_ID, 1)
 
         var startupRequest = createOneTimeWorkRequest(data, StartupWorker::class.java)
         var deletePendingRequest = createOneTimeWorkRequest(data, DeletePendingWorker::class.java)
@@ -192,7 +198,7 @@ class HomeViewModel(
 
         workManager
             .beginUniqueWork(
-                "sync_job",
+                SYNC_JOB_NAME,
                 ExistingWorkPolicy.REPLACE,
                 deletePendingRequest
             )
