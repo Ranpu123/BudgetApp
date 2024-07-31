@@ -19,6 +19,8 @@ import com.example.budgetapp.services.workers.DeletePendingWorker
 import com.example.budgetapp.services.workers.FetchAllWorker
 import com.example.budgetapp.services.workers.StartupWorker
 import com.example.budgetapp.services.workers.utils.createOneTimeWorkRequest
+import com.example.budgetapp.utils.BudgetAppConstants.SYNC_JOB_NAME
+import com.example.budgetapp.utils.BudgetAppConstants.USER_ID
 import com.example.budgetapp.utils.validDayofMonth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -188,7 +190,7 @@ class HomeViewModel(
 
     fun launchStartupWork(workManager: WorkManager) {
         var data = Data.Builder()
-        data.putInt("userId", 1)
+        data.putInt(USER_ID, 1)
 
         var startupRequest = createOneTimeWorkRequest(data, StartupWorker::class.java)
         var deletePendingRequest = createOneTimeWorkRequest(data, DeletePendingWorker::class.java)
@@ -196,7 +198,7 @@ class HomeViewModel(
 
         workManager
             .beginUniqueWork(
-                "sync_job",
+                SYNC_JOB_NAME,
                 ExistingWorkPolicy.REPLACE,
                 deletePendingRequest
             )

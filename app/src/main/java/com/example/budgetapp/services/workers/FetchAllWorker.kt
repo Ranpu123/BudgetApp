@@ -17,6 +17,8 @@ import com.example.budgetapp.services.local.models.RoomFixedIncome
 import com.example.budgetapp.services.local.models.RoomIncome
 import com.example.budgetapp.services.remote.IBudgetAppAPI
 import com.example.budgetapp.services.workers.utils.isConnected
+import com.example.budgetapp.utils.BudgetAppConstants
+import com.example.budgetapp.utils.BudgetAppConstants.USER_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
@@ -45,7 +47,7 @@ class FetchAllWorker(appContext: Context, params: WorkerParameters) : CoroutineW
             return Result.retry()
         }
 
-        var userId = inputData.getInt("userId", -1)
+        var userId = inputData.getInt(USER_ID, -1)
         if(userId == -1){
             Result.failure()
         }
@@ -79,7 +81,7 @@ class FetchAllWorker(appContext: Context, params: WorkerParameters) : CoroutineW
                 }
 
                 var data = Data.Builder()
-                data.putInt("userId", userId)
+                data.putInt(USER_ID, userId)
 
                 return@withContext Result.success(data.build())
 

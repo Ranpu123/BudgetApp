@@ -11,6 +11,8 @@ import com.example.budgetapp.services.remote.IBudgetAppAPI
 import com.example.budgetapp.services.remote.models.ApiIncome
 import com.example.budgetapp.services.workers.utils.OperationHelper
 import com.example.budgetapp.services.workers.utils.isConnected
+import com.example.budgetapp.utils.BudgetAppConstants
+import com.example.budgetapp.utils.BudgetAppConstants.TRANSACTION_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -37,7 +39,7 @@ class RemoveIncomeWorker(
 
         return withContext(Dispatchers.IO) {
 
-            var transactionId = inputData.getString("transactionId")
+            var transactionId = inputData.getString(TRANSACTION_ID)
 
             if (transactionId.isNullOrBlank()) {
                 Log.e("[Worker]", "transactionId is empty")

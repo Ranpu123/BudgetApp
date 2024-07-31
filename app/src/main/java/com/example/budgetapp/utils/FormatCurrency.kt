@@ -1,6 +1,7 @@
 package com.example.budgetapp.utils
 
 import android.util.Log
+import com.example.budgetapp.utils.BudgetAppConstants.REGEX_CURRENCY
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
@@ -13,7 +14,7 @@ fun formatCurrency(it: String): String {
     val symbol: String = currency.getSymbol()
 
     try {
-        val cleanS: String = it.replace("[  $symbol,. ]".toRegex(), "")
+        val cleanS: String = it.replace("[$symbol$REGEX_CURRENCY]".toRegex(), "")
 
         val parsed: BigDecimal = BigDecimal(cleanS)
             .setScale(2, RoundingMode.DOWN)

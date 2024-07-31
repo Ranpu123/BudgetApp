@@ -14,6 +14,8 @@ import com.example.budgetapp.services.workers.fixed_expense.AddFixedExpenseWorke
 import com.example.budgetapp.services.workers.fixed_expense.RemoveFixedExpenseWorker
 import com.example.budgetapp.services.workers.fixed_expense.UpdateFixedExpenseLastDateWorker
 import com.example.budgetapp.services.workers.utils.createOneTimeWorkRequest
+import com.example.budgetapp.utils.BudgetAppConstants.TRANSACTION_ID
+import com.example.budgetapp.utils.BudgetAppConstants.USER_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
@@ -33,8 +35,8 @@ class SyncFixedExpenseRepository(
             val n = async{dao.add(RoomFixedExpense.fromFixedExpense(fixedExpense, 1))}.await()
 
             var data = Data.Builder()
-            data.putString("transactionId", fixedExpense.id.toString())
-            data.putInt("userId", 1)
+            data.putString(TRANSACTION_ID, fixedExpense.id.toString())
+            data.putInt(USER_ID, 1)
 
             var addRequest = createOneTimeWorkRequest(data, AddFixedExpenseWorker::class.java)
             workManager.enqueue(addRequest)
@@ -47,7 +49,7 @@ class SyncFixedExpenseRepository(
         val n = dao.remove(fixedExpense.id.toString())
 
         var data = Data.Builder()
-        data.putString("transactionId" ,fixedExpense.id.toString())
+        data.putString(TRANSACTION_ID ,fixedExpense.id.toString())
 
         var removeRequest = createOneTimeWorkRequest(data, RemoveFixedExpenseWorker::class.java)
         workManager.enqueue(removeRequest)
@@ -64,8 +66,8 @@ class SyncFixedExpenseRepository(
 
         fixedExpenses.forEach {
             var data = Data.Builder()
-            data.putString("transactionId" ,it.id.toString())
-            data.putInt("userId", 1)
+            data.putString(TRANSACTION_ID ,it.id.toString())
+            data.putInt(USER_ID, 1)
 
             var updateRequest = createOneTimeWorkRequest(data, UpdateFixedExpenseLastDateWorker::class.java)
             workManager.enqueue(updateRequest)

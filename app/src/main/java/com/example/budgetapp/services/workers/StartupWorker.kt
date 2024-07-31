@@ -23,6 +23,7 @@ import com.example.budgetapp.services.remote.models.ApiFixedExpense
 import com.example.budgetapp.services.remote.models.ApiFixedIncome
 import com.example.budgetapp.services.remote.models.ApiIncome
 import com.example.budgetapp.services.workers.utils.isConnected
+import com.example.budgetapp.utils.BudgetAppConstants.USER_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
@@ -51,7 +52,7 @@ class StartupWorker(appContext: Context, params: WorkerParameters) : CoroutineWo
             return Result.retry()
         }
 
-        var userId = inputData.getInt("userId", -1)
+        var userId = inputData.getInt(USER_ID, -1)
         if(userId == -1){
             Result.failure()
         }
@@ -164,7 +165,7 @@ class StartupWorker(appContext: Context, params: WorkerParameters) : CoroutineWo
                 }
 
                 var data = Data.Builder()
-                data.putInt("userId", userId)
+                data.putInt(USER_ID, userId)
 
                 return@withContext Result.success(data.build())
 
