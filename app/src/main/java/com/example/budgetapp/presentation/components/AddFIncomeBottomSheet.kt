@@ -78,6 +78,10 @@ fun AddFIncomeBottomSheet(
         addExpensetSheetState.expand()
     }
 
+    if(uiState.isDone){
+        bottomSheetViewModel.clearState()
+        onAdd()
+    }
 
     if(addExpensetSheetState.isVisible) {
         ModalBottomSheet(
@@ -209,25 +213,7 @@ fun AddFIncomeBottomSheet(
                     colors = ButtonDefaults.buttonColors(Color(0xFF009A33)),
                     shape = RoundedCornerShape(15.dp),
                     onClick = {
-                        /*if (bottomSheetViewModel.validadeForm(
-                                description,
-                                currencyToDouble(value)
-                            )
-                        ) {
-                            bottomSheetViewModel.addNewTransaction(
-                                description = description,
-                                value = currencyToDouble(value),
-                                category = category,
-                                date = Instant.ofEpochMilli(date)
-                                    .atZone(ZoneId.of("UTC"))
-                                    .toLocalDate(),
-                            )
-                            onAdd()
-                            bottomSheetViewModel.clearState()
-                        }*/
-                              if(bottomSheetViewModel.checkForm()){
-                                  onAdd()
-                              }
+                        bottomSheetViewModel.checkForm()
                     },
                 ) {
                     Text(

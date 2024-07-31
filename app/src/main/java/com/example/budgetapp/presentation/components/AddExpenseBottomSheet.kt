@@ -2,6 +2,7 @@
 
 package com.example.budgetapp.presentation.components
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -85,6 +86,10 @@ fun AddExpenseBottomSheet(
         addExpensetSheetState.expand()
     }
 
+    if(uiState.isDone){
+        bottomSheetViewModel.clearState()
+        onAdd()
+    }
 
     if(addExpensetSheetState.isVisible) {
         ModalBottomSheet(
@@ -216,21 +221,7 @@ fun AddExpenseBottomSheet(
                     colors = ButtonDefaults.buttonColors(Color(0xFF009A33)),
                     shape = RoundedCornerShape(15.dp),
                     onClick = {
-                        /*if(bottomSheetViewModel.validadeForm(description, currencyToDouble(value))){
-                            bottomSheetViewModel.addNewTransaction(
-                                description = description,
-                                value = currencyToDouble(value),
-                                category = category,
-                                date = Instant.ofEpochMilli(date)
-                                    .atZone(ZoneId.of("UTC"))
-                                    .toLocalDate(),
-                            )
-                            onAdd()
-                            bottomSheetViewModel.clearState()
-                        }*/
-                              if(bottomSheetViewModel.checkForm()){
-                                  onAdd()
-                              }
+                        bottomSheetViewModel.checkForm()
                     },
                 ) {
                     Text(

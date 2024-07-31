@@ -124,7 +124,10 @@ class ExpenseBottomSheetViewModelTest: KoinTest {
         viewModel.category.value = entry.category
         viewModel.date.value = entry.date.toInstant(ZoneOffset.UTC).toEpochMilli()
 
-        assertTrue(viewModel.checkForm())
+        viewModel.checkForm()
+        assertTrue(viewModel.uiState.value.isDone)
+        assertNull(viewModel.uiState.value.valueError)
+        assertNull(viewModel.uiState.value.descriptionError)
 
         coVerify(exactly = 1) { repository.addExpense(any()) }
     }
@@ -151,7 +154,11 @@ class ExpenseBottomSheetViewModelTest: KoinTest {
         viewModel.category.value = entry.category
         viewModel.date.value = entry.date.toInstant(ZoneOffset.UTC).toEpochMilli()
 
-        assertFalse(viewModel.checkForm())
+        viewModel.checkForm()
+
+        assertFalse(viewModel.uiState.value.isDone)
+        assertEquals("empty description" ,viewModel.uiState.value.descriptionError)
+        assertEquals("value can't be zero" ,viewModel.uiState.value.valueError)
 
         coVerify(exactly = 0) { repository.addExpense(any()) }
     }

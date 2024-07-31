@@ -79,7 +79,7 @@ class IncomeBottomSheetViewModel(
         category.value = IncomeCategory.OTHER
     }
 
-    fun checkForm(): Boolean {
+    fun checkForm() {
         if(validateForm(this.description.value, currencyToDouble(this.value.value))){
             addNewTransaction(
                 date = Instant.ofEpochMilli(date.value)
@@ -89,10 +89,7 @@ class IncomeBottomSheetViewModel(
                 category = category.value,
                 description = description.value
             )
-            clearState()
-            return true
-        }else{
-            return false
+            _uiState.value = TransactionBottomSheetUIState(isDone = true)
         }
     }
 }

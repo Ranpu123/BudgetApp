@@ -52,7 +52,7 @@ open class FixedTransaction<T>(
         if( (curDate.dayOfMonth >= date.dayOfMonth)
             && lastDate.isBefore(curDate.withDayOfMonth(validDayofMonth(date.dayOfMonth, curDate))) ) {
 
-            val res = ChronoUnit.MONTHS.between(lastDate.withDayOfMonth(validDayofMonth(date.dayOfMonth, curDate)),
+            val res = ChronoUnit.MONTHS.between(lastDate.withDayOfMonth(validDayofMonth(date.dayOfMonth, lastDate)),
                 curDate.withDayOfMonth(validDayofMonth(date.dayOfMonth, curDate)))
 
             return res.toInt()

@@ -4,5 +4,6 @@ import java.lang.Error
 
 data class TransactionBottomSheetUIState(
     val descriptionError: String? = null,
-    val valueError: String? = null
+    val valueError: String? = null,
+    val isDone: Boolean = false,
 )

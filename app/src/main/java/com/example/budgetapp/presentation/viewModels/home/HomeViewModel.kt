@@ -50,7 +50,7 @@ class HomeViewModel(
 
     private val _uiState = MutableStateFlow(HomeUiState(isLoading = true))
     val uiState: StateFlow<HomeUiState> = trigger.flatMapLatest {
-        //_uiState.value.copy(isLoading = true)
+        _uiState.value.copy(isLoading = true)
         combine(
             _uiState,
             incomeRepository.fetchAll().flowOn(Dispatchers.IO),
@@ -131,7 +131,7 @@ class HomeViewModel(
                             .withDayOfMonth(
                                 validDayofMonth(
                                     transaction.date.dayOfMonth,
-                                    transaction.lastDate
+                                    transaction.lastDate.plusMonths(1)
                                 )
                             );
 

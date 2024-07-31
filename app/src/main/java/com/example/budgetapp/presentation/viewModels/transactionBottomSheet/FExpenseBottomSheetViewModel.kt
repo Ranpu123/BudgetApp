@@ -79,8 +79,8 @@ class FExpenseBottomSheetViewModel(
         category.value = ExpenseCategory.OTHER
     }
 
-    fun checkForm(): Boolean {
-        if(validateForm(this.description.value, currencyToDouble(this.value.value))){
+    fun checkForm() {
+        if(validateForm(this.description.value, currencyToDouble(this.value.value))) {
             addNewTransaction(
                 date = Instant.ofEpochMilli(date.value)
                     .atZone(ZoneId.of("UTC"))
@@ -89,10 +89,7 @@ class FExpenseBottomSheetViewModel(
                 category = category.value,
                 description = description.value
             )
-            clearState()
-            return true
-        }else{
-            return false
+            _uiState.value = TransactionBottomSheetUIState(isDone = true)
         }
     }
 }

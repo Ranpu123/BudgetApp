@@ -120,7 +120,9 @@ class FIncomeBottomSheetViewModelTest: KoinTest{
         viewModel.category.value = entry.category
         viewModel.date.value = entry.date.toInstant(ZoneOffset.UTC).toEpochMilli()
 
-        assertTrue(viewModel.checkForm())
+        viewModel.checkForm()
+
+        assertTrue(viewModel.uiState.value.isDone)
 
         coVerify(exactly = 1) { repository.addFixedIncome(any()) }
     }
@@ -147,7 +149,9 @@ class FIncomeBottomSheetViewModelTest: KoinTest{
         viewModel.category.value = entry.category
         viewModel.date.value = entry.date.toInstant(ZoneOffset.UTC).toEpochMilli()
 
-        assertFalse(viewModel.checkForm())
+        viewModel.checkForm()
+
+        assertFalse(viewModel.uiState.value.isDone)
 
         coVerify(exactly = 0) { repository.addFixedIncome(any()) }
     }
